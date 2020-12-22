@@ -1,4 +1,4 @@
-args = -std=c++17
+args = -std=c++2a
 
 all: IA_chess
 

@@ -15,5 +15,5 @@ class Board {
         void print_pieces();
         void print_move(char* move);
     private:
-        Piece** pieces;
+        Piece* squares[64];
 };
