@@ -6,15 +6,17 @@ Piece::Piece(square position, bool white, bool black) {
     this->black = black;
 }
 
-Piece::Piece() {
-    this->name = "Null";
-}
-
 void Piece::print_piece() {
     std::string color = "black";
     if (this->white)
         color = "white";
 
     std::cout << color << " " << this->name << " " <<
-              this->position.letter << this->position.number << std::endl;
+              this->position.row << this->position.line << std::endl;
+}
+
+int Piece::squareToIdx(square c) {
+    int row = c.row - 97;
+    int line = c.line - 1;
+    return line * 8 + row;
 }

@@ -1,14 +1,18 @@
 #include "classes/board.h"
 
 int main (int argc, char** argv) {
-    Board *b = (Board*) malloc(sizeof(Board));
+    Board b;
+
     if (argc == 2) {
         string temp(argv[1]);
-        Board b2(temp);
-        *b = b2;
+        b.init(temp);
     } else {
-        *b = Board();
+        b.init();
     }
-    (*b).print_pieces();
+
+    b.print_pieces();
+    cout << endl;
+    b.print_move("");
+
     return 0;
 }

@@ -3,5 +3,5 @@
 class Bishop : public Piece {
     public:
         Bishop(square position, bool white, bool black);
-
+        bool check_move(square start, square stop) override { return false;};
 };

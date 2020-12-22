@@ -1,92 +1,87 @@
 #include "board.h"
 #include <stdio.h>
 
-int lines [] = {1, 2, 3, 4, 5, 6, 7, 8};
-enum rows {a = 'a', b = 'b', c='c', d='d', e='e', f='f', g='g'};
+Board::~Board() {
+    free(this->pieces);
+}
 
-Board::Board(string fen) {
+void Board::init(string fen) {
     int row = 97; // ASCII for a
     int line = 8;
     int idx = 0;
 
+    this->pieces = (Piece**) calloc(64, sizeof(Piece*));
+    for (int i = 0; i<64; i++) {
+        this->pieces[i] = (Piece*) calloc(1, sizeof(Piece));
+    }
+
     for (int i = 0; i<fen.length(); i++) {
         square position = {char(row), line};
-        if (fen[i] == ' ') break;
-        switch (fen[i]) {
-            case 'r' :
-                this->pieces[idx] = Rook(position, false, true);
-                idx++;
-                break;
-            case 'n' :
-                this->pieces[idx] = Knight(position, false, true);
-                idx++;
-                break;
-            case 'b' :
-                this->pieces[idx] = Bishop(position, false, true);
-                idx++;
-                break;
-            case 'q' :
-                this->pieces[idx] = Queen(position, false, true);
-                idx++;
-                break;
-            case 'k' : 
-                this->pieces[idx] = King(position, false, true);
-                idx++;
-                break;
-            case 'p' : 
-                this->pieces[idx] = Pawn(position, false, true);
-                idx++;
-                break;
 
-            case 'R' :
-                this->pieces[idx] = Rook(position, true, false);
-                idx++;
-                break;
-            case 'N' :
-                this->pieces[idx] = Knight(position, true, false);
-                idx++;
-                break;
-            case 'B' :
-                this->pieces[idx] = Bishop(position, true, false);
-                idx++;
-                break;
-            case 'Q' :
-                this->pieces[idx] = Queen(position, true, false);
-                idx++;
-                break;
-            case 'K' : 
-                this->pieces[idx] = King(position, true, false);
-                idx++;
-                break;
-            case 'P' : 
-                this->pieces[idx] = Pawn(position, true, false);
-                idx++;
-                break;
-            
-            case '/' : 
-                line--;
-                row = 96; //ASCII for char before 'a' because row++ at the end of the for
-                break;
-            
-            default : 
-                int nb = int(fen[i]) - 48;
+        if (fen[i] == ' ') break;
+
+        else if (fen[i] == 'r') {
+            (this->pieces[idx]) = new Rook(position, false, true);
+        } else if (fen[i] == 'n') {
+            (this->pieces[idx]) = new Knight(position, false, true);
+        } else if (fen[i] == 'b') {
+            (this->pieces[idx]) = new Bishop(position, false, true);
+        } else if (fen[i] == 'q') {
+            (this->pieces[idx]) = new Queen(position, false, true);
+        } else if (fen[i] == 'k') {
+            (this->pieces[idx]) = new King(position, false, true);
+        } else if (fen[i] == 'p') {
+            (this->pieces[idx]) = new Pawn(position, false, true);
+        }
+
+        else if (fen[i] == 'R') {
+            (this->pieces[idx]) = new Rook(position, true, false);
+        } else if (fen[i] == 'N') {
+            (this->pieces[idx]) = new Knight(position, true, false);
+        } else if (fen[i] == 'B') {
+            (this->pieces[idx]) = new Bishop(position, true, false);
+        } else if (fen[i] == 'Q') {
+            (this->pieces[idx]) = new Queen(position, true, false);
+        } else if (fen[i] == 'K') {
+            (this->pieces[idx]) = new King(position, true, false);
+        } else if (fen[i] == 'P') {
+            (this->pieces[idx]) = new Pawn(position, true, false);
+        }
+
+        else if (fen[i] == '/') {
+            line--;
+            row = 96;
+            idx--;
+        } else {
+            int nb = int(fen[i]) - 48;
                 if (nb >= 1 && nb <= 8) {
                     row += nb - 1;
-                    idx += nb;
-                    break;
+                    for (int i = 0; i<nb; i++) {
+                        (this->pieces[idx + i]) = new Empty();
+                    }
+
+                    idx += nb - 1;
                 } else {
                     cout << "Error in fen : " << fen << endl;
                     exit(-1);
                 }
-        };
-        row ++;
+        }
+
+        idx++;
+        row++;
     }
-    cout << idx << endl;
 }
 
 void Board::print_pieces () {
-    for (Piece p : this->pieces) {
-        if (p.getName() != "Null")
-            p.print_piece();
+    for (int i = 0; i<64; i++) {
+        if (this->pieces[i]->getName() != "Null")
+            this->pieces[i]->print_piece();
+    }
+}
+
+void Board::print_move (char* move) {
+    square s = {'e', 4};
+    for (int i = 0; i<64; i++) {
+            cout << (this->pieces[i]->check_move(s, s) ? "true" : "false") << endl;
     }
 }
