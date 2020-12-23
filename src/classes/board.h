@@ -13,7 +13,7 @@ class Board {
         void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         ~Board();
         void print_pieces();
-        void print_move(char* move);
+        void print_move(const char* move);
     private:
         Piece* squares[64];
 };

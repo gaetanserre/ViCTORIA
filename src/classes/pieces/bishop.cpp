@@ -1,5 +1,5 @@
 #include "bishop.h"
 
-Bishop::Bishop(square position, bool white, bool black) : Piece(position, white, black) {
+Bishop::Bishop(square position, bool white) : Piece(position, white) {
     this->name = "bishop";
 }

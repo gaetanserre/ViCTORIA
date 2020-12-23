@@ -2,7 +2,8 @@
 #include <stdio.h>
 
 Board::~Board() {
-    //free(this->squares);
+    for (int i = 0; i<64; i++)
+        free(this->squares[i]);
 }
 
 void Board::init(string fen) {
@@ -16,31 +17,31 @@ void Board::init(string fen) {
         if (fen[i] == ' ') break;
 
         else if (fen[i] == 'r') {
-            (this->squares[idx]) = new Rook(position, false, true);
+            (this->squares[idx]) = new Rook(position, false);
         } else if (fen[i] == 'n') {
-            (this->squares[idx]) = new Knight(position, false, true);
+            (this->squares[idx]) = new Knight(position, false);
         } else if (fen[i] == 'b') {
-            (this->squares[idx]) = new Bishop(position, false, true);
+            (this->squares[idx]) = new Bishop(position, false);
         } else if (fen[i] == 'q') {
-            (this->squares[idx]) = new Queen(position, false, true);
+            (this->squares[idx]) = new Queen(position, false);
         } else if (fen[i] == 'k') {
-            (this->squares[idx]) = new King(position, false, true);
+            (this->squares[idx]) = new King(position, false);
         } else if (fen[i] == 'p') {
-            (this->squares[idx]) = new Pawn(position, false, true);
+            (this->squares[idx]) = new Pawn(position, false);
         }
 
         else if (fen[i] == 'R') {
-            (this->squares[idx]) = new Rook(position, true, false);
+            (this->squares[idx]) = new Rook(position, true);
         } else if (fen[i] == 'N') {
-            (this->squares[idx]) = new Knight(position, true, false);
+            (this->squares[idx]) = new Knight(position, true);
         } else if (fen[i] == 'B') {
-            (this->squares[idx]) = new Bishop(position, true, false);
+            (this->squares[idx]) = new Bishop(position, true);
         } else if (fen[i] == 'Q') {
-            (this->squares[idx]) = new Queen(position, true, false);
+            (this->squares[idx]) = new Queen(position, true);
         } else if (fen[i] == 'K') {
-            (this->squares[idx]) = new King(position, true, false);
+            (this->squares[idx]) = new King(position, true);
         } else if (fen[i] == 'P') {
-            (this->squares[idx]) = new Pawn(position, true, false);
+            (this->squares[idx]) = new Pawn(position, true);
         }
 
         else if (fen[i] == '/') {
@@ -67,10 +68,6 @@ void Board::init(string fen) {
     }
 }
 
-bool checkIfPiece(Piece *p) {
-    return p->getName() != "Null";
-}
-
 void Board::print_pieces () {
     for (int i = 0; i<64; i++) {
         if (checkIfPiece(this->squares[i]))
@@ -78,10 +75,12 @@ void Board::print_pieces () {
     }
 }
 
-void Board::print_move (char* move) {
-    square s = {'e', 4};
-    for (int i = 0; i<64; i++) {
-        if (checkIfPiece(this->squares[i]))
-            cout << (this->squares[i]->check_move(s, s) ? "true" : "false") << endl;
+void Board::print_move (const char* move) {
+    
+    square dep = {move[0], int(move[1] - '0')};
+    square stop = {move[2], int(move[3] - '0')};
+    int idx = squareToIdx(dep);
+    if (checkIfPiece(this->squares[idx])) {
+        cout << (this->squares[idx]->check_move(stop, this->squares) ? "true" : "false") << endl;
     }
 }

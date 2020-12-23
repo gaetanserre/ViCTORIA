@@ -9,10 +9,16 @@ int main (int argc, char** argv) {
     } else {
         b.init();
     }
-
     b.print_pieces();
-    cout << endl;
-    b.print_move("");
+    
+    string input;
+    while (true) {
+        cout << "Type move :" << endl;
+        cin >> input;
+        if (input == "exit") break;
+        const char* move = input.c_str();
+        b.print_move(move);
+    }
 
     return 0;
 }

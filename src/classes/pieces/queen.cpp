@@ -1,5 +1,5 @@
 #include "queen.h"
 
-Queen::Queen (square position, bool white, bool black) : Piece(position, white, black) {
+Queen::Queen (square position, bool white) : Piece(position, white) {
     this->name = "queen";
 }

@@ -1,5 +1,5 @@
 #include "rook.h"
 
-Rook::Rook(square position, bool white, bool black) : Piece(position, white, black) {
+Rook::Rook(square position, bool white) : Piece(position, white) {
     this->name = "rook";
 }

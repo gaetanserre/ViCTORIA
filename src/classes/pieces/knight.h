@@ -2,6 +2,6 @@
 
 class Knight : public Piece {
     public:
-        Knight (square position, bool white, bool black);
-        bool check_move(square start, square stop) override { return false;};
+        Knight (square position, bool white);
+        bool check_move(square goal, Piece* squares[]) override { return false;};
 };

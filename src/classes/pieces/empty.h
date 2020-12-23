@@ -2,9 +2,9 @@
 
 class Empty : public Piece {
     public:
-        Empty() : Piece({'z', -1}, false, false) {
+        Empty() : Piece({'z', -1}, false) {
             this->name = "Null";
         }
 
-        bool check_move(square start, square stop) override { return false; };
+        bool check_move(square goal, Piece* squares[]) override { return false; };
 };
