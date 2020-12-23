@@ -1,8 +1,8 @@
 #include "pawn.h"
 
-Pawn::Pawn(square position, bool white) : Piece(position, white) {
+Pawn::Pawn(square position, bool white, bool start_pos) : Piece(position, white) {
     this->name = "pawn";
-    this->start_pos = true;
+    this->start_pos = start_pos;
 }
 
 int Pawn::forward (int n) {
@@ -21,7 +21,7 @@ bool Pawn::check_move(square goal, Piece* squares[]) {
 
     } else if (this->position.row + 1 == goal.row || this->position.row - 1 == goal.row) {
         if (this->position.line + forward(1) == goal.line)
-            return checkIfPiece(squares[squareToIdx(goal)]);
+            return this->checkIfPieceIsTakeable(squares[squareToIdx(goal)]);
             
         else return false;
 

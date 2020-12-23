@@ -15,6 +15,9 @@ class Piece {
         void print_piece ();
         std::string getName() { return this->name; }
         virtual bool check_move(square goal, Piece* squares[])=0;
+        bool isWhite();
+        bool checkIfPieceIsTakeable(Piece* p);
+        
     protected:
         square position;
         bool white;

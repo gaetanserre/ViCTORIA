@@ -14,6 +14,18 @@ void Piece::print_piece() {
               this->position.row << this->position.line << std::endl;
 }
 
+bool Piece::isWhite() {
+    return this->white;
+}
+
+bool Piece::checkIfPieceIsTakeable(Piece* p) {
+    if (checkIfPiece(p)) {
+        bool A = this->white;
+        bool B = p->isWhite();
+        return A != B; // XOR
+    } else return false;
+}
+
 int squareToIdx(square c) {
     int row = c.row - 97;
     int line = 7 - (c.line - 1);

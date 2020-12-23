@@ -17,39 +17,41 @@ void Board::init(string fen) {
         if (fen[i] == ' ') break;
 
         else if (fen[i] == 'r') {
-            (this->squares[idx]) = new Rook(position, false);
+            this->squares[idx] = new Rook(position, false);
         } else if (fen[i] == 'n') {
-            (this->squares[idx]) = new Knight(position, false);
+            this->squares[idx] = new Knight(position, false);
         } else if (fen[i] == 'b') {
-            (this->squares[idx]) = new Bishop(position, false);
+            this->squares[idx] = new Bishop(position, false);
         } else if (fen[i] == 'q') {
-            (this->squares[idx]) = new Queen(position, false);
+            this->squares[idx] = new Queen(position, false);
         } else if (fen[i] == 'k') {
-            (this->squares[idx]) = new King(position, false);
+            this->squares[idx] = new King(position, false);
+            this->black_king = this->squares[idx];
         } else if (fen[i] == 'p') {
-            (this->squares[idx]) = new Pawn(position, false);
+            this->squares[idx] = new Pawn(position, false, line == 7);
         }
 
         else if (fen[i] == 'R') {
-            (this->squares[idx]) = new Rook(position, true);
+            this->squares[idx] = new Rook(position, true);
         } else if (fen[i] == 'N') {
-            (this->squares[idx]) = new Knight(position, true);
+            this->squares[idx] = new Knight(position, true);
         } else if (fen[i] == 'B') {
-            (this->squares[idx]) = new Bishop(position, true);
+            this->squares[idx] = new Bishop(position, true);
         } else if (fen[i] == 'Q') {
-            (this->squares[idx]) = new Queen(position, true);
+            this->squares[idx] = new Queen(position, true);
         } else if (fen[i] == 'K') {
-            (this->squares[idx]) = new King(position, true);
+            this->squares[idx] = new King(position, true);
+            this->white_king = this->squares[idx];
         } else if (fen[i] == 'P') {
-            (this->squares[idx]) = new Pawn(position, true);
+            this->squares[idx] = new Pawn(position, true, line == 2);
         }
 
         else if (fen[i] == '/') {
             line--;
-            row = 96;
+            row = 96; // 97 is for 'a' and 96 is because we increment row at the end of the loop
             idx--;
         } else {
-            int nb = int(fen[i]) - 48;
+            int nb = fen[i] - '0'; // char to int conversion
                 if (nb >= 1 && nb <= 8) {
                     row += nb - 1;
                     for (int i = 0; i<nb; i++) {

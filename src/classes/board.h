@@ -16,4 +16,6 @@ class Board {
         void print_move(const char* move);
     private:
         Piece* squares[64];
+        Piece* white_king;
+        Piece* black_king;
 };
