@@ -19,6 +19,5 @@ int main (int argc, char** argv) {
         const char* move = input.c_str();
         b.print_move(move);
     }
-
     return 0;
 }
