@@ -13,17 +13,46 @@ bool Rook::check_move(square goal, Piece* squares[]) {
     }
 
     if (this->position.row == goal.row) {
-        for (int i = position.line+1; i<goal.line; i++) {
-            if (checkIfPiece(squares[squareToIdx({goal.row, i})]))
-                return false;
-        }
-        return true;
+        if (goal.line > this->position.line) {
+            int init = this->position.line+1;
+            auto test = [=] (int i) {return i < goal.line;};
+            auto incr = [] (int* i) {*i = *i+1;};
+            auto pos = [=] (int i) -> square {
+                return {goal.row, i}; 
+            };
+            return this->itermove(init, squares, test, incr, pos);
 
-    } else if (this->position.line == goal.line) {
-        for (int i = position.row+1; i < goal.row ; i++) {
-            if (checkIfPiece(squares[squareToIdx({char(i), goal.line})]))
-                return false;
+        } else {
+            int init = this->position.line-1;
+            auto test = [=] (int i) {return i > goal.line;};
+            auto incr = [] (int* i) {*i = *i-1;};
+            auto pos = [=] (int i) -> square {
+                return {goal.row, i}; 
+            };
+            return this->itermove(init, squares, test, incr, pos);
         }
-        return true;
+    } 
+    
+    else if (this->position.line == goal.line) {
+        if (goal.row > this->position.row) {
+            int init = this->position.row+1;
+            auto test = [=] (int i) {return i < goal.row;};
+            auto incr = [] (int* i) {*i = *i+1;};
+            auto pos = [=] (int i) -> square {
+                return {char(i), goal.line};
+            };
+            return this->itermove(init, squares, test, incr, pos);
+        }
+
+        else {
+            int init = this->position.row-1;
+            auto test = [=] (int i) {return i > goal.row;};
+            auto incr = [] (int* i) {*i = *i-1;};
+            auto pos = [=] (int i) -> square {
+                return {char(i), goal.line};
+            };
+            return this->itermove(init, squares, test, incr, pos);
+        }
+
     } else return false;
 }

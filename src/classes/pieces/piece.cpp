@@ -35,3 +35,22 @@ int squareToIdx(square c) {
 bool checkIfPiece(Piece *p) {
     return p->getName() != "Null";
 }
+
+bool Piece::itermove(
+    int init, Piece* squares[],
+    std::function<bool(int)> test,
+    std::function<void(int*)> incr,
+    std::function<square(int)> pos
+) {
+    int i = init;
+    while (test(i)) {
+        square c = pos(i);
+        std::cout << c.row << c.line << std::endl;
+        if (checkIfPiece(squares[squareToIdx(c)])) {
+            squares[squareToIdx(c)]->print_piece();
+            return false;
+        }
+        incr(&i);
+    }
+    return true;
+}

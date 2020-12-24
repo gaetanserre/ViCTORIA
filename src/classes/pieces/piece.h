@@ -23,6 +23,12 @@ class Piece {
         bool white;
         std::string name;
         bool has_moved;
+        bool itermove(
+            int init, Piece* squares[],
+            std::function<bool(int)> test,
+            std::function<void(int*)> incr,
+            std::function<square(int)> pos
+        );
 };
 
 bool checkIfPiece(Piece *p);
