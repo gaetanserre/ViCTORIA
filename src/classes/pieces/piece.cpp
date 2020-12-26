@@ -36,6 +36,10 @@ bool checkIfPiece(Piece *p) {
     return p->getName() != "Null";
 }
 
+bool Piece::PlusOrMinus(int value1, int value2, int n) {
+    return value1 + n == value2 || value1 - n == value2;
+}
+
 bool Piece::itermove(
     int init, Piece* squares[],
     std::function<bool(int)> test,

@@ -29,6 +29,7 @@ class Piece {
             std::function<void(int*)> incr,
             std::function<square(int)> pos
         );
+        bool PlusOrMinus(int value1, int value2, int n);
 };
 
 bool checkIfPiece(Piece *p);
