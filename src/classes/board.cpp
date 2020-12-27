@@ -111,11 +111,29 @@ void Board::print_pieces () {
     }
 }
 
-void Board::print_move (const char* move) {
+bool Board::check_move (square dep, square stop) {
+    int idx_dep = squareToIdx(dep);
+    if (checkIfPiece(this->squares[idx_dep])) {
+        if (this->squares[idx_dep]->isWhite() == this->white) {
+            return this->squares[idx_dep]->check_move(stop, this->squares);
+        }
+    }
+    return false;
+}
+
+bool Board::play_move(const char* move) {
     square dep = {move[0], int(move[1] - '0')};
     square stop = {move[2], int(move[3] - '0')};
-    int idx = squareToIdx(dep);
-    if (checkIfPiece(this->squares[idx])) {
-        cout << (this->squares[idx]->check_move(stop, this->squares) ? "true" : "false") << endl;
+    int idx_dep = squareToIdx(dep);
+    int idx_stop = squareToIdx(stop);
+
+    if (check_move(dep, stop)) {
+        Piece* temp = this->squares[idx_dep];
+        this->squares[idx_dep] = new Empty();
+        this->squares[idx_stop] = temp;
+        temp->setPosition(stop);
+        this->white = !this->white;
+        return true;
     }
+    return false;
 }

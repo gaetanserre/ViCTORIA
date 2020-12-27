@@ -11,18 +11,20 @@ struct square {
 class Piece {
     public:
         Piece (square position, bool white);
-        Piece();
         void print_piece ();
+        
         std::string getName() { return this->name; }
-        virtual bool check_move(square goal, Piece* squares[])=0;
-        bool isWhite();
+        void setPosition(square position) {this->position = position; };
+        bool isWhite() { return this->white; };
+
         bool checkIfPieceIsTakeable(Piece* p);
+        virtual bool check_move(square goal, Piece* squares[])=0;
+
         
     protected:
         square position;
         bool white;
         std::string name;
-        bool has_moved;
         bool itermove(
             int init, Piece* squares[],
             std::function<bool(int)> test,

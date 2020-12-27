@@ -10,10 +10,11 @@ using namespace std;
 class Board {
     public:
         Board (){};
-        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1");
+        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         ~Board();
         void print_pieces();
-        void print_move(const char* move);
+        bool check_move(square dep, square stop);
+        bool play_move(const char* move);
     private:
         Piece* squares[64];
         Piece* white_king;

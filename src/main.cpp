@@ -17,7 +17,8 @@ int main (int argc, char** argv) {
         cin >> input;
         if (input == "exit") break;
         const char* move = input.c_str();
-        b.print_move(move);
+        if (b.play_move(move)) b.print_pieces();
+        else cout << "Illegal move." << endl;
     }
     return 0;
 }

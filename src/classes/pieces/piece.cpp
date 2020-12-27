@@ -14,10 +14,6 @@ void Piece::print_piece() {
               this->position.row << this->position.line << std::endl;
 }
 
-bool Piece::isWhite() {
-    return this->white;
-}
-
 bool Piece::checkIfPieceIsTakeable(Piece* p) {
     if (checkIfPiece(p)) {
         bool A = this->white;
