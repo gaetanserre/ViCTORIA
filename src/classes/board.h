@@ -10,7 +10,7 @@ using namespace std;
 class Board {
     public:
         Board (){};
-        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1");
         ~Board();
         void print_pieces();
         void print_move(const char* move);
@@ -18,4 +18,15 @@ class Board {
         Piece* squares[64];
         Piece* white_king;
         Piece* black_king;
+
+        bool castling_short_w = true;
+        bool castling_long_w = true;
+
+        bool castling_short_b = true;
+        bool castling_long_b = true;
+
+        bool white = true;
+
+        bool en_passant = false;
+        square en_passant_square;
 };
