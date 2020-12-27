@@ -10,11 +10,44 @@ void Board::init(string fen) {
     int row = 97; // ASCII for a
     int line = 8;
     int idx = 0;
+    int nbspace = 0;
 
     for (int i = 0; i<fen.length(); i++) {
         square position = {char(row), line};
 
-        if (fen[i] == ' ') break;
+        if (fen[i] == ' ') {nbspace++; i++;}
+
+        if (nbspace != 0) {
+
+            if (nbspace == 1) {
+                if (fen[i] == 'b') this->white = false;
+            }
+            if (nbspace == 2) {
+                switch (fen[i])
+                {
+                case 'K':
+                    this->castling_short_w = true;
+                    break;
+                case 'k':
+                    this->castling_short_b = true;
+                    break;
+                case 'Q':
+                    this->castling_long_w = true;
+                    break;
+                case 'q':
+                    this->castling_long_b = true;
+                    break;
+                }
+            }
+            if (nbspace == 3) {
+                if (fen[i] != '-') {
+                    this->en_passant = true;
+                    this->en_passant_square = {fen[i], fen[i+1] - '0'};
+                    i++;
+                }
+            }
+            if (nbspace == 4) break;
+        }
 
         else if (fen[i] == 'r') {
             this->squares[idx] = new Rook(position, false);
@@ -28,7 +61,8 @@ void Board::init(string fen) {
             this->squares[idx] = new King(position, false);
             this->black_king = this->squares[idx];
         } else if (fen[i] == 'p') {
-            this->squares[idx] = new Pawn(position, false, line == 7);
+            this->squares[idx] = new Pawn(position, false, line == 7,
+                    &(this->en_passant), &(this->en_passant_square));
         }
 
         else if (fen[i] == 'R') {
@@ -43,7 +77,8 @@ void Board::init(string fen) {
             this->squares[idx] = new King(position, true);
             this->white_king = this->squares[idx];
         } else if (fen[i] == 'P') {
-            this->squares[idx] = new Pawn(position, true, line == 2);
+            this->squares[idx] = new Pawn(position, true, line == 2,
+                    &(this->en_passant), &(this->en_passant_square));
         }
 
         else if (fen[i] == '/') {
@@ -64,7 +99,6 @@ void Board::init(string fen) {
                     exit(-1);
                 }
         }
-
         idx++;
         row++;
     }
@@ -78,7 +112,6 @@ void Board::print_pieces () {
 }
 
 void Board::print_move (const char* move) {
-    
     square dep = {move[0], int(move[1] - '0')};
     square stop = {move[2], int(move[3] - '0')};
     int idx = squareToIdx(dep);
