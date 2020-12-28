@@ -60,5 +60,4 @@ class Board {
         
         bool en_passant = false;
         Square en_passant_square;
-
 };
