@@ -1,11 +1,11 @@
 #include "king.h"
 
-King::King (square position, bool white) : Piece(position, white) {
+King::King (Square position, bool white) : Piece(position, white) {
     this->name = "king";
     this->is_check = false;
 }
 
-bool King::check_move(square goal, Piece* squares[]) {
+bool King::check_move(Square goal, Piece* squares[]) {
     // Test if there is a not takeable piece at the goal
     if (checkIfPiece(squares[squareToIdx(goal)])) {
         if (!checkIfPieceIsTakeable(squares[squareToIdx(goal)])) {

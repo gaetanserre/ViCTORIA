@@ -1,10 +1,10 @@
 #include "rook.h"
 
-Rook::Rook(square position, bool white) : Piece(position, white) {
+Rook::Rook(Square position, bool white) : Piece(position, white) {
     this->name = "rook";
 }
 
-bool Rook::check_move(square goal, Piece* squares[]) {
+bool Rook::check_move(Square goal, Piece* squares[]) {
     // Test if there is a not takeable piece at the goal
     if (checkIfPiece(squares[squareToIdx(goal)])) {
         if (!checkIfPieceIsTakeable(squares[squareToIdx(goal)])) {
@@ -17,8 +17,8 @@ bool Rook::check_move(square goal, Piece* squares[]) {
             int init = this->position.line+1;
             auto test = [=] (int i) {return i < goal.line;};
             auto incr = [] (int* i) {*i = *i+1;};
-            auto pos = [=] (int i) -> square {
-                return {goal.row, i}; 
+            auto pos = [=] (int i) -> Square {
+                return Square(goal.row, i); 
             };
             return this->itermove(init, squares, test, incr, pos);
 
@@ -26,8 +26,8 @@ bool Rook::check_move(square goal, Piece* squares[]) {
             int init = this->position.line-1;
             auto test = [=] (int i) {return i > goal.line;};
             auto incr = [] (int* i) {*i = *i-1;};
-            auto pos = [=] (int i) -> square {
-                return {goal.row, i}; 
+            auto pos = [=] (int i) -> Square {
+                return Square(goal.row, i); 
             };
             return this->itermove(init, squares, test, incr, pos);
         }
@@ -38,8 +38,8 @@ bool Rook::check_move(square goal, Piece* squares[]) {
             int init = this->position.row+1;
             auto test = [=] (int i) {return i < goal.row;};
             auto incr = [] (int* i) {*i = *i+1;};
-            auto pos = [=] (int i) -> square {
-                return {char(i), goal.line};
+            auto pos = [=] (int i) -> Square {
+                return Square(char(i), goal.line);
             };
             return this->itermove(init, squares, test, incr, pos);
         }
@@ -48,8 +48,8 @@ bool Rook::check_move(square goal, Piece* squares[]) {
             int init = this->position.row-1;
             auto test = [=] (int i) {return i > goal.row;};
             auto incr = [] (int* i) {*i = *i-1;};
-            auto pos = [=] (int i) -> square {
-                return {char(i), goal.line};
+            auto pos = [=] (int i) -> Square {
+                return Square(char(i), goal.line);
             };
             return this->itermove(init, squares, test, incr, pos);
         }

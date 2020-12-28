@@ -1,38 +1,36 @@
 #pragma once
 
 #include <iostream>
-#include <string>
-
-struct square {
-    char row;
-    int line;
-};
+#include "../square.h"
 
 class Piece {
     public:
-        Piece (square position, bool white);
+        Piece (Square position, bool white);
         void print_piece ();
         
         std::string getName() { return this->name; }
-        void setPosition(square position) {this->position = position; };
+        void setPosition(Square position) { this->position = position; };
+        Square getPosition() { return this->position; }
         bool isWhite() { return this->white; };
 
         bool checkIfPieceIsTakeable(Piece* p);
-        virtual bool check_move(square goal, Piece* squares[])=0;
+        virtual bool check_move(Square goal, Piece* squares[])=0;
+        virtual bool en_prise(Square goal, Piece* squares[])=0;
 
         
     protected:
-        square position;
+        Square position;
         bool white;
         std::string name;
         bool itermove(
             int init, Piece* squares[],
             std::function<bool(int)> test,
             std::function<void(int*)> incr,
-            std::function<square(int)> pos
+            std::function<Square(int)> pos
         );
         bool PlusOrMinus(int value1, int value2, int n);
 };
 
 bool checkIfPiece(Piece *p);
-int squareToIdx(square c);
+int squareToIdx(Square c);
+Square IdxToSquare(int idx);

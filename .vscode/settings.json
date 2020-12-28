@@ -1,6 +1,13 @@
 {
     "files.associations": {
         "__node_handle": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "__bit_reference": "cpp",
+        "__string": "cpp",
+        "algorithm": "cpp",
+        "ios": "cpp",
+        "string": "cpp",
+        "type_traits": "cpp",
+        "iostream": "cpp"
     }
 }

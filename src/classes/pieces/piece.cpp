@@ -1,6 +1,6 @@
 #include "piece.h"
 
-Piece::Piece(square position, bool white) {
+Piece::Piece(Square position, bool white) {
     this->position = position;
     this->white = white;
 }
@@ -22,15 +22,6 @@ bool Piece::checkIfPieceIsTakeable(Piece* p) {
     } else return false;
 }
 
-int squareToIdx(square c) {
-    int row = c.row - 97;
-    int line = 7 - (c.line - 1);
-    return line * 8 + row;
-}
-
-bool checkIfPiece(Piece *p) {
-    return p->getName() != "Null";
-}
 
 bool Piece::PlusOrMinus(int value1, int value2, int n) {
     return value1 + n == value2 || value1 - n == value2;
@@ -40,17 +31,36 @@ bool Piece::itermove(
     int init, Piece* squares[],
     std::function<bool(int)> test,
     std::function<void(int*)> incr,
-    std::function<square(int)> pos
+    std::function<Square(int)> pos
 ) {
     int i = init;
     while (test(i)) {
-        square c = pos(i);
-        std::cout << c.row << c.line << std::endl;
+        Square c = pos(i);
+        //std::cout << c.row << c.line << std::endl;
         if (checkIfPiece(squares[squareToIdx(c)])) {
-            squares[squareToIdx(c)]->print_piece();
+            //squares[squareToIdx(c)]->print_piece();
             return false;
         }
         incr(&i);
     }
     return true;
+}
+
+
+
+
+int squareToIdx(Square c) {
+    int row = c.row - 97;
+    int line = 7 - (c.line - 1);
+    return line * 8 + row;
+}
+
+Square IdxToSquare(int idx) {
+    char row = 'a' + idx % 8;
+    int line = 1 + idx / 8;
+    return Square(row, line);
+}
+
+bool checkIfPiece(Piece *p) {
+    return p->getName() != "Null";
 }
