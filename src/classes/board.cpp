@@ -113,6 +113,10 @@ void Board::print_pieces () {
     cout << this->castling_long_w << " " << castling_short_w << endl;
     cout << this->castling_long_b << " " << castling_short_b << endl;
 
+    if (this->en_passant) {
+        cout << this->en_passant_square.row << this->en_passant_square.line << endl;
+    }
+
 }
 
 bool Board::isTakeable (Square s) {
@@ -264,9 +268,9 @@ bool isPromote (Piece* p) {
     return false;
 }
 
-bool Board::check_move (const char* move, bool play) {
-    Square dep(move[0], int(move[1] - '0'));
-    Square stop(move[2], int(move[3] - '0'));
+bool Board::check_move (ply p) {
+    Square dep = p.dep;
+    Square stop = p.stop;
     int idx_dep = squareToIdx(dep);
     int idx_stop = squareToIdx(stop);
 
@@ -279,9 +283,9 @@ bool Board::check_move (const char* move, bool play) {
         Piece* temp_stop = this->squares[idx_stop];
 
         // Promotion
-        if (strlen(move) == 5) {
+        if (p.promote) {
             if (! isPromote (this->squares[idx_dep])) return false;
-            if (move[4] == 'q')
+            if (p.prom == 'q')
                 this->squares[idx_stop] = new Queen(stop, temp->isWhite());
             else
                 this->squares[idx_stop] = new Knight(stop, temp->isWhite());
@@ -300,9 +304,63 @@ bool Board::check_move (const char* move, bool play) {
             return false;
         }
 
-        else {
-            // If we want to play the move, we check castles are still possible and we change side
-            if (play) {
+        this->squares[idx_dep] = temp;
+        this->squares[idx_dep]->setPosition(dep);
+        this->squares[idx_stop] = temp_stop;
+        return true;
+    }
+
+    // If the move was illegal, we check if it was a castle.
+    return check_castle({dep, stop});
+}
+
+bool Board::play_move(const char* move) {
+    Square dep = Square(move[0], int(move[1] - '0'));
+    Square stop = Square(move[2], int(move[3] - '0'));
+
+    ply p;
+
+    if (strlen(move) == 5) {
+        p = {dep, stop, true, move[4]};
+    } else
+        p = {dep, stop, false, ' '};
+
+    bool find = false;
+
+    for (ply m : this->legal_moves) {
+        if (m.dep == p.dep && m.stop == p.stop) {
+            find = true;
+            break;
+        }
+    }
+
+    if (find) {
+
+        int line = this->white ? 1 : 8;
+        bool castling = false;
+
+        if (dep == Square('e', line)) {
+            castling = stop == Square('g', line) || stop == Square('c', line);    
+        }
+
+        if (! castling) {
+            int idx_dep = squareToIdx(dep);
+            int idx_stop = squareToIdx(stop);
+
+            Piece* temp = this->squares[idx_dep];
+            this->squares[idx_dep] = new Empty();
+
+            if (p.promote) {
+                if (p.prom == 'q')
+                    this->squares[idx_stop] = new Queen(stop, temp->isWhite());
+                else
+                    this->squares[idx_stop] = new Knight(stop, temp->isWhite());
+            } else {
+                temp->setPosition(stop);
+                /*
+                    If we want to play the move, we check castles are still possible 
+                    and we change side
+                */
                 if (temp->getName() == "king") remove_castles();
                 if (temp->getName() == "rook") {
                     if (dep.row == 'a') {
@@ -312,50 +370,88 @@ bool Board::check_move (const char* move, bool play) {
                         remove_s_castle();
                     }
                 }
-                this->white = !this->white;
 
-            // else we go back to the previous position
-            } else {
-                this->squares[idx_dep] = temp;
-                this->squares[idx_dep]->setPosition(dep);
-                this->squares[idx_stop] = temp_stop;
+                /*
+                    We check pawn
+                */
+                if (temp->getName() == "pawn") {
+                    temp = new Pawn(temp->getPosition(), temp->isWhite(), false,
+                                &(this->en_passant), &(this->en_passant_square));
+                    
+                    // If pawn move 2 squares ahead
+                    if (abs(dep.line - stop.line) == 2) {
+                        this->en_passant = true;
+                        if (this->white)
+                            this->en_passant_square = Square(stop.row, stop.line-1);
+                        else
+                            this->en_passant_square = Square(stop.row, stop.line+1);
+                    } else
+                        this->en_passant = false;
+
+                    // If takes en passant
+                    if (stop == this->en_passant_square) {
+                        cout << "too" << endl;
+                        if (this->white) {
+                            this->squares[squareToIdx(Square(stop.row, stop.line-1))] = new Empty();
+                        } else
+                            this->squares[squareToIdx(Square(stop.row, stop.line+1))] = new Empty();
+
+                        this->en_passant = false;
+                    }
+                //en passant become false after moving a piece that is not a pawn
+                } else 
+                    this->en_passant = false;
+                
+                this->squares[idx_stop] = temp;
             }
+
+
+            this->white = !this->white;
+            this->squares[idx_dep] = new Empty();
+
+            return true;
+
+        } else {
+            play_castle(p);
             return true;
         }
-    }
 
-    // If the move was illegal, we check if it was a castle.
-    if (check_castle ({dep, stop})) {
-        if (play)
-            play_castle ({dep, stop});
-        return true;
-    }
-    return false;
+    } else return false;
 }
 
-vector<ply> Board::getLegalMoves () {
-    vector<ply> res;
+
+void Board::getLegalMoves () {
+    this->legal_moves.resize(0);
     for(int i = 0; i<64; i++) {
         for (int j = 0; j<64; j++) {
             if (checkIfPiece(this->squares[i]) && this->squares[i]->isWhite() == this->white) {
                 Square dep = this->squares[i]->getPosition();
-                string move;
-                move.push_back(dep.row);
-                move.push_back(dep.line + '0');
                 Square stop = IdxToSquare(j);
-                move.push_back(stop.row);
-                move.push_back(stop.line + '0');
+                int line = this->white ? 8 : 1;
+
+                if (this->squares[i]->getName() == "pawn" && stop.line == line) {
+                    if (check_move({dep, stop, true, 'q'}))
+                        this->legal_moves.push_back({dep, stop, true, 'q'});
+
+                    if (check_move({dep, stop, true, 'n'}))
+                        this->legal_moves.push_back({dep, stop, true, 'n'});
+                } 
                 
-                if (check_move(move.c_str(), false))
-                    res.push_back({dep, stop});
+                else {
+                    if (check_move({dep, stop, false, ' '}))
+                        this->legal_moves.push_back({dep, stop, false, ' '});
+                }
             }
         }
     }
     
-    for (ply p : res) {
-        cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << endl;
+    for (ply p : this->legal_moves) {
+        if (p.promote)
+            cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << p.prom << endl;
+        else
+            cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << endl;
     }
-    return res;
+    cout << this->legal_moves.size() << endl;
 }
 
 bool Board::isCheckmate(vector<ply> legal_moves) {
@@ -367,13 +463,13 @@ bool Board::isStalemate(vector<ply> legal_moves) {
 }
 
 bool Board::isOver() {
-    vector<ply> legal_moves = getLegalMoves();
-    if (isCheckmate(legal_moves)) {
+    getLegalMoves();
+    if (isCheckmate(this->legal_moves)) {
         cout << (this->white ? "Black" : "White") << " wins." << endl;
         return true;
     }
 
-    if (isStalemate(legal_moves)) {
+    if (isStalemate(this->legal_moves)) {
         cout << "Stalemate." << endl;
         return true;
     }

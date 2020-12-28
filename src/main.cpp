@@ -12,13 +12,12 @@ int main (int argc, char** argv) {
     b.print_pieces();
     
     string input;
-    b.getLegalMoves();
     while (!b.isOver()) {
         cout << "Type move :" << endl;
         cin >> input;
         if (input == "exit") break;
         const char* move = input.c_str();
-        if (b.check_move(move)) b.print_pieces();
+        if (b.play_move(move)) b.print_pieces();
         else cout << "Illegal move." << endl;
     }
     return 0;
