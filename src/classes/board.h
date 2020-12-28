@@ -19,9 +19,11 @@ struct ply {
 class Board {
     public:
         Board (){};
-        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         ~Board();
+
+        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         void print_pieces();
+
         bool play_move(const char* move);
         void getLegalMoves();
         bool isOver();
@@ -43,20 +45,20 @@ class Board {
         bool isCheckmate(vector<ply> legal_moves);
         bool isStalemate(vector<ply> legal_moves);
 
+
         Piece* squares[64];
+        vector<ply> legal_moves;
+        bool white = true;
+
         Piece* white_king;
         Piece* black_king;
 
         bool castling_short_w = false;
         bool castling_long_w = false;
-
         bool castling_short_b = false;
         bool castling_long_b = false;
-
-        bool white = true;
-
+        
         bool en_passant = false;
         Square en_passant_square;
 
-        vector<ply> legal_moves;
 };

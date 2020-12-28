@@ -186,8 +186,6 @@ bool Board::check_castle (ply p) {
     return false;
 }
 
-
-
 void Board::remove_s_castle() {
     if (this->white)
         this->castling_short_w = false;
