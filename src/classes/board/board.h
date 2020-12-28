@@ -21,11 +21,19 @@ class Board {
         Board (){};
         ~Board();
 
+        Piece* squares[64];
+
         void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         void print_pieces();
 
-        bool play_move(const char* move);
-        void getLegalMoves();
+        bool play_move(ply p);
+        bool play_move(const char *);
+        vector<ply> getLegalMoves() { return this->legal_moves; };
+        void changeSide() { this->white = ! this->white; };
+        bool isWhite() { return this->white; };
+
+        bool isCheckmate(vector<ply> legal_moves);
+        bool isStalemate(vector<ply> legal_moves);
         bool isOver();
 
     private:
@@ -42,22 +50,19 @@ class Board {
 
         bool isCheck();
 
-        bool isCheckmate(vector<ply> legal_moves);
-        bool isStalemate(vector<ply> legal_moves);
+        void computeLegalMoves();
 
-
-        Piece* squares[64];
         vector<ply> legal_moves;
-        bool white = true;
+        bool white;
 
         Piece* white_king;
         Piece* black_king;
 
-        bool castling_short_w = false;
-        bool castling_long_w = false;
-        bool castling_short_b = false;
-        bool castling_long_b = false;
+        bool castling_short_w;
+        bool castling_long_w;
+        bool castling_short_b;
+        bool castling_long_b;
         
-        bool en_passant = false;
+        bool en_passant;
         Square en_passant_square;
 };

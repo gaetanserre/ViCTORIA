@@ -21,6 +21,7 @@ void Board::init (string fen) {
 
             if (nbspace == 1) {
                 if (fen[i] == 'b') this->white = false;
+                else this->white = true;
             }
             if (nbspace == 2) {
                 switch (fen[i])
@@ -37,6 +38,13 @@ void Board::init (string fen) {
                 case 'q':
                     this->castling_long_b = true;
                     break;
+                
+                default:
+                    this->castling_long_b = false;
+                    this->castling_long_w = false;
+                    this->castling_short_b = false;
+                    this->castling_short_w = false;
+                    break;
                 }
             }
             if (nbspace == 3) {
@@ -44,7 +52,7 @@ void Board::init (string fen) {
                     this->en_passant = true;
                     this->en_passant_square = Square(fen[i], fen[i+1] - '0');
                     i++;
-                }
+                } else this->en_passant = false;
             }
             if (nbspace == 4) break;
         }
@@ -309,16 +317,9 @@ bool Board::check_move (ply p) {
     return check_castle({dep, stop});
 }
 
-bool Board::play_move(const char* move) {
-    Square dep = Square(move[0], int(move[1] - '0'));
-    Square stop = Square(move[2], int(move[3] - '0'));
-
-    ply p;
-
-    if (strlen(move) == 5) {
-        p = {dep, stop, true, move[4]};
-    } else
-        p = {dep, stop, false, ' '};
+bool Board::play_move (ply p) {
+    Square dep = p.dep;
+    Square stop = p.stop;
 
     bool find = false;
 
@@ -413,8 +414,21 @@ bool Board::play_move(const char* move) {
     } else return false;
 }
 
+bool Board::play_move (const char* move) {
+    Square dep = Square(move[0], int(move[1] - '0'));
+    Square stop = Square(move[2], int(move[3] - '0'));
 
-void Board::getLegalMoves () {
+    ply p;
+
+    if (strlen(move) == 5) {
+        p = {dep, stop, true, move[4]};
+    } else
+        p = {dep, stop, false, ' '};
+    
+    return play_move(p);
+}
+
+void Board::computeLegalMoves () {
     this->legal_moves.resize(0);
     for(int i = 0; i<64; i++) {
         for (int j = 0; j<64; j++) {
@@ -448,16 +462,16 @@ void Board::getLegalMoves () {
     cout << this->legal_moves.size() << endl;
 }
 
-bool Board::isCheckmate(vector<ply> legal_moves) {
+bool Board::isCheckmate (vector<ply> legal_moves) {
     return legal_moves.size() == 0 && isCheck();
 }
 
-bool Board::isStalemate(vector<ply> legal_moves) {
+bool Board::isStalemate (vector<ply> legal_moves) {
     return legal_moves.size() == 0 && !isCheck();
 }
 
-bool Board::isOver() {
-    getLegalMoves();
+bool Board::isOver () {
+    computeLegalMoves();
     if (isCheckmate(this->legal_moves)) {
         cout << (this->white ? "Black" : "White") << " wins." << endl;
         return true;
