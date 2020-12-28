@@ -186,15 +186,7 @@ bool Board::check_castle (ply p) {
     return false;
 }
 
-void Board::remove_castles () {
-    if (this->white) {
-        this->castling_long_w = false;
-        this->castling_short_w = false;
-    } else {
-        this->castling_long_b = false;
-        this->castling_short_b = false;
-    }
-}
+
 
 void Board::remove_s_castle() {
     if (this->white)
@@ -208,6 +200,11 @@ void Board::remove_l_castle() {
         this->castling_long_w = false;
     else
         this->castling_long_b = false;
+}
+
+void Board::remove_castles () {
+    remove_s_castle();
+    remove_l_castle();
 }
 
 /*
@@ -398,13 +395,12 @@ bool Board::play_move(const char* move) {
 
                         this->en_passant = false;
                     }
-                //en passant become false after moving a piece that is not a pawn
+                // en passant become false after moving a piece that is not a pawn
                 } else 
                     this->en_passant = false;
                 
                 this->squares[idx_stop] = temp;
             }
-
 
             this->white = !this->white;
             this->squares[idx_dep] = new Empty();
