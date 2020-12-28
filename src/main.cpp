@@ -1,4 +1,4 @@
-#include "classes/board.h"
+#include "classes/board/board.h"
 
 int main (int argc, char** argv) {
     Board b;
