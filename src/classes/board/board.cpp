@@ -404,7 +404,6 @@ bool Board::play_move (ply p) {
 
                     // If takes en passant
                     if (stop == this->en_passant_square) {
-                        cout << "too" << endl;
                         if (this->white) {
                             this->squares[squareToIdx(Square(stop.row, stop.line-1))] = new Empty();
                         } else

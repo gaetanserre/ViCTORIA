@@ -45,7 +45,7 @@ void Engine::parse_expr(string expr) {
     }
     
     else if (res[0] == "go") {
-        int depth = 5;
+        int depth = 3;
         if (res.size() > 2 && res[1] == "depth") {
             depth = stoi(res[2]);
         }
@@ -84,9 +84,9 @@ Score Engine::evalPosition() {
 
     if (isOver) {
         if (this->board.isCheckmate())
-            return Score(0, true, 0);
+            return Score(0, true, !this->board.isWhite(), 0);
         else
-            return Score(0, false, 0);
+            return Score(0, false, false, 0);
     } else {
         const int kingV = 200;
         const int queenV = 9;
@@ -156,11 +156,11 @@ Score Engine::evalPosition() {
         this->board.changeSide();
 
         int mobility_score = mobilityV * (mobility_white - mobility_black);
-        int score = (material_score + mobility_score) * (this->board.isWhite() ? -1 : 1);
+        int score = (material_score + mobility_score);
 
         //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
 
-        return Score(score, false, 0);
+        return Score(score, false, false, 0);
 
     }
 
@@ -170,7 +170,8 @@ Score Engine::inDepthAnalysis(int depth) {
 
     this->board.computeLegalMoves();
     bool isOver = this->board.isOver();
-    Score max_score (0, false, 0);
+    bool first =  true;
+    Score max_score (0, false, false, 0);
 
     if (! isOver && depth > 0) {
         vector<ply> legal_moves = this->board.getLegalMoves();
@@ -186,7 +187,11 @@ Score Engine::inDepthAnalysis(int depth) {
 
             temp.plies.push_back(p);
             
-            max_score = Score::max(max_score, temp, this->board.isWhite());
+            if (first) {
+                max_score = temp;
+                first = false;
+            } else 
+                max_score = Score::max(max_score, temp, this->board.isWhite());
 
             if (max_score.mate) {
                 if (max_score.n_mate < 2) {

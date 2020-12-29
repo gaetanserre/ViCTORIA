@@ -2,7 +2,7 @@ args = -std=c++2a -O3
 
 all: IA_chess
 
-IA_chess : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o board.o engine.o ../src/main.cpp
+IA_chess : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o board.o score.o engine.o ../src/main.cpp
 	rm -rf ../out
 	mkdir ../out
 	g++ $^ $(args) -o ../out/$@
@@ -31,7 +31,10 @@ piece.o : ../src/classes/board/pieces/piece.cpp
 board.o: ../src/classes/board/board.cpp
 	g++ $< $(args) -c
 
-engine.o: ../src/classes/AI/engine.cpp
+engine.o: ../src/classes/AI/engine.cpp score.o
+	g++ $< $(args) -c
+
+score.o: ../src/classes/AI/score.cpp
 	g++ $< $(args) -c
 
 clean:
