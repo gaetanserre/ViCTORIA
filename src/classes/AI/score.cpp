@@ -7,12 +7,18 @@ void Score::print() {
         cout << "score: " << this->score << endl;
     }
 
-    reverse(this->plies.begin(), this->plies.end());
-    cout << "bestmove ";
-    print_ply(this->plies[0]);
-    cout << " ponder ";
-    print_ply(this->plies[1]);
-    cout << endl;
+    if (plies.size() > 0) {
+        cout << "bestmove ";
+        print_ply(this->plies[0]);
+        if (plies.size() > 1) {
+            cout << " ponder ";
+            for (int i = 1; i<this->plies.size(); i++) {
+                print_ply(this->plies[i]);
+                cout << " ";
+            }
+        }
+        cout << endl;
+    }
 }
 
 void Score::print_ply(ply p) {

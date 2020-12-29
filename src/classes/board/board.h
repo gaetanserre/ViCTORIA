@@ -23,11 +23,11 @@ class Board {
 
         Piece* squares[64];
 
-        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        void init(string fen = "1k2r3/8/8/8/8/8/5PPP/R3q2K w - - 0 1");
         void printPieces();
         void printLegalMoves();
 
-        bool play_move(ply p);
+        bool play_move(ply p, bool force = false);
         bool play_move(const char *);
 
         void undo_move();
@@ -37,6 +37,7 @@ class Board {
         void setLegalMoves(vector<ply> legal_moves) { this->legal_moves = legal_moves; };
         void changeSide() { this->white = ! this->white; };
         bool isWhite() { return this->white; };
+        void setWhite(bool isWhite) { this->white = isWhite; } 
 
         bool isCheckmate();
         bool isStalemate();

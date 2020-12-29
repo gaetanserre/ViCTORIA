@@ -333,20 +333,22 @@ bool Board::check_move (ply p) {
     return check_castle({dep, stop});
 }
 
-bool Board::play_move (ply p) {
+bool Board::play_move (ply p, bool force) {
     Square dep = p.dep;
     Square stop = p.stop;
 
-    bool find = false;
+    bool found = false;
 
-    for (ply m : this->legal_moves) {
-        if (m.dep == p.dep && m.stop == p.stop) {
-            find = true;
-            break;
+    if (! force) {
+        for (ply m : this->legal_moves) {
+            if (m.dep == p.dep && m.stop == p.stop) {
+                found = true;
+                break;
+            }
         }
     }
 
-    if (find) {
+    if (found || force) {
 
         this->fens.push_back(getFen());
 

@@ -3,7 +3,6 @@
 #include "../board/board.h"
 
 #include <sstream>
-#include <algorithm>
 
 class Score {
     public:
@@ -12,6 +11,13 @@ class Score {
             this->mate = mate;
             this->white_mate = white_mate;
             this->n_mate = n_mate;
+        };
+
+        Score() {
+            this->score=0;
+            this->mate=false;
+            this->white_mate=false;
+            this->n_mate=0;
         };
 
         static Score max (Score s1, Score s2, bool white);

@@ -42,6 +42,7 @@ void Engine::parse_expr(string expr) {
         if (this->board.isStalemate()) {
             cout << "Stalemate." << endl;
         }
+        cout << this->board.isWhite() << endl;
     }
     
     else if (res[0] == "go") {
@@ -68,7 +69,6 @@ void Engine::parse_expr(string expr) {
     }
 
     else if (expr == "eval") {
-        this->board.computeLegalMoves();
         Score s = evalPosition();
         s.print();
     }
@@ -79,6 +79,7 @@ void Engine::parse_expr(string expr) {
 }
 
 Score Engine::evalPosition() {
+    this->board.computeLegalMoves();
     vector<ply> legal_moves = this->board.getLegalMoves();
     bool isOver = this->board.isOver();
 
@@ -166,45 +167,77 @@ Score Engine::evalPosition() {
 
 }
 
-Score Engine::inDepthAnalysis(int depth) {
+/*
+    We go through the tree of possible cuts in stages.
+    Thus, if we encounter checkmate, we can stop the search because
+    no combination of moves can be better (at best it will be equivalent).
+*/
+
+Score Engine::inDepthAnalysis (int depth) {
+
+    if (depth == 0) return evalPosition();
 
     this->board.computeLegalMoves();
-    bool isOver = this->board.isOver();
-    bool first =  true;
-    Score max_score (0, false, false, 0);
+    vector<ply> legal_moves = this->board.getLegalMoves();
 
-    if (! isOver && depth > 0) {
-        vector<ply> legal_moves = this->board.getLegalMoves();
+    if (legal_moves.size() == 0) return evalPosition();
 
-        for (ply p : legal_moves) {
-            
-            this->board.play_move(p);
 
-            Score temp = inDepthAnalysis(depth-1);
-        
-            this->board.undo_move();
-            this->board.setLegalMoves(legal_moves);
+    // First we evaluate the position for each legal moves
 
-            temp.plies.push_back(p);
-            
-            if (first) {
-                max_score = temp;
-                first = false;
-            } else 
-                max_score = Score::max(max_score, temp, this->board.isWhite());
+    vector<Score> scores;
 
-            if (max_score.mate) {
-                if (max_score.n_mate < 2) {
-                    max_score.n_mate++;
-                    return max_score;
-                } else 
-                    depth = max_score.n_mate - 1;
-            }
-        }
-        max_score.n_mate++;
-        return max_score;
+    for (ply p : legal_moves) {
+        this->board.play_move(p, true);
+        Score s = evalPosition();
+        this->board.undo_move();
 
-    } else {
-        return evalPosition();
+        s.plies.push_back(p);
+        s.n_mate = s.plies.size();
+
+        //If mate in 1
+        if (s.mate && s.white_mate == this->board.isWhite())
+            return s;
+
+        scores.push_back(s);
     }
+
+    // Then we store all variants starting with depth 1, 2, 3 etc...
+
+    vector<Score> res;
+    for (Score s : scores)
+        res.push_back(s);
+
+    for (int i = 1; i<depth; i++) {
+        for (int j = 0; j<scores.size(); j++) {
+            
+            int nb_move = scores[j].plies.size();
+            for (ply p : scores[j].plies)
+                this->board.play_move(p, true);
+            
+
+            Score temp = inDepthAnalysis(i);
+            temp.plies.insert(temp.plies.begin(), scores[j].plies.begin(), scores[j].plies.end());
+            temp.n_mate = temp.plies.size();
+
+            res[j] = temp;
+
+            for (int k = 0; k<nb_move; k++)
+                this->board.undo_move();
+            
+            // If one of the variants is checkmate, we return it.
+            if (temp.mate && temp.white_mate == this->board.isWhite())
+                return temp;
+        }
+    }
+
+    // Finally we return the best variant
+
+    Score max_score = res[0];
+    for (int i = 1; i<res.size(); i++) {
+        max_score = Score::max(max_score, res[i], this->board.isWhite());
+    }
+
+    return max_score;
+
 }
