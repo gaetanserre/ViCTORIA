@@ -1,5 +1,4 @@
 #include "board.h"
-#include <stdio.h>
 
 Board::~Board() {
     for (int i = 0; i<64; i++)
@@ -153,7 +152,7 @@ bool Board::isTakeable (Square s) {
     return false;
 }
 
-bool Board::isCheck() {
+bool Board::isCheck () {
     if (this->white) 
         return isTakeable (this->white_king->getPosition());
     else
@@ -209,14 +208,14 @@ bool Board::check_castle (ply p) {
     return false;
 }
 
-void Board::remove_s_castle() {
+void Board::remove_s_castle () {
     if (this->white)
         this->castling_short_w = false;
     else
         this->castling_short_b = false;
 }
 
-void Board::remove_l_castle() {
+void Board::remove_l_castle () {
     if (this->white)
         this->castling_long_w = false;
     else
@@ -451,7 +450,7 @@ bool Board::play_move (const char* move) {
     return play_move(p);
 }
 
-void Board::undo_move() {
+void Board::undo_move () {
     if (fens.size() > 0) {
         string fen = this->fens.back();
         this->fens.pop_back();
@@ -505,7 +504,7 @@ bool Board::isOver () {
     return false;
 }
 
-string Board::getFen() {
+string Board::getFen () {
     string fen = "";
 
     int empty = 0;

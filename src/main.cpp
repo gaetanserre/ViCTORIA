@@ -7,7 +7,5 @@ int main (int argc, char** argv) {
         getline(cin, input);
         engine.parse_expr(input);
     }
-
-
     return 0;
 }

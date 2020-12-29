@@ -202,7 +202,6 @@ Score Engine::evalPosition() {
     Thus, if we encounter checkmate, we can stop the search because
     no combination of moves can be better (at best it will be equivalent).
 */
-
 Score Engine::inDepthAnalysis (int depth) {
 
     if (depth == 0) return evalPosition();
