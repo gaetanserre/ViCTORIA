@@ -23,7 +23,7 @@ class Board {
 
         Piece* squares[64];
 
-        void init(string fen = "1k2r3/8/8/8/8/8/5PPP/R3q2K w - - 0 1");
+        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         void printPieces();
         void printLegalMoves();
 
