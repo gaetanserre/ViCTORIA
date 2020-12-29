@@ -11,6 +11,7 @@ void Board::init (string fen) {
     int line = 8;
     int idx = 0;
     int nbspace = 0;
+    string nb_moves_str = "";
 
     for (int i = 0; i<fen.length(); i++) {
         Square position(char(row), line);
@@ -54,7 +55,9 @@ void Board::init (string fen) {
                     i++;
                 } else this->en_passant = false;
             }
-            if (nbspace == 4) break;
+            if (nbspace == 5) {
+                nb_moves_str += fen[i];
+            }
         }
 
         else if (fen[i] == 'r') {
@@ -110,9 +113,10 @@ void Board::init (string fen) {
         idx++;
         row++;
     }
+    this->nb_moves = stoi(nb_moves_str);
 }
 
-void Board::print_pieces () {
+void Board::printPieces () {
     for (int i = 0; i<64; i++) {
         if (checkIfPiece(this->squares[i]))
             this->squares[i]->print_piece();
@@ -126,6 +130,17 @@ void Board::print_pieces () {
     }
 
 }
+
+void Board::printLegalMoves () {
+    computeLegalMoves();
+    for (ply p : this->legal_moves) {
+        if (p.promote)
+            cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << p.prom << endl;
+        else
+            cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << endl;
+    }
+    cout << "nb: " << this->legal_moves.size() << endl;
+} 
 
 bool Board::isTakeable (Square s) {
     for (int i = 0; i<64; i++) {
@@ -250,6 +265,7 @@ void Board::play_castle (ply p) {
 
     remove_castles();
     this->white = not white;
+    this->nb_moves++;
 }
 
 bool Board::check_move_min (ply p) {
@@ -332,6 +348,8 @@ bool Board::play_move (ply p) {
 
     if (find) {
 
+        this->fens.push_back(getFen());
+
         int line = this->white ? 1 : 8;
         bool castling = false;
 
@@ -404,6 +422,8 @@ bool Board::play_move (ply p) {
             this->white = !this->white;
             this->squares[idx_dep] = new Empty();
 
+            this->nb_moves++;
+
             return true;
 
         } else {
@@ -411,7 +431,9 @@ bool Board::play_move (ply p) {
             return true;
         }
 
-    } else return false;
+    } else  {
+        return false;
+    }
 }
 
 bool Board::play_move (const char* move) {
@@ -426,6 +448,14 @@ bool Board::play_move (const char* move) {
         p = {dep, stop, false, ' '};
     
     return play_move(p);
+}
+
+void Board::undo_move() {
+    if (fens.size() > 0) {
+        string fen = this->fens.back();
+        this->fens.pop_back();
+        init(fen);
+    }
 }
 
 void Board::computeLegalMoves () {
@@ -452,35 +482,86 @@ void Board::computeLegalMoves () {
             }
         }
     }
-    
-    for (ply p : this->legal_moves) {
-        if (p.promote)
-            cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << p.prom << endl;
-        else
-            cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << endl;
-    }
-    cout << this->legal_moves.size() << endl;
 }
 
-bool Board::isCheckmate (vector<ply> legal_moves) {
-    return legal_moves.size() == 0 && isCheck();
+bool Board::isCheckmate () {
+    return this->legal_moves.size() == 0 && isCheck();
 }
 
-bool Board::isStalemate (vector<ply> legal_moves) {
-    return legal_moves.size() == 0 && !isCheck();
+bool Board::isStalemate () {
+    return this->legal_moves.size() == 0 && !isCheck();
 }
 
 bool Board::isOver () {
-    computeLegalMoves();
-    if (isCheckmate(this->legal_moves)) {
-        cout << (this->white ? "Black" : "White") << " wins." << endl;
+    if (isCheckmate()) {
         return true;
     }
 
-    if (isStalemate(this->legal_moves)) {
-        cout << "Stalemate." << endl;
+    if (isStalemate()) {
         return true;
     }
 
     return false;
+}
+
+string Board::getFen() {
+    string fen = "";
+
+    int empty = 0;
+    for (int i = 0; i<64; i++) {
+        if (i % 8 == 0 && i != 0) {
+            if (empty > 0)
+                fen += to_string(empty); empty = 0;
+            fen += "/";
+        }
+
+        if (! checkIfPiece(this->squares[i]))
+            empty++;
+        else {
+            if (empty > 0) fen += to_string(empty); empty = 0;
+
+            string name = this->squares[i]->getName();
+            bool white = this->squares[i]->isWhite();
+
+            if (name == "king")
+                fen += (white ? "K" : "k");
+            if (name == "queen")
+                fen += (white ? "Q" : "q");
+            if (name == "rook")
+                fen += (white ? "R" : "r");
+            if (name == "bishop")
+                fen += (white ? "B" : "b");
+            if (name == "knight")
+                fen += (white ? "N" : "n");
+            if (name == "pawn")
+                fen += (white ? "P" : "p");
+        }
+    }
+
+    if (empty > 0)
+        fen += to_string(empty);
+
+    fen += " ";
+    fen += (this->white ? "w " : "b ");
+
+    if (this->castling_short_w ||
+        this->castling_short_b ||
+        this->castling_long_w ||
+        this->castling_long_b) {
+
+        fen += (this->castling_short_w ? "K" : "");
+        fen += (this->castling_long_w ? "Q" : "");
+        fen += (this->castling_short_b ? "k" : "");
+        fen += (this->castling_long_b ? "q " : " ");
+    } else
+        fen += "- ";
+
+    if (this->en_passant)
+        fen += this->en_passant_square.row + to_string(this->en_passant_square.line) + " ";
+    else
+        fen += "- ";
+
+    fen += "0 " + to_string((this->nb_moves - 1) / 2 + 1);
+
+    return fen;
 }

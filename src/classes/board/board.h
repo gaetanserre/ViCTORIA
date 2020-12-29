@@ -23,18 +23,26 @@ class Board {
 
         Piece* squares[64];
 
-        void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-        void print_pieces();
+        void init(string fen = "2k5/7R/2K5/8/8/8/8/8 w - - 0 1");
+        void printPieces();
+        void printLegalMoves();
 
         bool play_move(ply p);
         bool play_move(const char *);
+
+        void undo_move();
+        string getFen();
+
         vector<ply> getLegalMoves() { return this->legal_moves; };
+        void setLegalMoves(vector<ply> legal_moves) { this->legal_moves = legal_moves; };
         void changeSide() { this->white = ! this->white; };
         bool isWhite() { return this->white; };
 
-        bool isCheckmate(vector<ply> legal_moves);
-        bool isStalemate(vector<ply> legal_moves);
+        bool isCheckmate();
+        bool isStalemate();
         bool isOver();
+        void computeLegalMoves();
+
 
     private:
         bool check_move_min(ply p);
@@ -50,8 +58,6 @@ class Board {
 
         bool isCheck();
 
-        void computeLegalMoves();
-
         vector<ply> legal_moves;
         bool white;
 
@@ -65,4 +71,7 @@ class Board {
         
         bool en_passant;
         Square en_passant_square;
+
+        int nb_moves;
+        vector<string> fens;
 };

@@ -18,6 +18,10 @@ class Square {
             this->line = -1;
         }
 
+        void print() {
+            std::cout << this->row << this->line;
+        }
+
         bool operator==(Square s) {
             return this->row == s.row && this->line == s.line;
         }

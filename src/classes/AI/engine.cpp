@@ -27,8 +27,50 @@ void Engine::parse_expr(string expr) {
             }
             this->board.init(fen);
         }
-    } else if (expr == "go") {
-        inDepthAnalysis(10);
+    } 
+
+    else if (res.size() == 2 && res[0] == "play") {
+        this->board.computeLegalMoves();
+        this->board.play_move(res[1].c_str());
+        this->board.printPieces();
+
+        this->board.computeLegalMoves();
+        if (this->board.isCheckmate()) {
+            cout << (this->board.isWhite() ? "black" : "white") << " wins." << endl;
+        }
+
+        if (this->board.isStalemate()) {
+            cout << "Stalemate." << endl;
+        }
+    }
+    
+    else if (res[0] == "go") {
+        int depth = 5;
+        if (res.size() > 2 && res[1] == "depth") {
+            depth = stoi(res[2]);
+        }
+        Score s = inDepthAnalysis(depth);
+        s.print();
+    }
+    
+
+    else if (expr == "fen") {
+        cout << this->board.getFen() << endl;
+    }
+
+    else if (expr == "undo") {
+        this->board.undo_move();
+        this->board.printPieces();
+    }
+
+    else if (expr == "legal") {
+        this->board.printLegalMoves();
+    }
+
+    else if (expr == "eval") {
+        this->board.computeLegalMoves();
+        Score s = evalPosition();
+        s.print();
     }
     
     else if (expr != "quit") {
@@ -37,21 +79,21 @@ void Engine::parse_expr(string expr) {
 }
 
 Score Engine::evalPosition() {
-    vector<ply> legal_moves;
+    vector<ply> legal_moves = this->board.getLegalMoves();
     bool isOver = this->board.isOver();
-    legal_moves = this->board.getLegalMoves();
-    if (isOver) {
-        if (this->board.isStalemate(legal_moves))
-            return Score(0, true, 0);
 
+    if (isOver) {
+        if (this->board.isCheckmate())
+            return Score(0, true, 0);
         else
             return Score(0, false, 0);
     } else {
+        const int kingV = 200;
+        const int queenV = 9;
         const int rookV = 5;
         const int BNV = 3;
-        const int queenV = 9;
         const int pawnV = 1;
-        const int kingV = 200;
+        
         const float mobilityV = 0.2;
 
         int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
@@ -85,7 +127,7 @@ Score Engine::evalPosition() {
                 p->isWhite() ? wP++ : bP++;
             }
         }
-        cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
+        //cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
             
         int material_score =  kingV * (wK - bK)
                             + queenV * (wQ - bQ)
@@ -109,14 +151,15 @@ Score Engine::evalPosition() {
             
         // Compute mobility for the other side
         this->board.changeSide();
-        this->board.isOver();
+        this->board.computeLegalMoves();
         *other_mobility = this->board.getLegalMoves().size();
         this->board.changeSide();
 
         int mobility_score = mobilityV * (mobility_white - mobility_black);
-        int score = (material_score + mobility_score) * (this->board.isWhite() ? 1 : -1);
+        int score = (material_score + mobility_score) * (this->board.isWhite() ? -1 : 1);
 
-        cout << score << endl;
+        //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
+
         return Score(score, false, 0);
 
     }
@@ -124,22 +167,37 @@ Score Engine::evalPosition() {
 }
 
 Score Engine::inDepthAnalysis(int depth) {
+
+    this->board.computeLegalMoves();
     bool isOver = this->board.isOver();
     Score max_score (0, false, 0);
+
     if (! isOver && depth > 0) {
         vector<ply> legal_moves = this->board.getLegalMoves();
 
         for (ply p : legal_moves) {
+            
             this->board.play_move(p);
+
             Score temp = inDepthAnalysis(depth-1);
+        
+            this->board.undo_move();
+            this->board.setLegalMoves(legal_moves);
 
-            if (temp > max_score) max_score = temp;
+            temp.plies.push_back(p);
+            
+            max_score = Score::max(max_score, temp, this->board.isWhite());
 
-            if (max_score.mate) depth = max_score.n_mate;
-
-            //Implémenter undo move
+            if (max_score.mate) {
+                if (max_score.n_mate < 2) {
+                    max_score.n_mate++;
+                    return max_score;
+                } else 
+                    depth = max_score.n_mate - 1;
+            }
         }
-        return Score (max_score.score, max_score.mate, max_score.n_mate+1);
+        max_score.n_mate++;
+        return max_score;
 
     } else {
         return evalPosition();
