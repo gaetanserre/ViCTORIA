@@ -42,7 +42,6 @@ void Engine::parse_expr(string expr) {
         if (this->board.isStalemate()) {
             cout << "Stalemate." << endl;
         }
-        cout << this->board.isWhite() << endl;
     }
     
     else if (res[0] == "go") {
