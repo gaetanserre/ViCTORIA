@@ -1,7 +1,9 @@
 #include "engine.h"
 
+#include <fstream>
+
 Engine::Engine() {
-    cout << "Chess AI Engine version alpha." << endl;
+    cout << "Chess AI Engine version alpha" << endl;
     this->board.init();
 }
 
@@ -18,16 +20,36 @@ vector<string> split (const string &s, char delim) {
 }
 
 void Engine::parse_expr(string expr) {
+
+   ofstream outfile;
+   outfile.open("/home/gaetan/Documents/command.txt", ios::app);
+   outfile << expr << endl;
+   outfile.close();
+
     vector<string> res = split(expr, ' ');
 
+    // parse expression of type : position fen [fen] moves [moves]
     if (res.size() > 7) {
         if (res[0] == "position" && res[1] == "fen") {
             string fen = "";
-            for (int i = 2; i<res.size(); i++) {
+            for (int i = 2; i<8; i++) {
                 fen += res[i] + " ";
             }
+            replace(fen.begin(), fen.end(), 'A', 'K');
+            replace(fen.begin(), fen.end(), 'H', 'Q');
+            replace(fen.begin(), fen.end(), 'a', 'k');
+            replace(fen.begin(), fen.end(), 'h', 'q');
+
             this->board.init(fen);
         }
+
+        if (res.size() > 9 && res[8] == "moves") {
+            for (int i = 9; i<res.size(); i++) {
+                this->board.computeLegalMoves();
+                this->board.play_move(res[i].c_str());
+            }
+        }
+
     } 
 
     else if (res.size() == 2 && res[0] == "play") {
@@ -51,9 +73,9 @@ void Engine::parse_expr(string expr) {
             depth = stoi(res[2]);
         }
 
-        Score s = inDepthAnalysis(depth);
-        s.print_info(depth);
-        if (res.size() > 2 && res[1] == "depth") s.print();
+        this->best_move = inDepthAnalysis(depth);
+        this->best_move.print_info(depth);
+        if (res.size() > 2 && res[1] == "depth") best_move.print();
     }
     
 
@@ -73,6 +95,19 @@ void Engine::parse_expr(string expr) {
     else if (expr == "eval") {
         Score s = evalPosition();
         s.print();
+    }
+
+    else if (expr == "uci") {
+        cout << "id name Chess AI Engine 1.0" << endl;
+        cout << "uciok" << endl;
+    }
+
+    else if (expr == "isready") {
+        cout << "readyok" << endl;
+    }
+
+    else if (expr == "stop") {
+        this->best_move.print();
     }
     
     else if (expr != "quit") {
@@ -97,7 +132,7 @@ Score Engine::evalPosition() {
         const int BNV = 300;
         const int pawnV = 100;
         
-        const float mobilityV = 0.2;
+        const float mobilityV = 30;
 
         int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
             wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;

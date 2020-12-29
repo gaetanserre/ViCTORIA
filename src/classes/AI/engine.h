@@ -3,6 +3,7 @@
 #include "../board/board.h"
 
 #include <sstream>
+#include <algorithm>
 
 class Score {
     public:
@@ -43,4 +44,6 @@ class Engine {
         Board board;
         Score evalPosition();
         Score inDepthAnalysis (int depth);
+
+        Score best_move;
 };
