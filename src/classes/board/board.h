@@ -7,6 +7,7 @@
 #include "pieces/empty.h"
 
 #include <vector>
+#include <cstring>
 using namespace std;
 
 struct ply {
