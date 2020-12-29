@@ -44,6 +44,8 @@ class Board {
         bool isOver();
         void computeLegalMoves();
 
+        void resetFens() { this->fens.clear(); };
+
 
     private:
         bool check_move_min(ply p);

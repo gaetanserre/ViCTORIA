@@ -1,6 +1,7 @@
 #include "engine.h"
 
 Engine::Engine() {
+    cout << "Chess AI Engine version alpha." << endl;
     this->board.init();
 }
 
@@ -49,8 +50,10 @@ void Engine::parse_expr(string expr) {
         if (res.size() > 2 && res[1] == "depth") {
             depth = stoi(res[2]);
         }
+
         Score s = inDepthAnalysis(depth);
-        s.print();
+        s.print_info(depth);
+        if (res.size() > 2 && res[1] == "depth") s.print();
     }
     
 
@@ -88,11 +91,11 @@ Score Engine::evalPosition() {
         else
             return Score(0, false, false, 0);
     } else {
-        const int kingV = 200;
-        const int queenV = 9;
-        const int rookV = 5;
-        const int BNV = 3;
-        const int pawnV = 1;
+        const int kingV = 20000;
+        const int queenV = 900;
+        const int rookV = 500;
+        const int BNV = 300;
+        const int pawnV = 100;
         
         const float mobilityV = 0.2;
 
@@ -195,8 +198,10 @@ Score Engine::inDepthAnalysis (int depth) {
         s.n_mate = s.plies.size();
 
         //If mate in 1
-        if (s.mate && s.white_mate == this->board.isWhite())
+        if (s.mate && s.white_mate == this->board.isWhite()) {
+            //s.print_info(1);
             return s;
+        }
 
         scores.push_back(s);
     }
@@ -210,7 +215,9 @@ Score Engine::inDepthAnalysis (int depth) {
     for (int i = 1; i<depth; i++) {
         for (int j = 0; j<scores.size(); j++) {
             
-            int nb_move = scores[j].plies.size();
+            //We store the initial position
+            string initPos = this->board.getFen();
+
             for (ply p : scores[j].plies)
                 this->board.play_move(p, true);
             
@@ -221,8 +228,9 @@ Score Engine::inDepthAnalysis (int depth) {
 
             res[j] = temp;
 
-            for (int k = 0; k<nb_move; k++)
-                this->board.undo_move();
+            // We restore the initial position
+            //this->board.resetFens();
+            this->board.init(initPos);
             
             // If one of the variants is checkmate, we return it.
             if (temp.mate && temp.white_mate == this->board.isWhite())
@@ -238,5 +246,4 @@ Score Engine::inDepthAnalysis (int depth) {
     }
 
     return max_score;
-
 }

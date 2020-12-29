@@ -1,24 +1,35 @@
 #include "engine.h"
 
 void Score::print() {
-    if (this->mate) {
-        cout << "mate in " << this->n_mate << endl;
-    } else {
-        cout << "score: " << this->score << endl;
-    }
 
     if (plies.size() > 0) {
         cout << "bestmove ";
         print_ply(this->plies[0]);
         if (plies.size() > 1) {
             cout << " ponder ";
-            for (int i = 1; i<this->plies.size(); i++) {
-                print_ply(this->plies[i]);
-                cout << " ";
-            }
+            print_ply(this->plies[1]);
         }
         cout << endl;
     }
+}
+
+void Score::print_info(int depth) {
+    cout << "info depth " << depth << " seldepth " << depth;
+    cout << " score ";
+    if (this->mate) {
+        int n = this->n_mate / 2;
+        if (this->n_mate % 2)
+            n++;
+        cout << "mate " << n;
+    }
+    else cout << "cp " << this->score;
+
+    cout << " pv ";
+    for (ply p : this->plies) {
+        print_ply(p);
+        cout << " ";
+    }
+    cout << endl;
 }
 
 void Score::print_ply(ply p) {

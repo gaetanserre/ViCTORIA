@@ -23,6 +23,7 @@ class Score {
         static Score max (Score s1, Score s2, bool white);
 
         void print();
+        void print_info(int depth);
         static void print_ply (ply p);
 
         int score;
