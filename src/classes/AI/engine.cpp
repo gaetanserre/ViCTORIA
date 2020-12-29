@@ -1,7 +1,5 @@
 #include "engine.h"
 
-#include <fstream>
-
 Engine::Engine() {
     cout << "Chess AI Engine version alpha" << endl;
     this->board.init();
@@ -20,11 +18,6 @@ vector<string> split (const string &s, char delim) {
 }
 
 void Engine::parse_expr(string expr) {
-
-   ofstream outfile;
-   outfile.open("/home/gaetan/Documents/command.txt", ios::app);
-   outfile << expr << endl;
-   outfile.close();
 
     vector<string> res = split(expr, ' ');
 
