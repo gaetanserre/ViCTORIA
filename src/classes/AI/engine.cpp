@@ -62,6 +62,7 @@ void Engine::parse_expr(string expr) {
     
     else if (res[0] == "go") {
         int depth = 3;
+        
         if (res.size() > 2 && res[1] == "depth") {
             depth = stoi(res[2]);
         }

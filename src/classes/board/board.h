@@ -62,6 +62,8 @@ class Board {
 
         bool isCheck();
 
+        void checkRepetitions();
+
         vector<ply> legal_moves;
         bool white;
 
@@ -78,4 +80,7 @@ class Board {
 
         int nb_moves;
         vector<string> fens;
+
+        vector<ply> last_move;
+        int nb_rep = 0;
 };
