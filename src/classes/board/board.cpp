@@ -522,7 +522,7 @@ void Board::undo_move () {
 
 void Board::computeLegalMoves () {
     this->legal_moves.resize(0);
-    if (this->nb_rep < 3 || true) { // Fix the stalemate by repetitions
+    if (this->nb_rep < 3) { // Fix the stalemate by repetitions
         for(int i = 0; i<64; i++) {
             for (int j = 0; j<64; j++) {
                 if (checkIfPiece(this->squares[i]) && this->squares[i]->isWhite() == this->white) {

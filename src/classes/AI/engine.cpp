@@ -20,26 +20,25 @@ void Engine::parse_expr(string expr) {
     vector<string> res = split(expr, ' ');
 
     // parse expression of type : position fen [fen] moves [moves]
-    if (res.size() > 1) {
+    if (res.size() > 1 && res[0] == "position") {
         int moves_idx = 8;
 
-        if (res[0] == "position") {
-            if (res[1] == "fen") {
-                string fen = "";
-                for (int i = 2; i<8; i++) {
-                    fen += res[i] + " ";
-                }
-                replace(fen.begin(), fen.end(), 'A', 'K');
-                replace(fen.begin(), fen.end(), 'H', 'Q');
-                replace(fen.begin(), fen.end(), 'a', 'k');
-                replace(fen.begin(), fen.end(), 'h', 'q');
-
-                this->board.init(fen);
-            } else if (res[1] == "startpos") {
-                this->board.init();
-                moves_idx = 2;
+        if (res[1] == "fen") {
+            string fen = "";
+            for (int i = 2; i<8; i++) {
+                fen += res[i] + " ";
             }
+            replace(fen.begin(), fen.end(), 'A', 'K');
+            replace(fen.begin(), fen.end(), 'H', 'Q');
+            replace(fen.begin(), fen.end(), 'a', 'k');
+            replace(fen.begin(), fen.end(), 'h', 'q');
+
+            this->board.init(fen);
+        } else if (res[1] == "startpos") {
+            this->board.init();
+            moves_idx = 2;
         }
+
 
         if (res.size() > moves_idx+1 && res[moves_idx] == "moves") {
             for (int i = moves_idx+1; i<res.size(); i++) {
@@ -74,7 +73,7 @@ void Engine::parse_expr(string expr) {
 
         this->best_move = inDepthAnalysis(depth);
         this->best_move.print_info(depth);
-        //if (res.size() > 2 && res[1] == "depth") best_move.print();
+        //if (res.size() > 2 && (res[1] == "depth" || res[1] == "timestop")) best_move.print();
         best_move.print();
     }
     
