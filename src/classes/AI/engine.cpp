@@ -16,6 +16,17 @@ vector<string> split (const string &s, char delim) {
 
     return result;
 }
+
+#include <time.h>
+clock_t startChrono() { 
+    return clock();
+}
+
+double stopChrono(clock_t start) {
+    return (double)(clock() - start) / CLOCKS_PER_SEC;
+}
+
+
 void Engine::parse_expr(string expr) {
     vector<string> res = split(expr, ' ');
 
@@ -71,10 +82,12 @@ void Engine::parse_expr(string expr) {
             depth = stoi(res[2]);
         }
 
+        clock_t start = startChrono();
         this->best_move = inDepthAnalysis(depth);
-        this->best_move.print_info(depth);
-        //if (res.size() > 2 && (res[1] == "depth" || res[1] == "timestop")) best_move.print();
+        double dur = stopChrono(start);
+        this->best_move.print_info(depth, this->board.isWhite());
         best_move.print();
+        printf("%.3f seconds\n", dur);
     }
     
 
@@ -92,8 +105,11 @@ void Engine::parse_expr(string expr) {
     }
 
     else if (expr == "eval") {
+        clock_t start = startChrono();
         Score s = evalPosition();
+        double dur = stopChrono(start);
         s.print();
+        printf("\n%lf seconds.\n", dur);
     }
 
     else if (expr == "uci") {
@@ -131,8 +147,6 @@ Score Engine::evalPosition() {
         const int BNV = 300;
         const int pawnV = 100;
         
-        const float mobilityV = 30;
-
         int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
             wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
 
@@ -173,6 +187,8 @@ Score Engine::evalPosition() {
                             + BNV * (wB - bB)
                             + pawnV * (wP - bP)
         ;
+
+        const float mobilityV = 3;
 
         int mobility_white, mobility_black;
         int *other_mobility;
@@ -272,10 +288,5 @@ Score Engine::inDepthAnalysis (int depth) {
 
     // Finally we return the best variant
 
-    Score max_score = res[0];
-    for (int i = 1; i<res.size(); i++) {
-        max_score = Score::max(max_score, res[i], this->board.isWhite());
-    }
-
-    return max_score;
+    return Score::max (res, this->board.isWhite());
 }

@@ -13,16 +13,28 @@ void Score::print() {
     }
 }
 
-void Score::print_info(int depth) {
+void Score::print_info(int depth, bool white) {
     cout << "info depth " << depth << " seldepth " << depth;
     cout << " score ";
+
     if (this->mate) {
+        // We convert plies to moves and we check the color of the mate
         int n = this->n_mate / 2;
         if (this->n_mate % 2)
             n++;
-        cout << "mate " << n;
+        cout << "mate " << (this->white_mate == white ? n : -n);
     }
-    else cout << "cp " << this->score;
+
+    else {
+
+        int score = this->score;
+        // If white has advantage and it's black to play, we multiply score by -1  
+        if (this->score > 0 && !white) {
+            score *= -1;
+        }
+    
+        cout << "cp " << score;
+    }
 
     cout << " pv ";
     for (ply p : this->plies) {
@@ -75,4 +87,20 @@ Score Score::max (Score s1, Score s2, bool white) {
             return s1.score < s2.score ? s1 : s2;
         }
     }
+}
+
+Score Score::max (vector<Score> scores, bool white) {
+    Score max_score;
+    bool first = true;
+
+    for (Score score: scores) {
+        if (first) {
+            max_score = score;
+            first = false;
+        }
+
+        max_score = max (max_score, score, white);
+    }
+
+    return max_score;
 }

@@ -22,9 +22,10 @@ class Score {
         };
 
         static Score max (Score s1, Score s2, bool white);
+        static Score max (vector<Score> scores, bool white);
 
         void print();
-        void print_info(int depth);
+        void print_info(int depth, bool white);
         static void print_ply (ply p);
 
         int score;
