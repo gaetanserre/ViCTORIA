@@ -392,7 +392,7 @@ bool Board::play_move (ply p, bool force) {
         }
     }
 
-    if (found || force && ! isOver()) {
+    if (found || force) {
 
         this->fens.push_back(getFen());
 

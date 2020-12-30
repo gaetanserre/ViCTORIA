@@ -16,28 +16,33 @@ vector<string> split (const string &s, char delim) {
 
     return result;
 }
-
 void Engine::parse_expr(string expr) {
-
     vector<string> res = split(expr, ' ');
 
     // parse expression of type : position fen [fen] moves [moves]
-    if (res.size() > 7) {
-        if (res[0] == "position" && res[1] == "fen") {
-            string fen = "";
-            for (int i = 2; i<8; i++) {
-                fen += res[i] + " ";
-            }
-            replace(fen.begin(), fen.end(), 'A', 'K');
-            replace(fen.begin(), fen.end(), 'H', 'Q');
-            replace(fen.begin(), fen.end(), 'a', 'k');
-            replace(fen.begin(), fen.end(), 'h', 'q');
+    if (res.size() > 1) {
+        int moves_idx = 8;
 
-            this->board.init(fen);
+        if (res[0] == "position") {
+            if (res[1] == "fen") {
+                string fen = "";
+                for (int i = 2; i<8; i++) {
+                    fen += res[i] + " ";
+                }
+                replace(fen.begin(), fen.end(), 'A', 'K');
+                replace(fen.begin(), fen.end(), 'H', 'Q');
+                replace(fen.begin(), fen.end(), 'a', 'k');
+                replace(fen.begin(), fen.end(), 'h', 'q');
+
+                this->board.init(fen);
+            } else if (res[1] == "startpos") {
+                this->board.init();
+                moves_idx = 2;
+            }
         }
 
-        if (res.size() > 9 && res[8] == "moves") {
-            for (int i = 9; i<res.size(); i++) {
+        if (res.size() > moves_idx+1 && res[moves_idx] == "moves") {
+            for (int i = moves_idx+1; i<res.size(); i++) {
                 this->board.computeLegalMoves();
                 this->board.play_move(res[i].c_str());
             }
@@ -69,7 +74,8 @@ void Engine::parse_expr(string expr) {
 
         this->best_move = inDepthAnalysis(depth);
         this->best_move.print_info(depth);
-        if (res.size() > 2 && res[1] == "depth") best_move.print();
+        //if (res.size() > 2 && res[1] == "depth") best_move.print();
+        best_move.print();
     }
     
 
@@ -257,7 +263,6 @@ Score Engine::inDepthAnalysis (int depth) {
             res[j] = temp;
 
             // We restore the initial position
-            //this->board.resetFens();
             this->board.init(initPos);
             
             // If one of the variants is checkmate, we return it.
