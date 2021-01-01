@@ -1,8 +1,10 @@
 #include "engine.h"
 
 Engine::Engine() {
-    cout << "Chess AI Engine version alpha" << endl;
+    this->name = "Chess AI Engine 1.0";
     this->board.init();
+    cout << this->name << endl;
+
 }
 
 vector<string> split (const string &s, char delim) {
@@ -45,25 +47,34 @@ void Engine::parse_expr(string expr) {
             replace(fen.begin(), fen.end(), 'h', 'q');
 
             this->board.init(fen);
+
+            this->startpos = false;
         } else if (res[1] == "startpos") {
             this->board.init();
             moves_idx = 2;
+
+            this->startpos = true;
         }
+
+        this->moves.clear();
 
 
         if (res.size() > moves_idx+1 && res[moves_idx] == "moves") {
             for (int i = moves_idx+1; i<res.size(); i++) {
                 this->board.computeLegalMoves();
-                this->board.play_move(res[i].c_str());
+                this->board.play_move(res[i]);
+                this->moves.push_back(Board::StringToPly(res[i]));
             }
+            this->startpos = false;
         }
-
-    } 
+    }
 
     else if (res.size() == 2 && res[0] == "play") {
         this->board.computeLegalMoves();
-        this->board.play_move(res[1].c_str());
+        this->board.play_move(res[1]);
         this->board.printPieces();
+
+        this->moves.push_back(Board::StringToPly(res[1]));
 
         this->board.computeLegalMoves();
         if (this->board.isCheckmate()) {
@@ -73,17 +84,29 @@ void Engine::parse_expr(string expr) {
         if (this->board.isStalemate()) {
             cout << "Stalemate." << endl;
         }
+
+        this->startpos = false;
     }
     
     else if (res[0] == "go") {
         int depth = 3;
+
+        // We check that there are less than 8 pieces on the chessboard.
+        if (this->board.nb_pieces != 0 && this->board.nb_pieces < 8) depth = 4; 
         
+        bool direct_analysis = false;
+
         if (res.size() > 2 && res[1] == "depth") {
             depth = stoi(res[2]);
+            direct_analysis = true;
         }
 
         clock_t start = startChrono();
-        this->best_move = inDepthAnalysis(depth);
+        if (this->moves.size() < 14 && this->startpos && !direct_analysis)
+            this->best_move = searchOpeningBook(3);
+        else
+            this->best_move = inDepthAnalysis(depth);
+
         double dur = stopChrono(start);
         this->best_move.print_info(depth, this->board.isWhite());
         best_move.print();
@@ -113,7 +136,7 @@ void Engine::parse_expr(string expr) {
     }
 
     else if (expr == "uci") {
-        cout << "id name Chess AI Engine 1.0" << endl;
+        cout << "id name " << this->name << endl;
         cout << "uciok" << endl;
     }
 
@@ -130,6 +153,7 @@ void Engine::parse_expr(string expr) {
     }
 }
 
+// We evaluate position with value of each piece taken and number of legal moves
 Score Engine::evalPosition() {
     this->board.computeLegalMoves();
     vector<ply> legal_moves = this->board.getLegalMoves();
@@ -141,6 +165,8 @@ Score Engine::evalPosition() {
         else
             return Score(0, false, false, 0);
     } else {
+
+        // Value in centipawn
         const int kingV = 20000;
         const int queenV = 900;
         const int rookV = 500;
@@ -290,3 +316,98 @@ Score Engine::inDepthAnalysis (int depth) {
 
     return Score::max (res, this->board.isWhite());
 }
+
+
+
+
+
+// Checks if the line corresponds to a game
+bool isGame (string line) {
+    return line[0] != '[' && line.size() > 1;
+}
+
+bool isPly (string line, ply p) {
+    if (line[0] == p.dep.row && line[1] == char(p.dep.line + '0')) {
+        return line [2] == p.stop.row && line[3] == char(p.stop.line + '0');
+    }
+    return false;
+}
+
+// Checks if the game contained in line is a win
+bool isWin (string line, bool white) {
+    int end = line.size() - 1;
+
+    if (line[end] == '2') return false;
+    if (line[end] == '1') return ! white;
+    else return white;
+}
+
+// Erase the n firsts char in line
+void eraseNchars (string &line, int n) {
+    for (int i = 0; i<n; i++)
+        line.erase(line.begin());
+}
+
+// Convert the first ply in line into a ply
+ply lineToPly (string line) {
+    string move = "";
+    for (int i = 0; i<4; i++)
+        move += line[i];
+
+    return Board::StringToPly(move);
+}
+
+
+// We search for the next move in a opening book
+Score Engine::searchOpeningBook (int depth) {
+    ifstream opening_book;
+    opening_book.open ("/home/gaetan/Documents/Projets/IA-Chess/libs/opening_book-2.5M.pgn");
+
+    if (opening_book.is_open()) {
+        string line;
+        while (getline(opening_book, line)) {
+
+            // We check if the line corresponds to a game
+            if (isGame (line)) {
+                
+                // If no move has been played, we return the first opening that fits the color
+                if (this->moves.size() == 0 && isWin(line, this->board.isWhite())) {
+                    cout<<line<<endl;
+                    Score s;
+                    s.plies.push_back(lineToPly(line));
+                    opening_book.close();
+                    return s;
+                }
+
+                // We check if the game contains the moves already played.
+                bool found = true;
+                for (ply p : this->moves) {
+                    if (isPly (line, p)) {
+                        eraseNchars(line, 5);
+                    } else {
+                        found = false;
+                        break;
+                    }
+                }
+
+                // If yes, we return it
+                if (found && isWin(line, this->board.isWhite())) {
+                    if (line.size() > 4) {
+                        Score s;
+                        s.plies.push_back(lineToPly(line));
+                        opening_book.close();
+                        return s;
+                    } else {
+                        opening_book.close();
+                        return inDepthAnalysis(depth);
+                    }
+                }
+            }
+        }
+        opening_book.close();
+        return inDepthAnalysis(depth);
+    }
+
+    return inDepthAnalysis(depth);
+}
+

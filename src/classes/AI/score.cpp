@@ -7,7 +7,7 @@ void Score::print() {
         print_ply(this->plies[0]);
         if (plies.size() > 1) {
             cout << " ponder ";
-            print_ply(this->plies[1]);
+            Score::print_ply(this->plies[1]);
         }
         cout << endl;
     }
@@ -38,7 +38,7 @@ void Score::print_info(int depth, bool white) {
 
     cout << " pv ";
     for (ply p : this->plies) {
-        print_ply(p);
+        Score::print_ply(p);
         cout << " ";
     }
     cout << endl;

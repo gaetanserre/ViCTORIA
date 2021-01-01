@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "__bit_reference": "cpp",
+        "algorithm": "cpp",
+        "deque": "cpp",
+        "type_traits": "cpp",
+        "*.tcc": "cpp",
+        "__string": "cpp",
+        "ios": "cpp",
+        "string": "cpp",
+        "iostream": "cpp"
+    }
+}

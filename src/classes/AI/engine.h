@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <fstream>
 
 class Score {
     public:
@@ -42,9 +43,16 @@ class Engine {
         void parse_expr(string expr);
 
     private:
+        string name;
+
         Board board;
         Score evalPosition();
         Score inDepthAnalysis (int depth);
+        Score searchOpeningBook (int depth);
+
+        bool startpos = true;
 
         Score best_move;
+
+        vector<ply> moves;
 };

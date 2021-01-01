@@ -29,7 +29,7 @@ class Board {
         void printLegalMoves();
 
         bool play_move(ply p, bool force = false);
-        bool play_move(const char *);
+        bool play_move(string p);
 
         void undo_move();
         string getFen();
@@ -46,6 +46,10 @@ class Board {
         void computeLegalMoves();
 
         void resetFens() { this->fens.clear(); };
+
+        int nb_pieces;
+
+        static ply StringToPly (string ply);
 
 
     private:
