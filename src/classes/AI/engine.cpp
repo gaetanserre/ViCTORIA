@@ -361,7 +361,7 @@ ply lineToPly (string line) {
 // We search for the next move in a opening book
 Score Engine::searchOpeningBook (int depth) {
     ifstream opening_book;
-    opening_book.open ("/home/gaetan/Documents/Projets/IA-Chess/libs/opening_book-2.5M.pgn");
+    opening_book.open ("/home/gaetan/Documents/Projets/IA-Chess/books/opening_book-2.5M.pgn");
 
     if (opening_book.is_open()) {
         string line;
