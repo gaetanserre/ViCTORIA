@@ -40,8 +40,9 @@ class Board {
         bool isWhite() { return this->white; };
         void setWhite(bool isWhite) { this->white = isWhite; } 
 
-        bool isCheckmate();
-        bool isStalemate();
+        bool isCheck();
+        bool isCheckmate(int size);
+        bool isStalemate(int size);
         bool isOver();
         void computeLegalMoves();
 
@@ -53,7 +54,7 @@ class Board {
 
 
     private:
-        bool check_move_min(ply p);
+        bool check_move_min(Square dep, Square stop);
         bool isTakeable(Square s);
 
         bool check_castle (ply p);
@@ -64,7 +65,6 @@ class Board {
 
         bool check_move(ply p);
 
-        bool isCheck();
 
         void checkRepetitions();
 

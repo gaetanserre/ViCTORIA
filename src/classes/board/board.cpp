@@ -297,15 +297,9 @@ void Board::play_castle (ply p) {
     this->nb_moves++;
 }
 
-bool Board::check_move_min (ply p) {
-    Square dep = p.dep; Square stop = p.stop;
+bool Board::check_move_min (Square dep, Square stop) {
     int idx_dep = squareToIdx(dep);
-    if (checkIfPiece(this->squares[idx_dep])) {
-        if (this->squares[idx_dep]->isWhite() == this->white) { 
-            return this->squares[idx_dep]->check_move(stop, this->squares);
-        }
-    }
-    return false;
+    return this->squares[idx_dep]->check_move(stop, this->squares);
 }
 
 bool isPromote (Piece* p) {
@@ -326,7 +320,7 @@ bool Board::check_move (ply p) {
         If the move is playable, play it and then check if the king is in check. 
         If it is the case, return to the previous position.
     */
-    if (check_move_min ({dep, stop})) {
+    if (check_move_min (dep, stop)) {
         Piece* temp = this->squares[idx_dep];
         Piece* temp_stop = this->squares[idx_stop];
 
@@ -560,16 +554,17 @@ void Board::computeLegalMoves () {
     }
 }
 
-bool Board::isCheckmate () {
-    return this->legal_moves.size() == 0 && isCheck();
+bool Board::isCheckmate (int size) {
+    return size == 0 && isCheck();
 }
 
-bool Board::isStalemate () {
-    return this->legal_moves.size() == 0 && !isCheck();
+bool Board::isStalemate (int size) {
+    return size == 0 && !isCheck();
 }
 
 bool Board::isOver () {
-    return isCheckmate() || isStalemate();
+    int legal_moves_size = this->legal_moves.size();
+    return isCheckmate(legal_moves_size) || isStalemate(legal_moves_size);
 }
 
 string Board::getFen () {

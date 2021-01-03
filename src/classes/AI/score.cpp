@@ -104,3 +104,36 @@ Score Score::max (vector<Score> scores, bool white) {
 
     return max_score;
 }
+
+bool Score::operator <= (Score s1) {
+    if (this->mate) {
+        if (s1.mate) {
+            if (this->white_mate) {
+                if (s1.white_mate) {
+                    return this->n_mate >= s1.n_mate;
+                } else {
+                    return false;
+                }
+            } else {
+                if (s1.white_mate){
+                    return true;
+                }
+                else {
+                    return this->n_mate <= s1.n_mate;
+                }
+            }
+        } else {
+            if (this->white_mate) return false;
+            else return true;
+        }
+    }
+
+    else if (s1.mate) {
+        if (s1.white_mate) return true;
+            else return false;
+    }
+
+    else {
+        return this->score <= s1.score;
+    }
+}

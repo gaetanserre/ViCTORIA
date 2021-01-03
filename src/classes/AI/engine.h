@@ -22,6 +22,8 @@ class Score {
             this->n_mate=0;
         };
 
+        bool operator <= (Score s1);
+
         static Score max (Score s1, Score s2, bool white);
         static Score max (vector<Score> scores, bool white);
 
