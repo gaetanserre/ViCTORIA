@@ -29,6 +29,98 @@ double stopChrono(clock_t start) {
 }
 
 
+Score evalPosition(Board board) {
+    vector<ply> legal_moves = board.getLegalMoves();
+    bool isOver = board.isOver();
+
+    if (isOver) {
+        if (board.isCheckmate())
+            return Score(0, true, !board.isWhite(), 0);
+        else
+            return Score(0, false, false, 0);
+    } else {
+
+        // Value in centipawn
+        const int kingV = 20000;
+        const int queenV = 900;
+        const int rookV = 500;
+        const int BNV = 300;
+        const int pawnV = 100;
+        
+        int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
+            wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
+
+        for (int i = 0; i<64; i++) {
+            Piece* p = board.squares[i];
+            string name = p->getName();
+
+            if (name == "king") {
+                p->isWhite() ? wK++ : bK++;
+            }
+
+            if (name == "queen") {
+                p->isWhite() ? wQ++ : bQ++;
+            }
+
+            if (name == "rook") {
+                p->isWhite() ? wR++ : bR++;
+            }
+
+            if (name == "knight") {
+                p->isWhite() ? wN++ : bN++;
+            }
+
+            if (name == "bishop") {
+                p->isWhite() ? wB++ : bB++;
+            }
+
+            if (name == "pawn") {
+                p->isWhite() ? wP++ : bP++;
+            }
+        }
+        //cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
+            
+        int material_score =  kingV * (wK - bK)
+                            + queenV * (wQ - bQ)
+                            + rookV * (wR - bR)
+                            + BNV * (wN - bN)
+                            + BNV * (wB - bB)
+                            + pawnV * (wP - bP)
+        ;
+
+        const float mobilityV = 3;
+
+        int mobility_white, mobility_black;
+        int *other_mobility;
+
+        if (board.isWhite()) {
+            mobility_white = legal_moves.size();
+            other_mobility = &mobility_black;
+        }
+        else {
+            mobility_black = legal_moves.size();
+            other_mobility = &mobility_white;
+        }
+            
+        // Compute mobility for the other side
+        board.changeSide();
+        board.computeLegalMoves();
+        *other_mobility = board.getLegalMoves().size();
+        board.changeSide();
+
+        int mobility_score = mobilityV * (mobility_white - mobility_black);
+        int score = (material_score + mobility_score);
+
+        //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
+
+        return Score(score, false, false, 0);
+
+    }
+}
+
+
+
+
 void Engine::parse_expr(string expr) {
     vector<string> res = split(expr, ' ');
 
@@ -49,6 +141,7 @@ void Engine::parse_expr(string expr) {
             this->board.init(fen);
 
             this->startpos = false;
+
         } else if (res[1] == "startpos") {
             this->board.init();
             moves_idx = 2;
@@ -65,7 +158,6 @@ void Engine::parse_expr(string expr) {
                 this->board.play_move(res[i]);
                 this->moves.push_back(Board::StringToPly(res[i]));
             }
-            this->startpos = false;
         }
     }
 
@@ -85,7 +177,6 @@ void Engine::parse_expr(string expr) {
             cout << "Stalemate." << endl;
         }
 
-        this->startpos = false;
     }
     
     else if (res[0] == "go") {
@@ -129,7 +220,7 @@ void Engine::parse_expr(string expr) {
 
     else if (expr == "eval") {
         clock_t start = startChrono();
-        Score s = evalPosition();
+        Score s = evalPosition(this->board);
         double dur = stopChrono(start);
         s.print();
         printf("\n%lf seconds.\n", dur);
@@ -152,172 +243,6 @@ void Engine::parse_expr(string expr) {
         cout << "Unknown command: " << expr << endl;
     }
 }
-
-// We evaluate position with value of each piece taken and number of legal moves
-Score Engine::evalPosition() {
-    this->board.computeLegalMoves();
-    vector<ply> legal_moves = this->board.getLegalMoves();
-    bool isOver = this->board.isOver();
-
-    if (isOver) {
-        if (this->board.isCheckmate())
-            return Score(0, true, !this->board.isWhite(), 0);
-        else
-            return Score(0, false, false, 0);
-    } else {
-
-        // Value in centipawn
-        const int kingV = 20000;
-        const int queenV = 900;
-        const int rookV = 500;
-        const int BNV = 300;
-        const int pawnV = 100;
-        
-        int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
-            wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
-
-        for (int i = 0; i<64; i++) {
-            Piece* p = this->board.squares[i];
-            string name = p->getName();
-
-            if (name == "king") {
-                p->isWhite() ? wK++ : bK++;
-            }
-
-            if (name == "queen") {
-                p->isWhite() ? wQ++ : bQ++;
-            }
-
-            if (name == "rook") {
-                p->isWhite() ? wR++ : bR++;
-            }
-
-            if (name == "knight") {
-                p->isWhite() ? wN++ : bN++;
-            }
-
-            if (name == "bishop") {
-                p->isWhite() ? wB++ : bB++;
-            }
-
-            if (name == "pawn") {
-                p->isWhite() ? wP++ : bP++;
-            }
-        }
-        //cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
-            
-        int material_score =  kingV * (wK - bK)
-                            + queenV * (wQ - bQ)
-                            + rookV * (wR - bR)
-                            + BNV * (wN - bN)
-                            + BNV * (wB - bB)
-                            + pawnV * (wP - bP)
-        ;
-
-        const float mobilityV = 3;
-
-        int mobility_white, mobility_black;
-        int *other_mobility;
-
-        if (this->board.isWhite()) {
-            mobility_white = legal_moves.size();
-            other_mobility = &mobility_black;
-        }
-        else {
-            mobility_black = legal_moves.size();
-            other_mobility = &mobility_white;
-        }
-            
-        // Compute mobility for the other side
-        this->board.changeSide();
-        this->board.computeLegalMoves();
-        *other_mobility = this->board.getLegalMoves().size();
-        this->board.changeSide();
-
-        int mobility_score = mobilityV * (mobility_white - mobility_black);
-        int score = (material_score + mobility_score);
-
-        //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
-
-        return Score(score, false, false, 0);
-
-    }
-
-}
-
-/*
-    We go through the tree of possible cuts in stages.
-    Thus, if we encounter checkmate, we can stop the search because
-    no combination of moves can be better (at best it will be equivalent).
-*/
-Score Engine::inDepthAnalysis (int depth) {
-
-    if (depth == 0) return evalPosition();
-
-    this->board.computeLegalMoves();
-    vector<ply> legal_moves = this->board.getLegalMoves();
-
-    if (legal_moves.size() == 0) return evalPosition();
-
-
-    // First we evaluate the position for each legal moves
-
-    vector<Score> scores;
-
-    for (ply p : legal_moves) {
-        this->board.play_move(p, true);
-        Score s = evalPosition();
-        this->board.undo_move();
-
-        s.plies.push_back(p);
-        s.n_mate = s.plies.size();
-
-        //If mate in 1
-        if (s.mate && s.white_mate == this->board.isWhite()) {
-            //s.print_info(1);
-            return s;
-        }
-
-        scores.push_back(s);
-    }
-
-    // Then we store all variants starting with depth 1, 2, 3 etc...
-
-    vector<Score> res;
-    for (Score s : scores)
-        res.push_back(s);
-
-    for (int i = 1; i<depth; i++) {
-        for (int j = 0; j<scores.size(); j++) {
-            
-            //We store the initial position
-            string initPos = this->board.getFen();
-
-            for (ply p : scores[j].plies)
-                this->board.play_move(p, true);
-            
-
-            Score temp = inDepthAnalysis(i);
-            temp.plies.insert(temp.plies.begin(), scores[j].plies.begin(), scores[j].plies.end());
-            temp.n_mate = temp.plies.size();
-
-            res[j] = temp;
-
-            // We restore the initial position
-            this->board.init(initPos);
-            
-            // If one of the variants is checkmate, we return it.
-            if (temp.mate && temp.white_mate == this->board.isWhite())
-                return temp;
-        }
-    }
-
-    // Finally we return the best variant
-
-    return Score::max (res, this->board.isWhite());
-}
-
-
 
 
 
@@ -411,3 +336,125 @@ Score Engine::searchOpeningBook (int depth) {
     return inDepthAnalysis(depth);
 }
 
+
+
+
+
+void inDepthAnalysisThread (int n_thread, int depth, vector<ply> moves, Board board, Score* res) {
+
+    if (depth == 0) *res = evalPosition(board);
+
+    // First we evaluate the position for each legal moves
+
+    vector<Score> scores;
+
+    for (ply p : moves) {
+        board.play_move(p, true);
+        board.computeLegalMoves();
+        Score s = evalPosition(board);
+        board.undo_move();
+
+        s.plies.push_back(p);
+        s.n_mate = s.plies.size();
+
+        //If mate in 1
+        if (s.mate && s.white_mate == board.isWhite()) {
+            //s.print_info(1);
+            *res = s;
+            return;
+        }
+
+        scores.push_back(s);
+    }
+
+    // Then we store all variants starting with depth 1, 2, 3 etc...
+
+    vector<Score> sol;
+    for (Score s : scores)
+        sol.push_back(s);
+
+    for (int i = 1; i<depth; i++) {
+        for (int j = 0; j<scores.size(); j++) {
+            
+            //We store the initial position
+            string initPos = board.getFen();
+
+            for (ply p : scores[j].plies)
+                board.play_move(p, true);
+            
+            board.computeLegalMoves();
+            Score temp;
+            inDepthAnalysisThread(n_thread, i, board.getLegalMoves(), board, &temp);
+            temp.plies.insert(temp.plies.begin(), scores[j].plies.begin(), scores[j].plies.end());
+            temp.n_mate = temp.plies.size();
+
+            sol[j] = temp;
+
+            // We restore the initial position
+            board.init(initPos);
+            
+            // If one of the variants is checkmate, we return it.
+            if (temp.mate && temp.white_mate == board.isWhite()) {
+                *res = temp;
+                return;
+            }
+        }
+    }
+
+    // Finally we return the best variant
+
+    *res = Score::max (sol, board.isWhite());
+}
+
+#include <thread>
+#define nb_thread_max 3
+
+Score Engine::inDepthAnalysis (int depth) {
+
+    if (depth == 0) return evalPosition(this->board);
+
+    this->board.computeLegalMoves();
+    vector<ply> legal_moves = this->board.getLegalMoves();
+
+    if (legal_moves.size() == 0) return evalPosition(this->board);
+
+
+    int size = legal_moves.size() / nb_thread_max;
+    int nb_thread = size > 0 ? nb_thread_max : 1;
+
+    vector<Score> scores (nb_thread);
+    thread threads[nb_thread];
+    Board boards[nb_thread];
+
+    string fen = this->board.getFen();
+
+    for (int i = 0; i<nb_thread; i++) {
+        boards[i].init(fen);
+    }
+
+    vector<vector<ply>> moves(nb_thread);
+
+    int count = 0;
+    for (int i = 0; i<nb_thread; i++) {
+
+        if (size > 0) {
+            while (moves[i].size() < size) {
+                moves[i].push_back(legal_moves[count]);
+                count ++;
+            }
+        } else {
+            moves[i] = legal_moves;
+        }
+        
+        threads[i] = thread(inDepthAnalysisThread, i+1, depth, moves[i], boards[i], &scores[i]);
+
+    }
+
+
+    for (int i = 0; i<nb_thread; i++) {
+        threads[i].join();
+    }
+
+
+    return Score::max(scores, this->board.isWhite());
+}

@@ -20,7 +20,7 @@ struct ply {
 class Board {
     public:
         Board (){};
-        ~Board();
+        //~Board();
 
         Piece* squares[64];
 

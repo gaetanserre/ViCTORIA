@@ -46,7 +46,6 @@ class Engine {
         string name;
 
         Board board;
-        Score evalPosition();
         Score inDepthAnalysis (int depth);
         Score searchOpeningBook (int depth);
 
