@@ -1,5 +1,7 @@
 #include "engine.h"
 #include <stdio.h>
+#include <time.h>
+
 
 Engine::Engine() {
     this->name = "Chess AI Engine 1.0";
@@ -20,7 +22,6 @@ vector<string> split (const string &s, char delim) {
     return result;
 }
 
-#include <time.h>
 clock_t startChrono() { 
     return clock();
 }
@@ -121,8 +122,8 @@ Score evalPosition(Board board) {
 
 
 
-
 void Engine::parse_expr(string expr) {
+
     vector<string> res = split(expr, ' ');
 
     // parse expression of type : position fen [fen] moves [moves]
@@ -141,7 +142,7 @@ void Engine::parse_expr(string expr) {
 
             this->board.init(fen);
 
-            this->startpos = fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            this->startpos = fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
 
         } else if (res[1] == "startpos") {
             this->board.init();
