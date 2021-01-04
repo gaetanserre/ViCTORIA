@@ -1,9 +1,9 @@
 #include "board.h"
 
-/*Board::~Board() {
+Board::~Board() {
     for (int i = 0; i<64; i++)
         free(this->squares[i]);
-}*/
+}
 
 void Board::init (string fen) {
 
