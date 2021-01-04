@@ -1,11 +1,15 @@
 #include "board.h"
 
 Board::~Board() {
+    this->fens = vector<string> ();
     for (int i = 0; i<64; i++)
-        free(this->squares[i]);
+        delete this->squares[i];
+    delete [] this->squares;
 }
 
 void Board::init (string fen) {
+
+    this->squares = (Piece**) malloc(64 * sizeof(Piece*));
 
     this->nb_pieces = 0;
 
@@ -40,13 +44,6 @@ void Board::init (string fen) {
                     break;
                 case 'q':
                     this->castling_long_b = true;
-                    break;
-                
-                default:
-                    this->castling_long_b = false;
-                    this->castling_long_w = false;
-                    this->castling_short_b = false;
-                    this->castling_short_w = false;
                     break;
                 }
             }
@@ -418,12 +415,16 @@ bool Board::play_move (ply p, bool force) {
 
             Piece* temp = this->squares[idx_dep];
             this->squares[idx_dep] = new Empty();
+            
+
 
             if (p.promote) {
-                if (p.prom == 'q')
+                if (p.prom == 'q') {
                     this->squares[idx_stop] = new Queen(stop, temp->isWhite());
-                else
+                }
+                else {
                     this->squares[idx_stop] = new Knight(stop, temp->isWhite());
+                }
             } else {
                 temp->setPosition(stop);
                 /*
@@ -444,6 +445,7 @@ bool Board::play_move (ply p, bool force) {
                     We check pawn
                 */
                 if (temp->getName() == "pawn") {
+                    //delete temp;
                     temp = new Pawn(temp->getPosition(), temp->isWhite(), false,
                                 &(this->en_passant), &(this->en_passant_square));
                     
@@ -461,8 +463,9 @@ bool Board::play_move (ply p, bool force) {
                     if (stop == this->en_passant_square) {
                         if (this->white) {
                             this->squares[squareToIdx(Square(stop.row, stop.line-1))] = new Empty();
-                        } else
+                        } else {
                             this->squares[squareToIdx(Square(stop.row, stop.line+1))] = new Empty();
+                        }
 
                         this->en_passant = false;
                     }
@@ -487,7 +490,6 @@ bool Board::play_move (ply p, bool force) {
 
 
             this->white = !this->white;
-            this->squares[idx_dep] = new Empty();
 
             this->nb_moves++;
 
@@ -512,6 +514,7 @@ bool Board::play_move (string p) {
 }
 
 void Board::undo_move () {
+
     if (fens.size() > 0) {
         string fen = this->fens.back();
         this->fens.pop_back();
@@ -520,7 +523,7 @@ void Board::undo_move () {
 }
 
 void Board::computeLegalMoves () {
-    this->legal_moves.resize(0);
+    this->legal_moves = vector<ply> ();
     this->nb_pieces = 0;
 
     if (this->nb_rep < 3) { // Fix the stalemate by repetitions

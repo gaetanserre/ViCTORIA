@@ -1,4 +1,4 @@
-args = -lpthread -std=c++2a -O3
+args = -std=c++2a -O3
 
 all: IA_chess
 

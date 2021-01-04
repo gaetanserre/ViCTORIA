@@ -5,10 +5,17 @@
 
 Engine::Engine() {
     this->name = "Chess AI Engine 1.0";
-    this->board.init();
+    this->board = new Board();
+    this->board->init();
     cout << this->name << endl;
 
 }
+
+
+Engine::~Engine() {
+    delete this->board;
+}
+
 
 vector<string> split (const string &s, char delim) {
     vector<string> result;
@@ -124,10 +131,12 @@ Score evalPosition(Board board) {
 
 void Engine::parse_expr(string expr) {
 
+
     vector<string> res = split(expr, ' ');
 
     // parse expression of type : position fen [fen] moves [moves]
     if (res.size() > 1 && res[0] == "position") {
+
         int moves_idx = 8;
 
         if (res[1] == "fen") {
@@ -140,12 +149,12 @@ void Engine::parse_expr(string expr) {
             replace(fen.begin(), fen.end(), 'a', 'k');
             replace(fen.begin(), fen.end(), 'h', 'q');
 
-            this->board.init(fen);
+            this->board->init(fen);
 
             this->startpos = fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
 
         } else if (res[1] == "startpos") {
-            this->board.init();
+            this->board->init();
             moves_idx = 2;
 
             this->startpos = true;
@@ -156,37 +165,40 @@ void Engine::parse_expr(string expr) {
 
         if (res.size() > moves_idx+1 && res[moves_idx] == "moves") {
             for (int i = moves_idx+1; i<res.size(); i++) {
-                this->board.computeLegalMoves();
-                this->board.play_move(res[i]);
+                this->board->computeLegalMoves();
+                this->board->play_move(res[i]);
                 this->moves.push_back(Board::StringToPly(res[i]));
             }
         }
     }
+    
 
     else if (res.size() == 2 && res[0] == "play") {
-        this->board.computeLegalMoves();
-        this->board.play_move(res[1]);
-        this->board.printPieces();
+        
+        this->board->computeLegalMoves();
+        this->board->play_move(res[1]);
+        this->board->printPieces();
 
         this->moves.push_back(Board::StringToPly(res[1]));
 
-        this->board.computeLegalMoves();
-        int size = this->board.getLegalMoves().size();
-        if (this->board.isCheckmate(size)) {
-            cout << (this->board.isWhite() ? "black" : "white") << " wins." << endl;
+        this->board->computeLegalMoves();
+        int size = this->board->getLegalMoves().size();
+        if (this->board->isCheckmate(size)) {
+            cout << (this->board->isWhite() ? "black" : "white") << " wins." << endl;
         }
 
-        if (this->board.isStalemate(size)) {
+        if (this->board->isStalemate(size)) {
             cout << "Stalemate." << endl;
         }
 
     }
     
-    else if (res[0] == "go") {
+    else if (res.size() > 0 && res[0] == "go") {
+
         int depth = 4;
 
         // We check that there are less than 8 pieces on the chessboard.
-        if (this->board.nb_pieces != 0 && this->board.nb_pieces < 8) depth = 5; 
+        if (this->board->nb_pieces != 0 && this->board->nb_pieces <= 8) depth = 5; 
         
         bool direct_analysis = false;
 
@@ -202,32 +214,33 @@ void Engine::parse_expr(string expr) {
             this->best_move = inDepthAnalysis(depth);
 
         double dur = stopChrono(start);
-        this->best_move.print_info(depth, this->board.isWhite());
+        this->best_move.print_info(depth, this->board->isWhite());
         best_move.print();
         printf("%.3f seconds\n", dur);
     }
     
 
     else if (expr == "fen") {
-        cout << this->board.getFen() << endl;
+
+        cout << this->board->getFen() << endl;
     }
 
     else if (expr == "undo") {
-        this->board.undo_move();
-        this->board.printPieces();
+        this->board->undo_move();
+        this->board->printPieces();
     }
 
     else if (expr == "legal") {
         clock_t start = startChrono();
-        this->board.computeLegalMoves();
+        this->board->computeLegalMoves();
         double dur = stopChrono(start);
-        this->board.printLegalMoves();
+        this->board->printLegalMoves();
         printf("%f seconds\n", dur);
     }
 
     else if (expr == "eval") {
         clock_t start = startChrono();
-        Score s = evalPosition(this->board);
+        Score s = evalPosition(*(this->board));
         double dur = stopChrono(start);
         s.print();
         printf("\n%lf seconds.\n", dur);
@@ -245,7 +258,7 @@ void Engine::parse_expr(string expr) {
     else if (expr == "stop") {
         this->best_move.print();
     }
-    
+
     else if (expr != "quit") {
         cout << "Unknown command: " << expr << endl;
     }
@@ -303,7 +316,7 @@ Score Engine::searchOpeningBook (int depth) {
             if (isGame (line)) {
                 
                 // If no move has been played, we return the first opening that fits the color
-                if (this->moves.size() == 0 && isWin(line, this->board.isWhite())) {
+                if (this->moves.size() == 0 && isWin(line, this->board->isWhite())) {
                     Score s;
                     s.plies.push_back(lineToPly(line));
                     opening_book.close();
@@ -322,7 +335,7 @@ Score Engine::searchOpeningBook (int depth) {
                 }
 
                 // If yes, we return it
-                if (found && isWin(line, this->board.isWhite())) {
+                if (found && isWin(line, this->board->isWhite())) {
                     if (line.size() > 4) {
                         Score s;
                         s.plies.push_back(lineToPly(line));
@@ -462,28 +475,29 @@ Score Engine::inDepthAnalysis (int depth) {
     return Score::max(scores, this->board.isWhite());
 }*/
 
-Score inDepthAnalysisAux (int depth, Board board, Score alpha, Score beta) {
+Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
 
-    board.computeLegalMoves();
-    vector<ply> legal_moves = board.getLegalMoves();
+    this->board->computeLegalMoves();
+    vector<ply> legal_moves = this->board->getLegalMoves();
     int size = legal_moves.size();
 
-    if (depth == 0 || size == 0) return evalPosition(board);
+    if (depth == 0 || size == 0) return evalPosition(*this->board);
 
 
-    Score bestMove (0, true, !board.isWhite(), 0);
+    Score bestMove (0, true, !this->board->isWhite(), 0);
 
     for (int i = 0; i<size; i++) {
-        bool white = board.isWhite();
-        board.play_move(legal_moves[i], true);
-        Score temp = inDepthAnalysisAux(depth - 1, board, alpha, beta);
+        bool white = this->board->isWhite();
+        this->board->play_move(legal_moves[i], true);
+        Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
         temp.plies.push_back(legal_moves[i]);
-        board.undo_move();
+        temp.n_mate++;
+        this->board->undo_move();
 
-        bestMove = Score::max(bestMove, temp, board.isWhite());
+        bestMove = Score::max(bestMove, temp, this->board->isWhite());
 
 
-        if (board.isWhite())
+        if (this->board->isWhite())
             alpha = Score::max (alpha, bestMove, true);
         else 
             beta = Score::max (beta, bestMove, false);
@@ -495,25 +509,25 @@ Score inDepthAnalysisAux (int depth, Board board, Score alpha, Score beta) {
 }
 
 Score Engine::inDepthAnalysis (int depth) {
-    this->board.computeLegalMoves();
-    vector<ply> legal_moves = this->board.getLegalMoves();
-    Score bestMove (0, true, !board.isWhite(), 0);
+    this->board->computeLegalMoves();
+    vector<ply> legal_moves = this->board->getLegalMoves();
+    Score bestMove (0, true, !board->isWhite(), 0);
 
     Score alpha (0, true, false, 0); // Black checkmate
     Score beta (0, true, true, 0); // White Checkmate
 
 
     for (ply p : legal_moves) {
-        this->board.play_move(p, true);
-        Score temp = inDepthAnalysisAux(depth - 1, this->board, alpha, beta);
-        this->board.undo_move();
+        this->board->play_move(p, true);
+        Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
+        this->board->undo_move();
         temp.plies.push_back(p);
-        temp.n_mate = temp.plies.size();
+        temp.n_mate++;
 
-        bestMove = Score::max(bestMove, temp, this->board.isWhite());
+        bestMove = Score::max(bestMove, temp, this->board->isWhite());
     }
 
     reverse(bestMove.plies.begin(), bestMove.plies.end());
-
+    
     return bestMove;
 }

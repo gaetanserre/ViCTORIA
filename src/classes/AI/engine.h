@@ -42,12 +42,14 @@ class Score {
 class Engine {
     public:
         Engine();
+        ~Engine();
         void parse_expr(string expr);
 
     private:
         string name;
 
-        Board board;
+        Board* board;
+        Score inDepthAnalysisAux (int depth, Score alpha, Score beta);
         Score inDepthAnalysis (int depth);
         Score searchOpeningBook (int depth);
 

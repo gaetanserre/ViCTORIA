@@ -36,9 +36,7 @@ bool Piece::itermove(
     int i = init;
     while (test(i)) {
         Square c = pos(i);
-        //std::cout << c.row << c.line << std::endl;
         if (checkIfPiece(squares[squareToIdx(c)])) {
-            //squares[squareToIdx(c)]->print_piece();
             return false;
         }
         incr(&i);

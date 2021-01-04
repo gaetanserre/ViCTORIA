@@ -10,3 +10,4 @@ make
 ## Bugs
 
 + Stalemate by repetitions
++ Memory leak
