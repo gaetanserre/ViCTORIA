@@ -1,10 +1,10 @@
 #include "board.h"
 
 Board::~Board() {
-    this->fens = vector<string> ();
+    /*this->fens = vector<string> ();
     for (int i = 0; i<64; i++)
         delete this->squares[i];
-    delete [] this->squares;
+    delete [] this->squares;*/
 }
 
 void Board::init (string fen) {
