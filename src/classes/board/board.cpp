@@ -1,15 +1,11 @@
 #include "board.h"
 
 Board::~Board() {
-    this->fens = vector<string> ();
     for (int i = 0; i<64; i++)
         delete this->squares[i];
-    delete [] this->squares;
 }
 
 void Board::init (string fen) {
-
-    this->squares = (Piece**) malloc(64 * sizeof(Piece*));
 
     this->nb_pieces = 0;
 
@@ -266,26 +262,42 @@ void Board::play_castle (ply p) {
         //Move king
         Piece* temp = this->squares[squareToIdx(Square('e', line))];
         temp->setPosition(Square('g', line));
+
+        // Prevent memory leak
+        delete this->squares[squareToIdx(Square('g', line))];
         this->squares[squareToIdx(Square('g', line))] = temp;
+
         this->squares[squareToIdx(Square('e', line))] = new Empty();
 
         //Move rook
         Piece* temp2 = this->squares[squareToIdx(Square('h', line))];
         temp2->setPosition(Square('f',line));
+
+        // Prevent memory leak
+        delete this->squares[squareToIdx(Square('f', line))];
         this->squares[squareToIdx(Square('f', line))] = temp2;
+
         this->squares[squareToIdx(Square('h', line))] = new Empty();
 
     } else {
         //Move king
         Piece* temp = this->squares[squareToIdx(Square('e', line))];
         temp->setPosition(Square('c', line));
+
+        // Prevent memory leak
+        delete this->squares[squareToIdx(Square('c', line))];
         this->squares[squareToIdx(Square('c', line))] = temp;
+
         this->squares[squareToIdx(Square('e', line))] = new Empty();
 
         //Move rook
         Piece* temp2 = this->squares[squareToIdx(Square('a', line))];
         temp2->setPosition(Square('d',line));
+
+        // Prevent memory leak
+        delete this->squares[squareToIdx(Square('d', line))];
         this->squares[squareToIdx(Square('d', line))] = temp2;
+        
         this->squares[squareToIdx(Square('a', line))] = new Empty();
     }
 
@@ -335,18 +347,17 @@ bool Board::check_move (ply p) {
 
         this->squares[idx_dep] = new Empty();
 
-        
-        if (isCheck()) {
-            this->squares[idx_dep] = temp;
-            this->squares[idx_dep]->setPosition(dep);
-            this->squares[idx_stop] = temp_stop;
-            return false;
-        }
+        bool check = isCheck();
+
+        // Prevent memory leak
+        if (p.promote) delete this->squares[idx_stop];
+        delete this->squares[idx_dep];
+
 
         this->squares[idx_dep] = temp;
         this->squares[idx_dep]->setPosition(dep);
         this->squares[idx_stop] = temp_stop;
-        return true;
+        return !check;
     }
 
     // If the move was illegal, we check if it was a castle.
@@ -415,7 +426,7 @@ bool Board::play_move (ply p, bool force) {
 
             Piece* temp = this->squares[idx_dep];
             this->squares[idx_dep] = new Empty();
-            
+            delete this->squares[idx_stop];
 
 
             if (p.promote) {
@@ -429,7 +440,6 @@ bool Board::play_move (ply p, bool force) {
                 temp->setPosition(stop);
                 /*
                     If we want to play the move, we check castles are still possible 
-                    and we change side
                 */
                 if (temp->getName() == "king") remove_castles();
                 if (temp->getName() == "rook") {
@@ -444,11 +454,7 @@ bool Board::play_move (ply p, bool force) {
                 /*
                     We check pawn
                 */
-                if (temp->getName() == "pawn") {
-                    //delete temp;
-                    temp = new Pawn(temp->getPosition(), temp->isWhite(), false,
-                                &(this->en_passant), &(this->en_passant_square));
-                    
+                if (temp->getName() == "pawn") {                   
                     // If pawn move 2 squares ahead
                     if (abs(dep.line - stop.line) == 2) {
                         this->en_passant = true;
@@ -462,8 +468,14 @@ bool Board::play_move (ply p, bool force) {
                     // If takes en passant
                     if (stop == this->en_passant_square) {
                         if (this->white) {
+                            // Prevent memory leak
+                            delete this->squares[squareToIdx(Square(stop.row, stop.line-1))];
+
                             this->squares[squareToIdx(Square(stop.row, stop.line-1))] = new Empty();
                         } else {
+                            // Prevent memory leak
+                            delete this->squares[squareToIdx(Square(stop.row, stop.line+1))];
+                            
                             this->squares[squareToIdx(Square(stop.row, stop.line+1))] = new Empty();
                         }
 
@@ -511,15 +523,6 @@ bool Board::play_move (ply p, bool force) {
 
 bool Board::play_move (string p) {
     return play_move(Board::StringToPly(p));
-}
-
-void Board::undo_move () {
-
-    if (fens.size() > 0) {
-        string fen = this->fens.back();
-        this->fens.pop_back();
-        init(fen);
-    }
 }
 
 void Board::computeLegalMoves () {

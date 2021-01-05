@@ -53,6 +53,8 @@ class Engine {
         Score inDepthAnalysis (int depth);
         Score searchOpeningBook (int depth);
 
+        void undo_move();
+
         bool startpos = true;
 
         Score best_move;

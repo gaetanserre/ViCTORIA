@@ -38,13 +38,13 @@ double stopChrono(clock_t start) {
 }
 
 
-Score evalPosition(Board board) {
-    vector<ply> legal_moves = board.getLegalMoves();
+Score evalPosition(Board* board) {
+    vector<ply> legal_moves = board->getLegalMoves();
     int size = legal_moves.size();
     
     if (size == 0) {
-        if (board.isCheck())
-            return Score(0, true, !board.isWhite(), 0);
+        if (board->isCheck())
+            return Score(0, true, !board->isWhite(), 0);
         else return Score(0, false, false, 0);
 
     } else {
@@ -60,7 +60,7 @@ Score evalPosition(Board board) {
             wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
 
         for (int i = 0; i<64; i++) {
-            Piece* p = board.squares[i];
+            Piece* p = board->squares[i];
             string name = p->getName();
 
             if (name == "king") {
@@ -102,7 +102,7 @@ Score evalPosition(Board board) {
         int mobility_white, mobility_black;
         int *other_mobility;
 
-        if (board.isWhite()) {
+        if (board->isWhite()) {
             mobility_white = legal_moves.size();
             other_mobility = &mobility_black;
         }
@@ -112,10 +112,10 @@ Score evalPosition(Board board) {
         }
             
         // Compute mobility for the other side
-        board.changeSide();
-        board.computeLegalMoves();
-        *other_mobility = board.getLegalMoves().size();
-        board.changeSide();
+        board->changeSide();
+        board->computeLegalMoves();
+        *other_mobility = board->getLegalMoves().size();
+        board->changeSide();
 
         int mobility_score = mobilityV * (mobility_white - mobility_black);
         int score = (material_score + mobility_score);
@@ -136,6 +136,9 @@ void Engine::parse_expr(string expr) {
 
     // parse expression of type : position fen [fen] moves [moves]
     if (res.size() > 1 && res[0] == "position") {
+
+        delete this->board;
+        this->board = new Board ();
 
         int moves_idx = 8;
 
@@ -226,7 +229,7 @@ void Engine::parse_expr(string expr) {
     }
 
     else if (expr == "undo") {
-        this->board->undo_move();
+        undo_move();
         this->board->printPieces();
     }
 
@@ -240,7 +243,7 @@ void Engine::parse_expr(string expr) {
 
     else if (expr == "eval") {
         clock_t start = startChrono();
-        Score s = evalPosition(*(this->board));
+        Score s = evalPosition(this->board);
         double dur = stopChrono(start);
         s.print();
         printf("\n%lf seconds.\n", dur);
@@ -427,12 +430,12 @@ Score Engine::searchOpeningBook (int depth) {
 
 Score Engine::inDepthAnalysis (int depth) {
 
-    if (depth == 0) return evalPosition(this->board);
+    if (depth == 0) return evalPosition(*this->board);
 
-    this->board.computeLegalMoves();
-    vector<ply> legal_moves = this->board.getLegalMoves();
+    this->board->computeLegalMoves();
+    vector<ply> legal_moves = this->board->getLegalMoves();
 
-    if (legal_moves.size() == 0) return evalPosition(this->board);
+    if (legal_moves.size() == 0) return evalPosition(*this->board);
 
 
     int size = legal_moves.size() / nb_thread_max;
@@ -442,7 +445,7 @@ Score Engine::inDepthAnalysis (int depth) {
     thread threads[nb_thread];
     Board boards[nb_thread];
 
-    string fen = this->board.getFen();
+    string fen = this->board->getFen();
 
     for (int i = 0; i<nb_thread; i++) {
         boards[i].init(fen);
@@ -472,8 +475,24 @@ Score Engine::inDepthAnalysis (int depth) {
     }
 
 
-    return Score::max(scores, this->board.isWhite());
+    return Score::max(scores, this->board->isWhite());
 }*/
+
+
+
+
+void Engine::undo_move () {
+    string fen = this->board->fens.back();
+    this->board->fens.pop_back();
+    vector<string> fens = this->board->fens;
+    
+    delete this->board;
+    this->board = new Board();
+    this->board->init(fen);
+    this->board->fens = fens;
+}
+
+
 
 Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
 
@@ -481,7 +500,7 @@ Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
     vector<ply> legal_moves = this->board->getLegalMoves();
     int size = legal_moves.size();
 
-    if (depth == 0 || size == 0) return evalPosition(*this->board);
+    if (depth == 0 || size == 0) return evalPosition(this->board);
 
 
     Score bestMove (0, true, !this->board->isWhite(), 0);
@@ -492,7 +511,7 @@ Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
         Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
         temp.plies.push_back(legal_moves[i]);
         temp.n_mate++;
-        this->board->undo_move();
+        undo_move();
 
         bestMove = Score::max(bestMove, temp, this->board->isWhite());
 
@@ -520,7 +539,7 @@ Score Engine::inDepthAnalysis (int depth) {
     for (ply p : legal_moves) {
         this->board->play_move(p, true);
         Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
-        this->board->undo_move();
+        undo_move();
         temp.plies.push_back(p);
         temp.n_mate++;
 

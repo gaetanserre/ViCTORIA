@@ -22,7 +22,7 @@ class Board {
         Board (){};
         ~Board();
 
-        Piece** squares;
+        Piece* squares [64];
 
         void init(string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         void printPieces();
@@ -31,7 +31,6 @@ class Board {
         bool play_move(ply p, bool force = false);
         bool play_move(string p);
 
-        void undo_move();
         string getFen();
 
         vector<ply> getLegalMoves() { return this->legal_moves; };
@@ -46,11 +45,14 @@ class Board {
         bool isOver();
         void computeLegalMoves();
 
-        void resetFens() { this->fens.resize(0); };
+        void resetFens() { this->fens = vector<string> (); };
 
         int nb_pieces;
 
         static ply StringToPly (string ply);
+
+        vector<string> fens;
+
 
     private:
         bool check_move_min(Square dep, Square stop);
@@ -86,5 +88,4 @@ class Board {
         vector<ply> last_move;
         int nb_rep = 0;
 
-        vector<string> fens;
 };
