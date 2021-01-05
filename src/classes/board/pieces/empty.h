@@ -5,6 +5,8 @@ class Empty : public Piece {
         Empty() : Piece(Square('z', -1), false) {
             this->name = "Null";
         }
+        
+        virtual ~Empty() {};
 
         bool check_move(Square goal, Piece* squares[]) override { return false; };
         bool en_prise (Square goal, Piece* squares[]) override { return false; };
