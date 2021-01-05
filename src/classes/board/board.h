@@ -70,9 +70,6 @@ class Board {
 
         bool check_move(ply p);
 
-
-        void checkRepetitions();
-
         vector<ply> legal_moves;
         bool white;
 
@@ -88,8 +85,4 @@ class Board {
         Square en_passant_square;
 
         int nb_moves;
-
-        vector<ply> last_move;
-        int nb_rep = 0;
-
 };

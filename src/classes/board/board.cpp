@@ -121,13 +121,6 @@ void Board::init (string fen) {
         row++;
     }
     this->nb_moves = stoi(nb_moves_str);
-
-    if (this->nb_rep != 0) this->nb_rep--;
-
-    if (this->last_move.size() > 0) {
-        this->last_move.pop_back();
-    }
-
 }
 
 void Board::printPieces () {
@@ -142,15 +135,6 @@ void Board::printPieces () {
     if (this->en_passant) {
         cout << this->en_passant_square.row << this->en_passant_square.line << endl;
     }
-
-    for (ply p : this->last_move) {
-        p.dep.print(); p.stop.print();
-        cout << endl;
-    }
-
-
-    cout << "rep: " << this->nb_rep << endl;
-
 }
 
 void Board::printLegalMoves () {
@@ -176,10 +160,12 @@ bool Board::isTakeable (Square s) {
 }
 
 bool Board::isCheck () {
-    if (this->white) 
+    if (this->white){
         return isTakeable (this->white_king->getPosition());
-    else
+    }
+    else {
         return isTakeable (this->black_king->getPosition());
+    }
 }
 
 bool Board::check_castle (ply p) {
@@ -192,42 +178,46 @@ bool Board::check_castle (ply p) {
     bool c_short = this->white ? this->castling_short_w : this->castling_short_b;
     bool c_long = this->white ? this->castling_long_w : this->castling_long_b;
 
-    if (dep == Square('e', line)) {
-        if (stop == Square('g', line) && c_short) {
-            l[0] = Square('f', line); l[1] = Square('g', line);
-            size = 2;
-            castling = true;
+    if (c_short || c_long) {
+
+        if (dep == Square('e', line)) {
+            if (stop == Square('g', line) && c_short) {
+                l[0] = Square('f', line); l[1] = Square('g', line);
+                size = 2;
+                castling = true;
+            }
+
+            if (stop == Square('c', line) && c_long) {
+                l[0] = Square('d', line); l[1] = Square('c', line);
+                l[2] = Square('b', line);
+                size = 3;
+                castling = true;
+            }
         }
 
-        if (stop == Square('c', line) && c_long) {
-            l[0] = Square('d', line); l[1] = Square('c', line);
-            l[2] = Square('b', line);
-            size = 3;
-            castling = true;
+        /*
+            We first check if the king is in check,
+            then if there is a piece blocking the castle 
+            and finally, if any the cases is en prise.
+            It's more efficient to do 2 for loops 
+            because it's much more easy to verify is there a piece blocking the castle.
+        */
+
+        if (castling) {
+            if (isCheck()) return false;
+
+            for (int i = 0; i<size; i++) {
+                if (checkIfPiece(this->squares[squareToIdx(l[i])]))
+                    return false;
+            }
+
+            for (int i = 0; i<size; i++) {
+                if (isTakeable(l[i])) return false;
+            }
+            return true;
         }
     }
 
-    /*
-        We first check if the king is in check,
-        then if there is a piece blocking the castle 
-        and finally, if any the cases is en prise.
-        It's more efficient to do 2 for loops 
-        because it's much more easy to verify is there a piece blocking the castle.
-    */
-
-    if (castling) {
-        if (isCheck()) return false;
-
-        for (int i = 0; i<size; i++) {
-            if (checkIfPiece(this->squares[squareToIdx(l[i])]))
-                return false;
-        }
-
-        for (int i = 0; i<size; i++) {
-            if (isTakeable(l[i])) return false;
-        }
-        return true;
-    }
     return false;
 }
 
@@ -345,6 +335,7 @@ bool Board::check_move (ply p) {
             this->squares[idx_stop] = temp;
         }
 
+
         this->squares[idx_dep] = new Empty();
 
         bool check = isCheck();
@@ -362,36 +353,6 @@ bool Board::check_move (ply p) {
 
     // If the move was illegal, we check if it was a castle.
     return check_castle({dep, stop});
-}
-
-void Board::checkRepetitions () {
-    int size = this->last_move.size();
-    if (size == 4) {
-        ply m1 = last_move[0];
-        ply m2 = last_move[2];
-        ply m3 = last_move[1];
-        ply m4 = last_move[3];
-
-        if (
-            m1.dep == m2.stop && m1.stop == m2.dep &&
-            m3.dep == m4.stop && m3.stop == m4.dep
-            ) 
-        {
-            this->nb_rep++;
-        }
-
-        else {
-            this->nb_rep = 0; 
-        }
-
-    } else if (size == 5) {
-        last_move[0] = last_move[2];
-        last_move[1] = last_move[3];
-        last_move[2] = last_move[4];
-
-        last_move.pop_back();
-        last_move.pop_back();
-    }
 }
 
 bool Board::play_move (ply p, bool force) {
@@ -469,12 +430,12 @@ bool Board::play_move (ply p, bool force) {
                     if (stop == this->en_passant_square) {
                         if (this->white) {
                             // Prevent memory leak
-                            delete this->squares[squareToIdx(Square(stop.row, stop.line-1))];
+                            //delete this->squares[squareToIdx(Square(stop.row, stop.line-1))];
 
                             this->squares[squareToIdx(Square(stop.row, stop.line-1))] = new Empty();
                         } else {
                             // Prevent memory leak
-                            delete this->squares[squareToIdx(Square(stop.row, stop.line+1))];
+                            //delete this->squares[squareToIdx(Square(stop.row, stop.line+1))];
                             
                             this->squares[squareToIdx(Square(stop.row, stop.line+1))] = new Empty();
                         }
@@ -488,31 +449,15 @@ bool Board::play_move (ply p, bool force) {
                 this->squares[idx_stop] = temp;
             }
 
-            /*
-                We had move to check repetitions. 
-                Since a move start with white ply, we need to check that either.
-            */
-            int size_last_move = this->last_move.size();
-            if (size_last_move < 5) {
-                if (size_last_move == 0) {
-                    if(this->white) last_move.push_back(p);
-                } 
-                else last_move.push_back(p);
-            }
-
 
             this->white = !this->white;
 
             this->nb_moves++;
 
-            checkRepetitions();
-
             return true;
 
         } else {
             play_castle(p);
-            this->last_move.clear();
-            this->nb_rep = 0; 
             return true;
         }
 
@@ -529,30 +474,28 @@ void Board::computeLegalMoves () {
     this->legal_moves = vector<ply> ();
     this->nb_pieces = 0;
 
-    if (this->nb_rep < 3) { // Fix the stalemate by repetitions
-        for(int i = 0; i<64; i++) {
-            if (checkIfPiece(this->squares[i])) {
-                nb_pieces++;
-                if (this->squares[i]->isWhite() == this->white) {
+    for(int i = 0; i<64; i++) {
+        if (checkIfPiece(this->squares[i])) {
+            nb_pieces++;
+            if (this->squares[i]->isWhite() == this->white) {
 
-                    for (int j = 0; j<64; j++) {
+                for (int j = 0; j<64; j++) {
 
-                        Square dep = this->squares[i]->getPosition();
-                        Square stop = IdxToSquare(j);
-                        int line = this->white ? 8 : 1;
+                    Square dep = this->squares[i]->getPosition();
+                    Square stop = IdxToSquare(j);
+                    int line = this->white ? 8 : 1;
 
-                        if (this->squares[i]->getName() == "pawn" && stop.line == line) {
-                            if (check_move({dep, stop, true, 'q'}))
-                                this->legal_moves.push_back({dep, stop, true, 'q'});
+                    if (this->squares[i]->getName() == "pawn" && stop.line == line) {
+                        if (check_move({dep, stop, true, 'q'}))
+                            this->legal_moves.push_back({dep, stop, true, 'q'});
 
-                            if (check_move({dep, stop, true, 'n'}))
-                                this->legal_moves.push_back({dep, stop, true, 'n'});
-                        } 
+                        if (check_move({dep, stop, true, 'n'}))
+                            this->legal_moves.push_back({dep, stop, true, 'n'});
+                    } 
                             
-                        else {
-                            if (check_move({dep, stop, false, ' '}))
-                                this->legal_moves.push_back({dep, stop, false, ' '});
-                        }
+                    else {
+                        if (check_move({dep, stop, false, ' '}))
+                            this->legal_moves.push_back({dep, stop, false, ' '});
                     }
                 }
             }
@@ -578,8 +521,9 @@ void Board::undo_move() {
     string fen = this->fens.back();
     this->fens.pop_back();
 
-    for (int i = 0; i<64; i++)
+    for (int i = 0; i<64; i++) {
         delete this->squares[i];
+    }
         
     init(fen);
 }

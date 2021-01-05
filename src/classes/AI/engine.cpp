@@ -484,6 +484,7 @@ Score Engine::inDepthAnalysis (int depth) {
 Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
 
     this->board->computeLegalMoves();
+
     vector<ply> legal_moves = this->board->getLegalMoves();
     int size = legal_moves.size();
 
@@ -502,7 +503,6 @@ Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
 
         bestMove = Score::max(bestMove, temp, this->board->isWhite());
 
-
         if (this->board->isWhite())
             alpha = Score::max (alpha, bestMove, true);
         else 
@@ -511,7 +511,6 @@ Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
         if (beta <= alpha) return bestMove;
     }
     return bestMove;
-
 }
 
 Score Engine::inDepthAnalysis (int depth) {
@@ -524,6 +523,7 @@ Score Engine::inDepthAnalysis (int depth) {
 
 
     for (ply p : legal_moves) {
+
         this->board->play_move(p, true);
         Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
         this->board->undo_move();
