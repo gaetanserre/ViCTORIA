@@ -25,15 +25,8 @@ void Score::print_info(int depth, bool white) {
         cout << "mate " << (this->white_mate == white ? n : -n);
     }
 
-    else {
-
-        int score = this->score;
-        // If white has advantage and it's black to play, we multiply score by -1  
-        if (this->score > 0 && !white) {
-            score *= -1;
-        }
-    
-        cout << "cp " << score;
+    else {  
+        cout << "cp " << this->score;
     }
 
     cout << " pv ";
