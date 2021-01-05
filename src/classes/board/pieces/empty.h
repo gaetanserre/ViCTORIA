@@ -8,7 +8,6 @@ class Empty : public Piece {
         
         virtual ~Empty() {};
 
-        virtual ~Empty () {}
 
         bool check_move(Square goal, Piece* squares[]) override { return false; };
         bool en_prise (Square goal, Piece* squares[]) override { return false; };
