@@ -212,7 +212,7 @@ void Engine::parse_expr(string expr) {
 
         clock_t start = startChrono();
         if (this->moves.size() < 14 && this->startpos && !direct_analysis)
-            this->best_move = searchOpeningBook(3);
+            this->best_move = searchOpeningBook(depth);
         else
             this->best_move = inDepthAnalysis(depth);
 
@@ -229,8 +229,9 @@ void Engine::parse_expr(string expr) {
     }
 
     else if (expr == "undo") {
-        undo_move();
+        this->board->undo_move();
         this->board->printPieces();
+        this->moves.pop_back();
     }
 
     else if (expr == "legal") {
@@ -480,20 +481,6 @@ Score Engine::inDepthAnalysis (int depth) {
 
 
 
-
-void Engine::undo_move () {
-    string fen = this->board->fens.back();
-    this->board->fens.pop_back();
-    vector<string> fens = this->board->fens;
-    
-    delete this->board;
-    this->board = new Board();
-    this->board->init(fen);
-    this->board->fens = fens;
-}
-
-
-
 Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
 
     this->board->computeLegalMoves();
@@ -511,7 +498,7 @@ Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
         Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
         temp.plies.push_back(legal_moves[i]);
         temp.n_mate++;
-        undo_move();
+        this->board->undo_move();
 
         bestMove = Score::max(bestMove, temp, this->board->isWhite());
 
@@ -539,7 +526,7 @@ Score Engine::inDepthAnalysis (int depth) {
     for (ply p : legal_moves) {
         this->board->play_move(p, true);
         Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
-        undo_move();
+        this->board->undo_move();
         temp.plies.push_back(p);
         temp.n_mate++;
 

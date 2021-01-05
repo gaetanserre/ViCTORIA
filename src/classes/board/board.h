@@ -45,6 +45,9 @@ class Board {
         bool isOver();
         void computeLegalMoves();
 
+        void undo_move ();
+
+
         void resetFens() { this->fens = vector<string> (); };
 
         int nb_pieces;
@@ -52,6 +55,7 @@ class Board {
         static ply StringToPly (string ply);
 
         vector<string> fens;
+
 
 
     private:

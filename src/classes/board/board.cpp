@@ -573,6 +573,17 @@ bool Board::isOver () {
     return isCheckmate(legal_moves_size) || isStalemate(legal_moves_size);
 }
 
+
+void Board::undo_move() {
+    string fen = this->fens.back();
+    this->fens.pop_back();
+
+    for (int i = 0; i<64; i++)
+        delete this->squares[i];
+        
+    init(fen);
+}
+
 string Board::getFen () {
     string fen = "";
 
