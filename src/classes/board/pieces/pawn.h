@@ -5,6 +5,8 @@ class Pawn: public Piece {
         Pawn(Square position, bool white, bool start_pos,
            bool* en_passant, Square* en_passant_square);
         
+        virtual ~Pawn () {};
+        
         bool check_move(Square goal, Piece* squares[]) override;
         bool en_prise(Square goal, Piece* squares[]) override;
 

@@ -7,6 +7,7 @@
 class Piece {
     public:
         Piece (Square position, bool white);
+        virtual ~Piece () {};
         void print_piece ();
         
         std::string getName() { return this->name; }
