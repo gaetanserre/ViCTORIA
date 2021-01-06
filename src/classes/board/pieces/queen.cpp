@@ -4,6 +4,11 @@
 
 Queen::Queen (Square position, bool white) : Piece(position, white) {
     this->name = "queen";
+
+    this->pieceValue = 900;
+
+    this->table = &queen_table[0];
+    this->table_end_game = &queen_table[0];
 }
 
 bool Queen::check_move(Square goal, Piece* squares[]) {

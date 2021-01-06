@@ -2,6 +2,11 @@
 
 Knight::Knight (Square position, bool white) : Piece(position, white) {
     this->name = "knight";
+
+    this->pieceValue = 320;
+
+    this->table = &knight_table[0];
+    this->table_end_game = &knight_table[0];
 }
 
 bool Knight::check_move(Square goal, Piece* squares[]) {

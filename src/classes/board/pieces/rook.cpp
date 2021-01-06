@@ -2,6 +2,11 @@
 
 Rook::Rook(Square position, bool white) : Piece(position, white) {
     this->name = "rook";
+
+    this->pieceValue = 500;
+
+    this->table = &rook_table[0];
+    this->table_end_game = &rook_table[0];
 }
 
 bool Rook::check_move(Square goal, Piece* squares[]) {

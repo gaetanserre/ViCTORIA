@@ -27,13 +27,10 @@ void Score::print_info(int depth, bool white) {
 
     else {
         
-        int score = this->score;
-        // If white has advantage and it's black to play, we multiply score by -1  
-        if (this->score > 0 && !white) {
-            score *= -1;
-        }
-    
-        cout << "cp " << score;
+        // If it's black to play we multiply score by -1 
+        int score = white ? this->score : -this->score;
+
+       cout << "cp " << score;
     }
 
     cout << " pv ";

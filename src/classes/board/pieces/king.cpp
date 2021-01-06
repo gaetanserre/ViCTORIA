@@ -3,6 +3,11 @@
 King::King (Square position, bool white) : Piece(position, white) {
     this->name = "king";
     this->is_check = false;
+
+    this->pieceValue = 2000;
+
+    this->table = &king_table[0];
+    this->table_end_game = &king_table_end_game[0];
 }
 
 bool King::check_move(Square goal, Piece* squares[]) {
@@ -24,3 +29,4 @@ bool King::check_move(Square goal, Piece* squares[]) {
 
     return false;
 };
+

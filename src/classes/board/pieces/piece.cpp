@@ -11,7 +11,8 @@ void Piece::print_piece() {
         color = "white";
 
     std::cout << color << " " << this->name << " " <<
-              this->position.row << this->position.line << std::endl;
+              this->position.row << this->position.line <<
+              " score : " << this->getPieceValue(false) << std::endl;
 }
 
 bool Piece::checkIfPieceIsTakeable(Piece* p) {
@@ -61,4 +62,17 @@ Square IdxToSquare(int idx) {
 
 bool checkIfPiece(Piece *p) {
     return p->getName() != "Null";
+}
+
+float Piece::getPieceValue (bool end_game) {
+    Square pos = this->white ? this->position : Square (this->position.row, 8 - this->position.line + 1);
+
+    float score = this->pieceValue;
+
+    if (end_game)
+        score += this->table_end_game[squareToIdx(pos)];
+    else 
+        score += this->table[squareToIdx(pos)];
+
+    return this->white ? score : -score;
 }

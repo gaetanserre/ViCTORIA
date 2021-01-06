@@ -149,6 +149,7 @@ void Board::printLegalMoves () {
 } 
 
 bool Board::isTakeable (Square s) {
+    if (s.line < 1 || s.line > 8) return true; // Bug to fix
     for (int i = 0; i<64; i++) {
         if (checkIfPiece (this->squares[i]) && 
             this->white != this->squares[i]->isWhite()) {
@@ -397,6 +398,7 @@ bool Board::play_move (ply p, bool force) {
                 else {
                     this->squares[idx_stop] = new Knight(stop, temp->isWhite());
                 }
+                delete temp;
             } else {
                 temp->setPosition(stop);
                 /*
@@ -430,12 +432,12 @@ bool Board::play_move (ply p, bool force) {
                     if (stop == this->en_passant_square) {
                         if (this->white) {
                             // Prevent memory leak
-                            //delete this->squares[squareToIdx(Square(stop.row, stop.line-1))];
+                            delete this->squares[squareToIdx(Square(stop.row, stop.line-1))];
 
                             this->squares[squareToIdx(Square(stop.row, stop.line-1))] = new Empty();
                         } else {
                             // Prevent memory leak
-                            //delete this->squares[squareToIdx(Square(stop.row, stop.line+1))];
+                            delete this->squares[squareToIdx(Square(stop.row, stop.line+1))];
                             
                             this->squares[squareToIdx(Square(stop.row, stop.line+1))] = new Empty();
                         }

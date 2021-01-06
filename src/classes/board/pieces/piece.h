@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <functional>
+#include <vector>
 #include "../square.h"
+#include "table.h"
 
 class Piece {
     public:
@@ -16,14 +18,21 @@ class Piece {
         bool isWhite() { return this->white; };
 
         bool checkIfPieceIsTakeable(Piece* p);
-        virtual bool check_move(Square goal, Piece* squares[])=0;
-        virtual bool en_prise(Square goal, Piece* squares[])=0;
+        virtual bool check_move(Square goal, Piece* squares[]) = 0;
+        virtual bool en_prise(Square goal, Piece* squares[]) = 0;
+
+        float getPieceValue (bool end_game);
 
         
     protected:
         Square position;
         bool white;
         std::string name;
+        
+        int pieceValue;
+        const float* table;
+        const float* table_end_game;
+
         bool itermove(
             int init, Piece* squares[],
             std::function<bool(int)> test,

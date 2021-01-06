@@ -6,6 +6,11 @@ Pawn::Pawn(Square position, bool white, bool start_pos,
     this->start_pos = start_pos;
     this->en_passant = en_passant;
     this->en_passant_square = en_passant_square;
+
+    this->pieceValue = 100;
+
+    this->table = &pawn_table[0];
+    this->table_end_game = &pawn_table[0];
 }
 
 int Pawn::forward (int n) {

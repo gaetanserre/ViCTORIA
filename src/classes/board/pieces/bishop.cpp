@@ -3,6 +3,11 @@
 
 Bishop::Bishop(Square position, bool white) : Piece(position, white) {
     this->name = "bishop";
+
+    this->pieceValue = 325;
+
+    this->table = &bishop_table[0];
+    this->table_end_game = &bishop_table[0];
 }
 
 bool Bishop::check_move(Square goal, Piece* squares[]) {

@@ -49,53 +49,64 @@ Score evalPosition(Board* board) {
 
     } else {
 
-        // Value in centipawn
-        const int kingV = 2000;
-        const int queenV = 900;
-        const int rookV = 500;
-        const int BNV = 300;
-        const int pawnV = 100;
+        bool end_game = board->nb_pieces <= 8;
         
         int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
             wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
+        
+        int material_score = 0;
 
         for (int i = 0; i<64; i++) {
-            Piece* p = board->squares[i];
-            string name = p->getName();
 
-            if (name == "king") {
-                p->isWhite() ? wK++ : bK++;
-            }
+            if (checkIfPiece(board->squares[i])) {
+                string name = board->squares[i]->getName();
+                material_score += board->squares[i]->getPieceValue(end_game);
 
-            if (name == "queen") {
-                p->isWhite() ? wQ++ : bQ++;
-            }
+                if (name == "king") {
+                    board->squares[i]->isWhite() ? wK++ : bK++;
+                }
 
-            if (name == "rook") {
-                p->isWhite() ? wR++ : bR++;
-            }
+                if (name == "queen") {
+                    board->squares[i]->isWhite() ? wQ++ : bQ++;
+                }
 
-            if (name == "knight") {
-                p->isWhite() ? wN++ : bN++;
-            }
+                if (name == "rook") {
+                    board->squares[i]->isWhite() ? wR++ : bR++;
+                }
 
-            if (name == "bishop") {
-                p->isWhite() ? wB++ : bB++;
-            }
+                if (name == "knight") {
+                    board->squares[i]->isWhite() ? wN++ : bN++;
+                }
 
-            if (name == "pawn") {
-                p->isWhite() ? wP++ : bP++;
+                if (name == "bishop") {
+                    board->squares[i]->isWhite() ? wB++ : bB++;
+                }
+
+                if (name == "pawn") {
+                    board->squares[i]->isWhite() ? wP++ : bP++;
+                }
             }
         }
+
+        if (end_game) {
+
+            // Pair of bishop
+            if (wB >= 2)
+                material_score += 10;
+
+            if (bB >= 2)
+                material_score -= 10;
+
+            // Increase pawn value
+            for (int i = 0; i<wP; i++)
+                material_score += 100;
+
+            for (int i = 0; i<bP; i++)
+                material_score -= 100;
+        }
+
         //cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
             
-        int material_score =  kingV * (wK - bK)
-                            + queenV * (wQ - bQ)
-                            + rookV * (wR - bR)
-                            + BNV * (wN - bN)
-                            + BNV * (wB - bB)
-                            + pawnV * (wP - bP)
-        ;
 
         const float mobilityV = 3;
 
@@ -358,128 +369,6 @@ Score Engine::searchOpeningBook (int depth) {
 
     return inDepthAnalysis(depth);
 }
-
-
-
-
-
-/*void inDepthAnalysisThread (int n_thread, int depth, vector<ply> moves, Board board, Score* res) {
-
-    // First we evaluate the position for each legal moves
-
-    vector<Score> scores;
-
-    for (ply p : moves) {
-        board.play_move(p, true);
-        board.computeLegalMoves();
-        Score s = evalPosition(board);
-        board.undo_move();
-
-        s.plies.push_back(p);
-        s.n_mate = s.plies.size();
-
-        //If mate in 1
-        if (s.mate && s.white_mate == board.isWhite()) {
-            *res = s;
-            return;
-        }
-
-        scores.push_back(s);
-    }
-
-    // Then we store all variants starting with depth 1, 2, 3 etc...
-
-    vector<Score> sol;
-    for (Score s : scores)
-        sol.push_back(s);
-
-    for (int i = 1; i<depth; i++) {
-        for (int j = 0; j<scores.size(); j++) {
-            
-            //We store the initial position
-            string initPos = board.getFen();
-
-            for (ply p : scores[j].plies)
-                board.play_move(p, true);
-            
-            board.computeLegalMoves();
-            Score temp;
-            inDepthAnalysisThread(n_thread, i, board.getLegalMoves(), board, &temp);
-            temp.plies.insert(temp.plies.begin(), scores[j].plies.begin(), scores[j].plies.end());
-            temp.n_mate = temp.plies.size();
-
-            sol[j] = temp;
-
-            // We restore the initial position
-            board.init(initPos);
-            
-            // If one of the variants is checkmate, we return it.
-            if (temp.mate && temp.white_mate == board.isWhite()) {
-                *res = temp;
-                return;
-            }
-        }
-    }
-
-    // Finally we return the best variant
-
-    *res = Score::max (sol, board.isWhite());
-}
-
-#include <thread>
-#define nb_thread_max 3
-
-Score Engine::inDepthAnalysis (int depth) {
-
-    if (depth == 0) return evalPosition(*this->board);
-
-    this->board->computeLegalMoves();
-    vector<ply> legal_moves = this->board->getLegalMoves();
-
-    if (legal_moves.size() == 0) return evalPosition(*this->board);
-
-
-    int size = legal_moves.size() / nb_thread_max;
-    int nb_thread = size > 0 ? nb_thread_max : 1;
-
-    vector<Score> scores (nb_thread);
-    thread threads[nb_thread];
-    Board boards[nb_thread];
-
-    string fen = this->board->getFen();
-
-    for (int i = 0; i<nb_thread; i++) {
-        boards[i].init(fen);
-    }
-
-    vector<vector<ply>> moves(nb_thread);
-
-    int count = 0;
-    for (int i = 0; i<nb_thread; i++) {
-
-        if (size > 0) {
-            while (moves[i].size() < size) {
-                moves[i].push_back(legal_moves[count]);
-                count ++;
-            }
-        } else {
-            moves[i] = legal_moves;
-        }
-        
-        threads[i] = thread(inDepthAnalysisThread, i+1, depth, moves[i], boards[i], &scores[i]);
-
-    }
-
-
-    for (int i = 0; i<nb_thread; i++) {
-        threads[i].join();
-    }
-
-
-    return Score::max(scores, this->board->isWhite());
-}*/
-
-
 
 Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
 
