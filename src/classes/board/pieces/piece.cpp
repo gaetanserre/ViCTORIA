@@ -12,7 +12,7 @@ void Piece::print_piece() {
 
     std::cout << color << " " << this->name << " " <<
               this->position.row << this->position.line <<
-              " score : " << this->getPieceValue(false) << std::endl;
+              " value : " << this->getPieceValue(false) << std::endl;
 }
 
 bool Piece::checkIfPieceIsTakeable(Piece* p) {
