@@ -7,7 +7,8 @@ Board::~Board() {
 
 void Board::init (string fen) {
 
-    this->nb_pieces = 0;
+    this->nb_piece = 0;
+    this->nb_pawn = 0;
 
     int row = 97; // ASCII for 'a'
     int line = 8;
@@ -57,46 +58,48 @@ void Board::init (string fen) {
 
         else if (fen[i] == 'r') {
             this->squares[idx] = new Rook(position, false);
-            this->nb_pieces++;
+            this->nb_piece++;
         } else if (fen[i] == 'n') {
             this->squares[idx] = new Knight(position, false);
-            this->nb_pieces++;
+            this->nb_piece++;
         } else if (fen[i] == 'b') {
             this->squares[idx] = new Bishop(position, false);
-            this->nb_pieces++;
+            this->nb_piece++;
         } else if (fen[i] == 'q') {
             this->squares[idx] = new Queen(position, false);
-            this->nb_pieces++;
+            this->nb_piece++;
         } else if (fen[i] == 'k') {
             this->squares[idx] = new King(position, false);
-            this->nb_pieces++;
+            this->nb_piece++;
             this->black_king = this->squares[idx];
         } else if (fen[i] == 'p') {
             this->squares[idx] = new Pawn(position, false, line == 7,
                     &(this->en_passant), &(this->en_passant_square));
-            this->nb_pieces++;
+            this->nb_piece++;
+            this->nb_pawn++;
         }
 
         else if (fen[i] == 'R') {
             this->squares[idx] = new Rook(position, true);
-            this->nb_pieces++;
+            this->nb_piece++;
         } else if (fen[i] == 'N') {
             this->squares[idx] = new Knight(position, true);
-            this->nb_pieces++;
+            this->nb_piece++;
         } else if (fen[i] == 'B') {
             this->squares[idx] = new Bishop(position, true);
-            this->nb_pieces++;
+            this->nb_piece++;
         } else if (fen[i] == 'Q') {
             this->squares[idx] = new Queen(position, true);
-            this->nb_pieces++;
+            this->nb_piece++;
         } else if (fen[i] == 'K') {
             this->squares[idx] = new King(position, true);
-            this->nb_pieces++;
+            this->nb_piece++;
             this->white_king = this->squares[idx];
         } else if (fen[i] == 'P') {
             this->squares[idx] = new Pawn(position, true, line == 2,
                     &(this->en_passant), &(this->en_passant_square));
-            this->nb_pieces++;
+            this->nb_piece++;
+            this->nb_pawn++;
         }
 
         else if (fen[i] == '/') {
@@ -135,6 +138,8 @@ void Board::printPieces () {
     if (this->en_passant) {
         cout << this->en_passant_square.row << this->en_passant_square.line << endl;
     }
+    cout << "pieces: " << this->nb_piece << endl;
+    cout << "pawns: " << this->nb_pawn << endl;
 }
 
 void Board::printLegalMoves () {
@@ -324,27 +329,15 @@ bool Board::check_move (ply p) {
         Piece* temp = this->squares[idx_dep];
         Piece* temp_stop = this->squares[idx_stop];
 
-        // Promotion
-        if (p.promote) {
-            if (! isPromote (this->squares[idx_dep])) return false;
-            if (p.prom == 'q')
-                this->squares[idx_stop] = new Queen(stop, temp->isWhite());
-            else
-                this->squares[idx_stop] = new Knight(stop, temp->isWhite());
-        } else {
-            temp->setPosition(stop);
-            this->squares[idx_stop] = temp;
-        }
 
+        temp->setPosition(stop);
+        this->squares[idx_stop] = temp;
 
         this->squares[idx_dep] = new Empty();
 
         bool check = isCheck();
 
-        // Prevent memory leak
-        if (p.promote) delete this->squares[idx_stop];
         delete this->squares[idx_dep];
-
 
         this->squares[idx_dep] = temp;
         this->squares[idx_dep]->setPosition(dep);
@@ -390,15 +383,23 @@ bool Board::play_move (ply p, bool force) {
             this->squares[idx_dep] = new Empty();
             delete this->squares[idx_stop];
 
-
+            // Promotion
             if (p.promote) {
                 if (p.prom == 'q') {
                     this->squares[idx_stop] = new Queen(stop, temp->isWhite());
                 }
-                else {
+                else if (p.prom == 'n') {
                     this->squares[idx_stop] = new Knight(stop, temp->isWhite());
                 }
+                else if (p.prom == 'r') {
+                    this->squares[idx_stop] = new Rook(stop, temp->isWhite());
+                }
+                else if (p.prom == 'b') {
+                    this->squares[idx_stop] = new Bishop(stop, temp->isWhite());
+                }
+                this->nb_pawn--;
                 delete temp;
+
             } else {
                 temp->setPosition(stop);
                 /*
@@ -474,11 +475,14 @@ bool Board::play_move (string p) {
 
 void Board::computeLegalMoves () {
     this->legal_moves = vector<ply> ();
-    this->nb_pieces = 0;
+    this->nb_piece = 0;
+    this->nb_pawn = 0;
 
     for(int i = 0; i<64; i++) {
         if (checkIfPiece(this->squares[i])) {
-            nb_pieces++;
+            nb_piece++;
+            if (this->squares[i]->getName() == "pawn") this->nb_pawn++;
+
             if (this->squares[i]->isWhite() == this->white) {
 
                 for (int j = 0; j<64; j++) {
@@ -487,17 +491,15 @@ void Board::computeLegalMoves () {
                     Square stop = IdxToSquare(j);
                     int line = this->white ? 8 : 1;
 
-                    if (this->squares[i]->getName() == "pawn" && stop.line == line) {
-                        if (check_move({dep, stop, true, 'q'}))
+                    if (check_move({dep, stop})) {
+                        if (this->squares[i]->getName() == "pawn" && stop.line == line) {
                             this->legal_moves.push_back({dep, stop, true, 'q'});
-
-                        if (check_move({dep, stop, true, 'n'}))
                             this->legal_moves.push_back({dep, stop, true, 'n'});
-                    } 
-                            
-                    else {
-                        if (check_move({dep, stop, false, ' '}))
-                            this->legal_moves.push_back({dep, stop, false, ' '});
+                            this->legal_moves.push_back({dep, stop, true, 'r'});
+                            this->legal_moves.push_back({dep, stop, true, 'b'});
+                        }
+                        else
+                            this->legal_moves.push_back({dep, stop});
                     }
                 }
             }

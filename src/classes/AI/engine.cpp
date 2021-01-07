@@ -38,7 +38,7 @@ double stopChrono(clock_t start) {
 }
 
 
-Score evalPosition(Board* board) {
+Score Engine::evalPosition(Board* board) {
     vector<ply> legal_moves = board->getLegalMoves();
     int size = legal_moves.size();
     
@@ -48,8 +48,6 @@ Score evalPosition(Board* board) {
         else return Score(0, false, false, 0);
 
     } else {
-
-        bool end_game = board->nb_pieces <= 8;
         
         int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
             wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
@@ -60,7 +58,7 @@ Score evalPosition(Board* board) {
 
             if (checkIfPiece(board->squares[i])) {
                 string name = board->squares[i]->getName();
-                material_score += board->squares[i]->getPieceValue(end_game);
+                material_score += board->squares[i]->getPieceValue(this->end_game);
 
                 if (name == "king") {
                     board->squares[i]->isWhite() ? wK++ : bK++;
@@ -88,7 +86,7 @@ Score evalPosition(Board* board) {
             }
         }
 
-        if (end_game) {
+        if (this->end_game) {
 
             // Pair of bishop
             if (wB >= 2)
@@ -96,13 +94,11 @@ Score evalPosition(Board* board) {
 
             if (bB >= 2)
                 material_score -= 10;
-
+            
             // Increase pawn value
-            for (int i = 0; i<wP; i++)
-                material_score += 100;
+            material_score += wP*200;
+            material_score -= bP*200;
 
-            for (int i = 0; i<bP; i++)
-                material_score -= 100;
         }
 
         //cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
@@ -209,10 +205,10 @@ void Engine::parse_expr(string expr) {
     
     else if (res.size() > 0 && res[0] == "go") {
 
-        int depth = 4;
+        this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
 
         // We check that there are less than 8 pieces on the chessboard.
-        if (this->board->nb_pieces != 0 && this->board->nb_pieces <= 8) depth = 5; 
+        int depth = end_game ? 5 : 4;
         
         bool direct_analysis = false;
 

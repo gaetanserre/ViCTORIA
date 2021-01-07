@@ -50,7 +50,8 @@ class Board {
 
         void resetFens() { this->fens = vector<string> (); };
 
-        int nb_pieces;
+        int nb_piece;
+        int nb_pawn;
 
         static ply StringToPly (string ply);
 
