@@ -254,10 +254,11 @@ void Engine::parse_expr(string expr) {
     }
 
     else if (expr == "eval") {
+        this->board->computeLegalMoves();
         clock_t start = startChrono();
         Score s = evalPosition(this->board);
         double dur = stopChrono(start);
-        s.print();
+        s.print_info(1, this->board->isWhite());
         printf("\n%lf seconds.\n", dur);
     }
 

@@ -18,21 +18,33 @@ int Pawn::forward (int n) {
 }
 
 bool Pawn::check_move(Square goal, Piece* squares[]) {
+
+    bool piece = false;
+
+    // Test if there is a not takeable piece at the goal
+    if (checkIfPiece(squares[squareToIdx(goal)])) {
+        piece = true;
+        if (!checkIfPieceIsTakeable(squares[squareToIdx(goal)])) {
+            return false;
+        }
+    }
+
     if (this->position.row == goal.row) {
         if (this->position.line + forward(1) == goal.line)
-            return ! checkIfPiece(squares[squareToIdx(goal)]);
+            return !piece;
         
-        else if ((this->position.line + forward(2) == goal.line) && this->start_pos)
-            return ! checkIfPiece(squares[squareToIdx(goal)]);
+        else if ((this->position.line + forward(2) == goal.line) && this->start_pos) {
+            // Check if there is a piece between the pawn and the goal
+            return !piece &&
+                   ! checkIfPiece(squares[squareToIdx(Square(goal.row, goal.line - forward(1)))]);
+        }
         
         else return false;
 
     } else if (this->PlusOrMinus(this->position.row, goal.row, 1)) {
-        if (this->position.line + forward(1) == goal.line)
-        
-            return 
-                this->checkIfPieceIsTakeable(squares[squareToIdx(goal)]) ||
-                (*(this->en_passant) && (*this->en_passant_square) == goal);
+        if (this->position.line + forward(1) == goal.line) {
+            return piece || (*(this->en_passant) && (*this->en_passant_square) == goal);
+        }
             
         else return false;
 
