@@ -7,8 +7,10 @@ Engine::Engine() {
     this->name = "Chess AI Engine 1.0";
     this->board = new Board();
     this->board->init();
-    cout << this->name << endl;
+    this->mate_in = -1;
+    this->last_fen = "";
 
+    cout << this->name << endl;
 }
 
 
@@ -35,103 +37,6 @@ clock_t startChrono() {
 
 double stopChrono(clock_t start) {
     return (double)(clock() - start) / CLOCKS_PER_SEC;
-}
-
-
-Score Engine::evalPosition(Board* board) {
-    vector<ply> legal_moves = board->getLegalMoves();
-    int size = legal_moves.size();
-    
-    if (size == 0) {
-        if (board->isCheck())
-            return Score(0, true, !board->isWhite(), 0);
-        else return Score(0, false, false, 0);
-
-    } else {
-        
-        int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
-            wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
-        
-        int material_score = 0;
-
-        for (int i = 0; i<64; i++) {
-
-            if (checkIfPiece(board->squares[i])) {
-                string name = board->squares[i]->getName();
-                material_score += board->squares[i]->getPieceValue(this->end_game);
-
-                if (name == "king") {
-                    board->squares[i]->isWhite() ? wK++ : bK++;
-                }
-
-                if (name == "queen") {
-                    board->squares[i]->isWhite() ? wQ++ : bQ++;
-                }
-
-                if (name == "rook") {
-                    board->squares[i]->isWhite() ? wR++ : bR++;
-                }
-
-                if (name == "knight") {
-                    board->squares[i]->isWhite() ? wN++ : bN++;
-                }
-
-                if (name == "bishop") {
-                    board->squares[i]->isWhite() ? wB++ : bB++;
-                }
-
-                if (name == "pawn") {
-                    board->squares[i]->isWhite() ? wP++ : bP++;
-                }
-            }
-        }
-
-        if (this->end_game) {
-
-            // Pair of bishop
-            if (wB >= 2)
-                material_score += 10;
-
-            if (bB >= 2)
-                material_score -= 10;
-            
-            // Increase pawn value
-            material_score += wP*200;
-            material_score -= bP*200;
-
-        }
-
-        //cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
-            
-
-        const float mobilityV = 3;
-
-        int mobility_white, mobility_black;
-        int *other_mobility;
-
-        if (board->isWhite()) {
-            mobility_white = legal_moves.size();
-            other_mobility = &mobility_black;
-        }
-        else {
-            mobility_black = legal_moves.size();
-            other_mobility = &mobility_white;
-        }
-            
-        // Compute mobility for the other side
-        board->changeSide();
-        board->computeLegalMoves();
-        *other_mobility = board->getLegalMoves().size();
-        board->changeSide();
-
-        int mobility_score = mobilityV * (mobility_white - mobility_black);
-        int score = (material_score + mobility_score);
-
-        //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
-
-        return Score(score, false, false, 0);
-
-    }
 }
 
 
@@ -162,6 +67,11 @@ void Engine::parse_expr(string expr) {
             this->board->init(fen);
 
             this->startpos = fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
+
+            if (fen != this->last_fen) {
+                this->last_fen = fen;
+                this->mate_in = -1;
+            }
 
         } else if (res[1] == "startpos") {
             this->board->init();
@@ -207,8 +117,11 @@ void Engine::parse_expr(string expr) {
 
         this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
 
-        // We check that there are less than 8 pieces on the chessboard.
-        int depth = end_game ? 5 : 4;
+        /* 
+            We check if this is end game or if there is a inevitable checkmate.
+            If a checkmate in n moves has been found, it's useless to go deeper than depth n
+        */
+        int depth = this->mate_in != -1 ? this->mate_in : (end_game ? 5 : 4);
         
         bool direct_analysis = false;
 
@@ -250,6 +163,8 @@ void Engine::parse_expr(string expr) {
     }
 
     else if (expr == "eval") {
+        this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
+
         this->board->computeLegalMoves();
         clock_t start = startChrono();
         Score s = evalPosition(this->board);
@@ -367,6 +282,102 @@ Score Engine::searchOpeningBook (int depth) {
     return inDepthAnalysis(depth);
 }
 
+Score Engine::evalPosition(Board* board) {
+    vector<ply> legal_moves = board->getLegalMoves();
+    int size = legal_moves.size();
+    
+    if (size == 0) {
+        if (board->isCheck())
+            return Score(0, true, !board->isWhite(), 0);
+        else return Score(0, false, false, 0);
+
+    } else {
+        
+        int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
+            wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
+        
+        int material_score = 0;
+
+        for (int i = 0; i<64; i++) {
+
+            if (checkIfPiece(board->squares[i])) {
+                string name = board->squares[i]->getName();
+                material_score += board->squares[i]->getPieceValue(this->end_game);
+
+                if (name == "king") {
+                    board->squares[i]->isWhite() ? wK++ : bK++;
+                }
+
+                if (name == "queen") {
+                    board->squares[i]->isWhite() ? wQ++ : bQ++;
+                }
+
+                if (name == "rook") {
+                    board->squares[i]->isWhite() ? wR++ : bR++;
+                }
+
+                if (name == "knight") {
+                    board->squares[i]->isWhite() ? wN++ : bN++;
+                }
+
+                if (name == "bishop") {
+                    board->squares[i]->isWhite() ? wB++ : bB++;
+                }
+
+                if (name == "pawn") {
+                    board->squares[i]->isWhite() ? wP++ : bP++;
+                }
+            }
+        }
+
+        if (this->end_game) {
+
+            // Pair of bishop
+            if (wB >= 2)
+                material_score += 10;
+
+            if (bB >= 2)
+                material_score -= 10;
+            
+            // Increase pawn value
+            material_score += wP*200;
+            material_score -= bP*200;
+
+        }
+
+        //cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
+            
+
+        const float mobilityV = 3;
+
+        int mobility_white, mobility_black;
+        int *other_mobility;
+
+        if (board->isWhite()) {
+            mobility_white = legal_moves.size();
+            other_mobility = &mobility_black;
+        }
+        else {
+            mobility_black = legal_moves.size();
+            other_mobility = &mobility_white;
+        }
+            
+        // Compute mobility for the other side
+        board->changeSide();
+        board->computeLegalMoves();
+        *other_mobility = board->getLegalMoves().size();
+        board->changeSide();
+
+        int mobility_score = mobilityV * (mobility_white - mobility_black);
+        int score = (material_score + mobility_score);
+
+        //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
+
+        return Score(score, false, false, 0);
+
+    }
+}
+
 Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
 
     this->board->computeLegalMoves();
@@ -420,6 +431,8 @@ Score Engine::inDepthAnalysis (int depth) {
     }
 
     reverse(bestMove.plies.begin(), bestMove.plies.end());
+
+    if (bestMove.mate) this->mate_in = bestMove.n_mate;
     
     return bestMove;
 }

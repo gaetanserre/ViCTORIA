@@ -57,6 +57,10 @@ class Engine {
         bool startpos = true;
         bool end_game;
 
+        int mate_in;
+
+        string last_fen;
+
         Score best_move;
 
         vector<ply> moves;
