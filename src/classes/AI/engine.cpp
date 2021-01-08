@@ -7,8 +7,6 @@ Engine::Engine() {
     this->name = "Chess AI Engine 1.0";
     this->board = new Board();
     this->board->init();
-    this->mate_in = -1;
-    this->last_fen = "";
 
     cout << this->name << endl;
 }
@@ -68,11 +66,6 @@ void Engine::parse_expr(string expr) {
 
             this->startpos = fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
 
-            if (fen != this->last_fen) {
-                this->last_fen = fen;
-                this->mate_in = -1;
-            }
-
         } else if (res[1] == "startpos") {
             this->board->init();
             moves_idx = 2;
@@ -121,7 +114,7 @@ void Engine::parse_expr(string expr) {
             We check if this is end game or if there is a inevitable checkmate.
             If a checkmate in n moves has been found, it's useless to go deeper than depth n
         */
-        int depth = this->mate_in != -1 ? this->mate_in : (end_game ? 5 : 4);
+        int depth = end_game ? 5 : 4;
         
         bool direct_analysis = false;
 
@@ -431,8 +424,6 @@ Score Engine::inDepthAnalysis (int depth) {
     }
 
     reverse(bestMove.plies.begin(), bestMove.plies.end());
-
-    if (bestMove.mate) this->mate_in = bestMove.n_mate;
     
     return bestMove;
 }
