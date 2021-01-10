@@ -12,7 +12,7 @@ class Piece {
         virtual ~Piece () {};
         void print_piece ();
         
-        std::string getName() { return this->name; }
+        char getName() { return this->name; }
         void setPosition(Square position) { this->position = position; };
         Square getPosition() { return this->position; }
         bool isWhite() { return this->white; };
@@ -27,7 +27,7 @@ class Piece {
     protected:
         Square position;
         bool white;
-        std::string name;
+        char name;
         
         int pieceValue;
         const float* table;

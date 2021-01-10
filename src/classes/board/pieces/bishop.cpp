@@ -2,7 +2,7 @@
 #include <math.h>
 
 Bishop::Bishop(Square position, bool white) : Piece(position, white) {
-    this->name = "bishop";
+    this->name = 'b';
 
     this->pieceValue = 325;
 

@@ -6,6 +6,8 @@
 #include "pieces/king.h"
 #include "pieces/empty.h"
 
+#include "../bitboard/magic_bitboard.h"
+
 #include <vector>
 #include <cstring>
 using namespace std;
@@ -57,9 +59,12 @@ class Board {
 
         vector<string> fens;
 
+        U64 occupancy;
 
 
     private:
+
+
         bool check_move_min(Square dep, Square stop);
         bool isTakeable(Square s);
 
@@ -86,4 +91,6 @@ class Board {
         Square en_passant_square;
 
         int nb_moves;
+
+        Magic_Bitboard magic_bitboard;
 };

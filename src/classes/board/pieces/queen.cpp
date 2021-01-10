@@ -3,7 +3,7 @@
 #include "rook.h"
 
 Queen::Queen (Square position, bool white) : Piece(position, white) {
-    this->name = "queen";
+    this->name = 'q';
 
     this->pieceValue = 900;
 

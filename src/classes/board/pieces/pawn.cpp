@@ -2,7 +2,7 @@
 
 Pawn::Pawn(Square position, bool white, bool start_pos,
            bool* en_passant, Square* en_passant_square) : Piece(position, white) {
-    this->name = "pawn";
+    this->name = 'p';
     this->start_pos = start_pos;
     this->en_passant = en_passant;
     this->en_passant_square = en_passant_square;

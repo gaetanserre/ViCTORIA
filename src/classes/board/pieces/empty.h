@@ -3,7 +3,7 @@
 class Empty : public Piece {
     public:
         Empty() : Piece(Square('z', -1), false) {
-            this->name = "Null";
+            this->name = 'z';
         }
         
         virtual ~Empty() {};

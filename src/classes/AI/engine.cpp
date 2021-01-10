@@ -92,6 +92,8 @@ void Engine::parse_expr(string expr) {
         this->board->play_move(res[1]);
         this->board->printPieces();
 
+        print_bitboard(this->board->occupancy);
+
         this->moves.push_back(Board::StringToPly(res[1]));
 
         this->board->computeLegalMoves();
@@ -295,30 +297,30 @@ Score Engine::evalPosition(Board* board) {
         for (int i = 0; i<64; i++) {
 
             if (checkIfPiece(board->squares[i])) {
-                string name = board->squares[i]->getName();
+                char name = board->squares[i]->getName();
                 material_score += board->squares[i]->getPieceValue(this->end_game);
 
-                if (name == "king") {
+                if (name == 'k') {
                     board->squares[i]->isWhite() ? wK++ : bK++;
                 }
 
-                if (name == "queen") {
+                if (name == 'q') {
                     board->squares[i]->isWhite() ? wQ++ : bQ++;
                 }
 
-                if (name == "rook") {
+                if (name == 'r') {
                     board->squares[i]->isWhite() ? wR++ : bR++;
                 }
 
-                if (name == "knight") {
+                if (name == 'n') {
                     board->squares[i]->isWhite() ? wN++ : bN++;
                 }
 
-                if (name == "bishop") {
+                if (name == 'b') {
                     board->squares[i]->isWhite() ? wB++ : bB++;
                 }
 
-                if (name == "pawn") {
+                if (name == 'p') {
                     board->squares[i]->isWhite() ? wP++ : bP++;
                 }
             }

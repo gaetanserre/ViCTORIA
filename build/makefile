@@ -2,7 +2,7 @@ args = -std=c++2a -O3
 
 all: AlphaBeta_Chess
 
-AlphaBeta_Chess : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o board.o score.o engine.o ../src/main.cpp
+AlphaBeta_Chess : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o engine.o ../src/main.cpp
 	rm -rf ../out
 	mkdir ../out
 	g++ $^ $(args) -o ../out/$@
@@ -26,6 +26,9 @@ king.o : ../src/classes/board/pieces/king.cpp piece.o
 	g++ $< $(args) -c
 
 piece.o : ../src/classes/board/pieces/piece.cpp
+	g++ $< $(args) -c
+
+magic_bitboard.o : ../src/classes/bitboard/magic_bitboard.cpp
 	g++ $< $(args) -c
 
 board.o: ../src/classes/board/board.cpp

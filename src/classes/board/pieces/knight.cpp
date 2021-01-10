@@ -1,7 +1,7 @@
 #include "knight.h"
 
 Knight::Knight (Square position, bool white) : Piece(position, white) {
-    this->name = "knight";
+    this->name = 'n';
 
     this->pieceValue = 320;
 
@@ -10,12 +10,6 @@ Knight::Knight (Square position, bool white) : Piece(position, white) {
 }
 
 bool Knight::check_move(Square goal, Piece* squares[]) {
-    // Test if there is a not takeable piece at the goal
-    if (checkIfPiece(squares[squareToIdx(goal)])) {
-        if (!checkIfPieceIsTakeable(squares[squareToIdx(goal)])) {
-            return false;
-        }
-    }
 
     if (this->PlusOrMinus(this->position.line, goal.line, 1)) {
         return this->PlusOrMinus(this->position.row, goal.row, 2);

@@ -56,12 +56,12 @@ int squareToIdx(Square c) {
 
 Square IdxToSquare(int idx) {
     char row = 'a' + idx % 8;
-    int line = 1 + idx / 8;
+    int line = 9 - (1 + idx / 8);
     return Square(row, line);
 }
 
 bool checkIfPiece(Piece *p) {
-    return p->getName() != "Null";
+    return p->getName() != 'z';
 }
 
 float Piece::getPieceValue (bool end_game) {
