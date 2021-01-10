@@ -52,6 +52,7 @@ class Engine {
         Score evalPosition(Board* board);
         Score inDepthAnalysisAux (int depth, Score alpha, Score beta);
         Score inDepthAnalysis (int depth);
+        Score inDepthAnalysisMul (int depth);
         Score searchOpeningBook (int depth);
 
         bool startpos = true;

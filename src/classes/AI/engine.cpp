@@ -4,7 +4,7 @@
 
 
 Engine::Engine() {
-    this->name = "Chess AI Engine 1.0";
+    this->name = "AlphaBeta Chess 1.0";
     this->board = new Board();
     this->board->init();
 
@@ -110,10 +110,9 @@ void Engine::parse_expr(string expr) {
 
         this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
 
-        /* 
-            We check if this is end game or if there is a inevitable checkmate.
-            If a checkmate in n moves has been found, it's useless to go deeper than depth n
-        */
+       /*
+            We check if we are in end game
+       */
         int depth = end_game ? 5 : 4;
         
         bool direct_analysis = false;
@@ -127,10 +126,10 @@ void Engine::parse_expr(string expr) {
         if (this->moves.size() < 14 && this->startpos && !direct_analysis)
             this->best_move = searchOpeningBook(depth);
         else
-            this->best_move = inDepthAnalysis(depth);
+            this->best_move = inDepthAnalysisMul(depth);
 
         double dur = stopChrono(start);
-        this->best_move.print_info(depth, this->board->isWhite());
+        //this->best_move.print_info(depth, this->board->isWhite());
         best_move.print();
         printf("%.3f seconds\n", dur);
     }
@@ -240,6 +239,7 @@ Score Engine::searchOpeningBook (int depth) {
                     Score s;
                     s.plies.push_back(lineToPly(line));
                     opening_book.close();
+                    s.print_info(1, this->board->isWhite());
                     return s;
                 }
 
@@ -260,19 +260,20 @@ Score Engine::searchOpeningBook (int depth) {
                         Score s;
                         s.plies.push_back(lineToPly(line));
                         opening_book.close();
+                        s.print_info(1, this->board->isWhite());
                         return s;
                     } else {
                         opening_book.close();
-                        return inDepthAnalysis(depth);
+                        return inDepthAnalysisMul(depth);
                     }
                 }
             }
         }
         opening_book.close();
-        return inDepthAnalysis(depth);
+        return inDepthAnalysisMul(depth);
     }
 
-    return inDepthAnalysis(depth);
+    return inDepthAnalysisMul(depth);
 }
 
 Score Engine::evalPosition(Board* board) {
@@ -426,4 +427,21 @@ Score Engine::inDepthAnalysis (int depth) {
     reverse(bestMove.plies.begin(), bestMove.plies.end());
     
     return bestMove;
+}
+
+
+Score Engine::inDepthAnalysisMul (int depth) {
+    Score maxScore;
+    for (int i = 1; i<= depth; i++) {
+        maxScore = inDepthAnalysis(i);
+        maxScore.print_info(i, this->board->isWhite());
+
+        /* 
+            We check if there is a inevitable checkmate.
+            If a checkmate in n moves has been found, it's useless to go deeper than depth n
+        */
+        if (maxScore.mate && maxScore.white_mate && this->board->isWhite())
+            return maxScore;
+    }
+    return maxScore;
 }

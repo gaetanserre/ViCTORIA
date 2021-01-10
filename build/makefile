@@ -1,8 +1,8 @@
 args = -std=c++2a -O3
 
-all: IA_chess
+all: AlphaBeta_Chess
 
-IA_chess : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o board.o score.o engine.o ../src/main.cpp
+AlphaBeta_Chess : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o board.o score.o engine.o ../src/main.cpp
 	rm -rf ../out
 	mkdir ../out
 	g++ $^ $(args) -o ../out/$@
