@@ -278,7 +278,7 @@ Score Engine::evalPosition(Board* board) {
     
     if (size == 0) {
         if (board->isCheck())
-            return Score(board->isWhite() ? -mate_value : mate_value);
+            return Score(-mate_value);
         else return Score();
 
     } else {
@@ -359,7 +359,7 @@ Score Engine::evalPosition(Board* board) {
         board->changeSide();
 
         int mobility_score = mobilityV * (mobility_white - mobility_black);
-        int score = (material_score + mobility_score);
+        int score = (material_score + mobility_score) * (board->isWhite() ? 1 : -1);
 
         //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
 
@@ -372,7 +372,7 @@ bool Engine::NullPruning (Score beta, int depth, Score &res) {
     this->board->changeSide();
     Score score = AlphaBeta (depth - 1 - 2, Score (-beta.score), Score (-beta.score+1));
     this->board->changeSide();
-    score.score *= -1;
+    score.score = -score.score;
 
     if (score.score >= beta.score) {
         res = beta;
@@ -392,26 +392,24 @@ Score Engine::AlphaBeta (int depth, Score alpha, Score beta) {
 
     if (depth == 0 || size == 0) return evalPosition(this->board);
 
-    if (depth >= 3 && !this->board->isCheck()) {
+    /*if (depth >= 3 && !this->board->isCheck()) {
         Score res;
         if (NullPruning (beta, depth, res)) return res;
-    }
+    }*/
 
     for (int i = 0; i<size; i++) {
         this->board->play_move(legal_moves[i], true);
         Score score = AlphaBeta (depth - 1, Score(-beta.score), Score(-alpha.score));
         this->board->undo_move();
-        score.score *= -1;
 
-        bool checkmate = score.score == mate_value || score.score == -mate_value;
-        if (score != beta || score != alpha || checkmate) {
-            score.plies.push_back(legal_moves[i]);
+        score.score = -score.score;
+        score.plies.push_back(legal_moves[i]);
+        
+        if (alpha.score >= beta.score) {
+            bool check_mate = alpha.score == mate_value && alpha.plies.size() >= 1;
+            return (check_mate ? alpha : beta);
         }
-
-        if (score.score >= beta.score) {
-            return (checkmate ? score : beta);
-        }
-
+        
         alpha = Score::max (score, alpha);
     }
     return alpha;
@@ -487,13 +485,9 @@ Score Engine::inDepthAnalysis (int depth) {
 
     Score bestMove = AlphaBeta (depth, alpha, beta);
 
-    /*if (this->board->isWhite())
-        bestMove = alphaBetaMax (depth, alpha, beta);
-    else
-        bestMove = alphaBetaMin (depth, alpha, beta);*/
-
-
     reverse(bestMove.plies.begin(), bestMove.plies.end());
+
+    if (!this->board->isWhite()) bestMove.score *= -1;
     
     return bestMove;
 }
