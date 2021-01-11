@@ -24,29 +24,9 @@ bool Piece::checkIfPieceIsTakeable(Piece* p) {
 }
 
 
-bool Piece::PlusOrMinus(int value1, int value2, int n) {
+bool PlusOrMinus(int value1, int value2, int n) {
     return value1 + n == value2 || value1 - n == value2;
 }
-
-bool Piece::itermove(
-    int init, Piece* squares[],
-    std::function<bool(int)> test,
-    std::function<void(int*)> incr,
-    std::function<Square(int)> pos
-) {
-    int i = init;
-    while (test(i)) {
-        Square c = pos(i);
-        if (checkIfPiece(squares[squareToIdx(c)])) {
-            return false;
-        }
-        incr(&i);
-    }
-    return true;
-}
-
-
-
 
 int squareToIdx(Square c) {
     int row = c.row - 97;

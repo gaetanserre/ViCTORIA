@@ -34,15 +34,10 @@ class Piece {
         const float* table;
         const float* table_end_game;
 
-        bool itermove(
-            int init, Piece* squares[],
-            std::function<bool(int)> test,
-            std::function<void(int*)> incr,
-            std::function<Square(int)> pos
-        );
-        bool PlusOrMinus(int value1, int value2, int n);
+        
 };
 
+bool PlusOrMinus(int value1, int value2, int n);
 bool checkIfPiece(Piece *p);
 int squareToIdx(Square c);
 Square IdxToSquare(int idx);

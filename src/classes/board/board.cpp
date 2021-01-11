@@ -178,6 +178,7 @@ void Board::printPieces () {
     }
     cout << "pieces: " << this->nb_piece << endl;
     cout << "pawns: " << this->nb_pawn << endl;
+    cout << "last_move_capture: " << this->last_move_capture << endl;
 }
 
 void Board::printLegalMoves () {
@@ -418,6 +419,9 @@ bool Board::play_move (ply p, bool force) {
 
             Piece* temp = this->squares[idx_dep];
             this->squares[idx_dep] = new Empty();
+
+            this->last_move_capture = checkIfPiece(this->squares[idx_stop]);
+
             delete this->squares[idx_stop];
 
             pop_bit(this->occupancy, idx_dep);
@@ -471,6 +475,8 @@ bool Board::play_move (ply p, bool force) {
 
                     // If takes en passant
                     if (stop == this->en_passant_square) {
+                        this->last_move_capture = true;
+
                         if (this->white) {
                             int idx = squareToIdx(Square(stop.row, stop.line-1));
 
@@ -510,6 +516,7 @@ bool Board::play_move (ply p, bool force) {
             return true;
 
         } else {
+            this->last_move_capture = false;
             play_castle(p);
             return true;
         }

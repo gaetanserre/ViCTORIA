@@ -30,6 +30,14 @@ class Square {
             return this->row == str[0] && this->line == str[1] - '0';
         }
 
+        bool operator!=(Square s) {
+            return !(*this == s);
+        }
+
+        bool operator!=(std::string str) {
+            return !(*this == str);
+        }
+
         char row;
         int line;
 };

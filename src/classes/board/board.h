@@ -61,6 +61,8 @@ class Board {
 
         U64 occupancy;
 
+        bool last_move_capture;
+
 
     private:
 

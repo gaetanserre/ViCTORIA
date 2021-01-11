@@ -12,13 +12,13 @@ King::King (Square position, bool white) : Piece(position, white) {
 
 bool King::check_move(Square goal, Piece* squares[], U64 occupancy) {
 
-    if (this->PlusOrMinus(this->position.line, goal.line, 1)) {
+    if (PlusOrMinus(this->position.line, goal.line, 1)) {
         return this->position.row == goal.row ||
-               this->PlusOrMinus(this->position.row, goal.row, 1);
+                PlusOrMinus(this->position.row, goal.row, 1);
     }
 
     if (this->position.line == goal.line) {
-        return this->PlusOrMinus(this->position.row, goal.row, 1);
+        return PlusOrMinus(this->position.row, goal.row, 1);
     }
 
     return false;

@@ -34,13 +34,12 @@ clock_t startChrono() {
 }
 
 double stopChrono(clock_t start) {
-    return (double)(clock() - start) / CLOCKS_PER_SEC;
+    return (double)(clock() - start) / 1000; //µs to ms
 }
 
 
 
 void Engine::parse_expr(string expr) {
-
 
     vector<string> res = split(expr, ' ');
 
@@ -124,16 +123,12 @@ void Engine::parse_expr(string expr) {
             direct_analysis = true;
         }
 
-        clock_t start = startChrono();
         if (this->moves.size() < 14 && this->startpos && !direct_analysis)
             this->best_move = searchOpeningBook(depth);
         else
-            this->best_move = inDepthAnalysisMul(depth);
+            this->best_move = MultiDepthAnalysis(depth);
 
-        double dur = stopChrono(start);
-        //this->best_move.print_info(depth, this->board->isWhite());
         best_move.print();
-        printf("%.3f second(s)\n", dur);
     }
     
 
@@ -153,7 +148,7 @@ void Engine::parse_expr(string expr) {
         this->board->computeLegalMoves();
         double dur = stopChrono(start);
         this->board->printLegalMoves();
-        printf("%lf second(s)\n", dur);
+        printf("%lf millisecond(s)\n", dur);
     }
 
     else if (expr == "eval") {
@@ -162,9 +157,8 @@ void Engine::parse_expr(string expr) {
         this->board->computeLegalMoves();
         clock_t start = startChrono();
         Score s = evalPosition(this->board);
-        double dur = stopChrono(start);
-        s.print_info(1, this->board->isWhite());
-        printf("\n%lf second(s).\n", dur);
+        int dur = stopChrono(start);
+        s.print_info(1, 1, dur, this->board->isWhite());
     }
 
     else if (expr == "uci") {
@@ -241,7 +235,7 @@ Score Engine::searchOpeningBook (int depth) {
                     Score s;
                     s.plies.push_back(lineToPly(line));
                     opening_book.close();
-                    s.print_info(1, this->board->isWhite());
+                    s.print_info(1, 1, 0, this->board->isWhite());
                     return s;
                 }
 
@@ -262,20 +256,20 @@ Score Engine::searchOpeningBook (int depth) {
                         Score s;
                         s.plies.push_back(lineToPly(line));
                         opening_book.close();
-                        s.print_info(1, this->board->isWhite());
+                        s.print_info(1, 1, 0, this->board->isWhite());
                         return s;
                     } else {
                         opening_book.close();
-                        return inDepthAnalysisMul(depth);
+                        return MultiDepthAnalysis(depth);
                     }
                 }
             }
         }
         opening_book.close();
-        return inDepthAnalysisMul(depth);
+        return MultiDepthAnalysis(depth);
     }
 
-    return inDepthAnalysisMul(depth);
+    return MultiDepthAnalysis(depth);
 }
 
 Score Engine::evalPosition(Board* board) {
@@ -284,8 +278,8 @@ Score Engine::evalPosition(Board* board) {
     
     if (size == 0) {
         if (board->isCheck())
-            return Score(0, true, !board->isWhite(), 0);
-        else return Score(0, false, false, 0);
+            return Score(board->isWhite() ? -mate_value : mate_value);
+        else return Score();
 
     } else {
         
@@ -369,62 +363,135 @@ Score Engine::evalPosition(Board* board) {
 
         //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
 
-        return Score(score, false, false, 0);
+        return Score(score);
 
     }
 }
 
-Score Engine::inDepthAnalysisAux (int depth, Score alpha, Score beta) {
+bool Engine::NullPruning (Score beta, int depth, Score &res) {
+    this->board->changeSide();
+    Score score = AlphaBeta (depth - 1 - 2, Score (-beta.score), Score (-beta.score+1));
+    this->board->changeSide();
+    score.score *= -1;
+
+    if (score.score >= beta.score) {
+        res = beta;
+        return true;
+    }
+    return false;
+}
+
+
+int nodes = 0;
+Score Engine::AlphaBeta (int depth, Score alpha, Score beta) {
+    nodes++;
 
     this->board->computeLegalMoves();
-
     vector<ply> legal_moves = this->board->getLegalMoves();
     int size = legal_moves.size();
 
     if (depth == 0 || size == 0) return evalPosition(this->board);
 
-
-    Score bestMove (0, true, !this->board->isWhite(), 0);
+    if (depth >= 3 && !this->board->isCheck()) {
+        Score res;
+        if (NullPruning (beta, depth, res)) return res;
+    }
 
     for (int i = 0; i<size; i++) {
-        bool white = this->board->isWhite();
         this->board->play_move(legal_moves[i], true);
-        Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
-        temp.plies.push_back(legal_moves[i]);
-        temp.n_mate++;
+        Score score = AlphaBeta (depth - 1, Score(-beta.score), Score(-alpha.score));
+        this->board->undo_move();
+        score.score *= -1;
+
+        bool checkmate = score.score == mate_value || score.score == -mate_value;
+        if (score != beta || score != alpha || checkmate) {
+            score.plies.push_back(legal_moves[i]);
+        }
+
+        if (score.score >= beta.score) {
+            return (checkmate ? score : beta);
+        }
+
+        alpha = Score::max (score, alpha);
+    }
+    return alpha;
+
+}
+
+Score Engine::alphaBetaMax (int depth, Score alpha, Score beta) {
+    nodes++;
+
+    this->board->computeLegalMoves();
+    vector<ply> legal_moves = this->board->getLegalMoves();
+    int size = legal_moves.size();
+
+    if (depth == 0 || size == 0) return evalPosition(this->board);
+
+    if (depth >= 3 && !this->board->isCheck()) {
+        Score res;
+        if (NullPruning (beta, depth, res)) return res;
+    }
+    
+    for (int i = 0; i<size; i++) {
+        this->board->play_move(legal_moves[i], true);
+        Score score = alphaBetaMin (depth - 1, alpha, beta);
         this->board->undo_move();
 
-        bestMove = Score::max(bestMove, temp, this->board->isWhite());
+        bool checkmate = score.score == mate_value || score.score == -mate_value;
 
-        if (this->board->isWhite())
-            alpha = Score::max (alpha, bestMove, true);
-        else 
-            beta = Score::max (beta, bestMove, false);
+        if (score != alpha || checkmate) {
+            score.plies.push_back(legal_moves[i]);
+        }
 
-        if (beta <= alpha) return bestMove;
+        if (score.score >= beta.score)
+            return (checkmate ? score : beta);
+        
+        alpha = Score::max (score, alpha);
     }
-    return bestMove;
+    return alpha;
+}
+
+Score Engine::alphaBetaMin (int depth, Score alpha, Score beta) {
+    nodes++;
+
+    this->board->computeLegalMoves();
+    vector<ply> legal_moves = this->board->getLegalMoves();
+    int size = legal_moves.size();
+
+    if (depth == 0 || size == 0) return evalPosition(this->board);
+
+    
+    for (int i = 0; i<size; i++) {
+        this->board->play_move(legal_moves[i], true);
+        Score score = alphaBetaMax (depth - 1, alpha, beta);
+        this->board->undo_move();
+
+        bool checkmate = score.score == mate_value || score.score == -mate_value;
+
+        if (score != beta || checkmate) {
+            score.plies.push_back(legal_moves[i]);
+        }
+
+        if (score.score <= alpha.score)
+            return (checkmate ? score : alpha);
+        
+        beta = Score::min (score, beta);
+    }
+    return beta;
 }
 
 Score Engine::inDepthAnalysis (int depth) {
-    this->board->computeLegalMoves();
-    vector<ply> legal_moves = this->board->getLegalMoves();
-    Score bestMove (0, true, !board->isWhite(), 0);
 
-    Score alpha (0, true, false, 0); // Black checkmate
-    Score beta (0, true, true, 0); // White Checkmate
+    Score alpha (-mate_value); // Black checkmate
+    Score beta (mate_value); // White Checkmate
 
+    Score bestMove = AlphaBeta (depth, alpha, beta);
 
-    for (ply p : legal_moves) {
+    /*if (this->board->isWhite())
+        bestMove = alphaBetaMax (depth, alpha, beta);
+    else
+        bestMove = alphaBetaMin (depth, alpha, beta);*/
 
-        this->board->play_move(p, true);
-        Score temp = inDepthAnalysisAux(depth - 1, alpha, beta);
-        this->board->undo_move();
-        temp.plies.push_back(p);
-        temp.n_mate++;
-
-        bestMove = Score::max(bestMove, temp, this->board->isWhite());
-    }
 
     reverse(bestMove.plies.begin(), bestMove.plies.end());
     
@@ -432,17 +499,25 @@ Score Engine::inDepthAnalysis (int depth) {
 }
 
 
-Score Engine::inDepthAnalysisMul (int depth) {
+Score Engine::MultiDepthAnalysis (int depth) {
     Score maxScore;
     for (int i = 1; i<= depth; i++) {
+        nodes = 0;
+
+        clock_t start = startChrono();
         maxScore = inDepthAnalysis(i);
-        maxScore.print_info(i, this->board->isWhite());
+        int dur = stopChrono(start);
+
+        maxScore.print_info(i, nodes, dur, this->board->isWhite());
 
         /* 
             We check if there is a inevitable checkmate.
             If a checkmate in n moves has been found, it's useless to go deeper than depth n
         */
-        if (maxScore.mate && maxScore.white_mate && this->board->isWhite())
+        if (maxScore.score == mate_value && this->board->isWhite())
+            return maxScore;
+        
+        if (maxScore.score == -mate_value && !this->board->isWhite())
             return maxScore;
     }
     return maxScore;

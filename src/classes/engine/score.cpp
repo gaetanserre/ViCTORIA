@@ -1,5 +1,6 @@
 #include "engine.h"
 
+
 void Score::print() {
 
     if (plies.size() > 0) {
@@ -13,16 +14,17 @@ void Score::print() {
     }
 }
 
-void Score::print_info(int depth, bool white) {
+void Score::print_info(int depth, int nodes, int time_ms, bool white) {
     cout << "info depth " << depth << " seldepth " << depth;
     cout << " score ";
 
-    if (this->mate) {
+    if (this->score == mate_value || this->score == -mate_value) {
         // We convert plies to moves and we check the color of the mate
-        int n = this->n_mate / 2;
-        if (this->n_mate % 2)
+        int n = this->plies.size() / 2;
+        if (this->plies.size() % 2)
             n++;
-        cout << "mate " << (this->white_mate == white ? n : -n);
+        bool white_mate = this->score > 0;
+        cout << "mate " << (white == white_mate ? n : -n);
     }
 
     else {
@@ -32,6 +34,10 @@ void Score::print_info(int depth, bool white) {
 
        cout << "cp " << score;
     }
+
+    cout << " nodes " << nodes; 
+
+    cout << " time " << time_ms;
 
     cout << " pv ";
     for (ply p : this->plies) {
@@ -48,89 +54,79 @@ void Score::print_ply(ply p) {
         cout << p.prom;
 }
 
-Score Score::max (Score s1, Score s2, bool white) {
+bool Score::operator== (Score s) {
+    if (this->score != s.score) return false;
+    int size = this->plies.size();
+    if (size != s.plies.size()) return false;
 
-    if (s1.mate) {
-        if (s2.mate) {
-            if (s1.white_mate == white) {
-                if (s2.white_mate == white) {
-                    return (s1.n_mate < s2.n_mate ? s1 : s2);
-                } else {
-                    return s1;
-                }
-            } else {
-                if (s2.white_mate == white){
-                    return s2;
-                }
-                else {
-                    return (s1.n_mate > s2.n_mate ? s1 : s2);
-                }
-            }
+    for (int i = 0; i<size; i++) {
+        if (!(this->plies[i].dep == s.plies[i].dep) || !(this->plies[i].stop == s.plies[i].stop))
+            return false;
+    }
+
+    return true;
+}
+
+bool Score::operator!= (Score s) {
+    return !(*this == s);
+}
+
+Score Score::max (Score s1, Score s2) {
+    if (s1.score == mate_value) {
+        if (s2.score == mate_value) {
+            return (s1.plies.size() < s2.plies.size() ? s1 : s2);
         } else {
-            if (s1.white_mate == white) return s1;
-            else return s2;
+            return s1;
         }
     }
 
-    else if (s2.mate) {
-        if (s2.white_mate == white) return s2;
-            else return s1;
+    if (s2.score == mate_value) {
+        return s2;
+    }
+
+    if (s1.score == -mate_value) {
+        if (s2.score == -mate_value) {
+            return (s1.plies.size() > s2.plies.size() ? s1 : s2);
+        } else {
+            return s2;
+        }
+    }
+
+    if (s2.score == -mate_value) {
+        return s1;
     }
 
     else {
-        if (white) {
-            return s1.score > s2.score ? s1 : s2;
-        } else {
-            return s1.score < s2.score ? s1 : s2;
-        }
+        return (s1.score > s2.score ? s1 : s2);
     }
 }
 
-Score Score::max (vector<Score> scores, bool white) {
-    Score max_score;
-    bool first = true;
-
-    for (Score score: scores) {
-        if (first) {
-            max_score = score;
-            first = false;
-        }
-
-        max_score = max (max_score, score, white);
-    }
-
-    return max_score;
-}
-
-bool Score::operator <= (Score s1) {
-    if (this->mate) {
-        if (s1.mate) {
-            if (this->white_mate) {
-                if (s1.white_mate) {
-                    return this->n_mate >= s1.n_mate;
-                } else {
-                    return false;
-                }
-            } else {
-                if (s1.white_mate){
-                    return true;
-                }
-                else {
-                    return this->n_mate <= s1.n_mate;
-                }
-            }
+Score Score::min (Score s1, Score s2) {
+    if (s1.score == mate_value) {
+        if (s2.score == mate_value) {
+            return (s1.plies.size() > s2.plies.size() ? s1 : s2);
         } else {
-            if (this->white_mate) return false;
-            else return true;
+            return s2;
         }
     }
 
-    else if (s1.mate) {
-        if (s1.white_mate) return true;
-            else return false;
+    if (s2.score == mate_value) {
+        return s1;
+    }
+
+    if (s1.score == -mate_value) {
+        if (s2.score == -mate_value) {
+            return (s1.plies.size() < s2.plies.size() ? s1 : s2);
+        } else {
+            return s1;
+        }
+    }
+
+    if (s2.score == -mate_value) {
+        return s2;
     }
 
     else {
-        return this->score <= s1.score;
+        return (s1.score < s2.score ? s1 : s2);
     }
 }

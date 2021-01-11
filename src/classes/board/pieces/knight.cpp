@@ -11,12 +11,12 @@ Knight::Knight (Square position, bool white) : Piece(position, white) {
 
 bool Knight::check_move(Square goal, Piece* squares[], U64 occupancy) {
 
-    if (this->PlusOrMinus(this->position.line, goal.line, 1)) {
-        return this->PlusOrMinus(this->position.row, goal.row, 2);
+    if (PlusOrMinus(this->position.line, goal.line, 1)) {
+        return PlusOrMinus(this->position.row, goal.row, 2);
     }
 
-    if (this->PlusOrMinus(this->position.line, goal.line, 2)) {
-        return this->PlusOrMinus(this->position.row, goal.row, 1);
+    if (PlusOrMinus(this->position.line, goal.line, 2)) {
+        return PlusOrMinus(this->position.row, goal.row, 1);
     }
 
     return false;
