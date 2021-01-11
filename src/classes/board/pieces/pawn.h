@@ -7,8 +7,8 @@ class Pawn: public Piece {
         
         virtual ~Pawn () {};
         
-        bool check_move(Square goal, Piece* squares[]) override;
-        bool en_prise(Square goal, Piece* squares[]) override;
+        bool check_move(Square goal, Piece* squares[], U64 occupancy) override;
+        bool en_prise(Square goal, Piece* squares[], U64 occupancy) override;
 
     private:
         int forward (int n);

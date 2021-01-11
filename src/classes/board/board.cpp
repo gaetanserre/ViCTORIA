@@ -59,7 +59,7 @@ void Board::init (string fen) {
         }
 
         else if (fen[i] == 'r') {
-            this->squares[idx] = new Rook(position, false);
+            this->squares[idx] = new Rook(position, false, &this->magic_bitboard);
             this->nb_piece++;
 
             set_bit(this->occupancy, squareToIdx(position));
@@ -71,13 +71,13 @@ void Board::init (string fen) {
             set_bit(this->occupancy, squareToIdx(position));
 
         } else if (fen[i] == 'b') {
-            this->squares[idx] = new Bishop(position, false);
+            this->squares[idx] = new Bishop(position, false, &this->magic_bitboard);
             this->nb_piece++;
             
             set_bit(this->occupancy, squareToIdx(position));
             
         } else if (fen[i] == 'q') {
-            this->squares[idx] = new Queen(position, false);
+            this->squares[idx] = new Queen(position, false, &this->magic_bitboard);
             this->nb_piece++;
 
             set_bit(this->occupancy, squareToIdx(position));
@@ -100,7 +100,7 @@ void Board::init (string fen) {
         }
 
         else if (fen[i] == 'R') {
-            this->squares[idx] = new Rook(position, true);
+            this->squares[idx] = new Rook(position, true, &this->magic_bitboard);
             this->nb_piece++;
 
             set_bit(this->occupancy, squareToIdx(position));
@@ -112,13 +112,13 @@ void Board::init (string fen) {
             set_bit(this->occupancy, squareToIdx(position));
 
         } else if (fen[i] == 'B') {
-            this->squares[idx] = new Bishop(position, true);
+            this->squares[idx] = new Bishop(position, true, &this->magic_bitboard);
             this->nb_piece++;
 
             set_bit(this->occupancy, squareToIdx(position));
 
         } else if (fen[i] == 'Q') {
-            this->squares[idx] = new Queen(position, true);
+            this->squares[idx] = new Queen(position, true, &this->magic_bitboard);
             this->nb_piece++;
 
             set_bit(this->occupancy, squareToIdx(position));
@@ -194,26 +194,9 @@ void Board::printLegalMoves () {
 bool Board::isTakeable (Square s) {
     if (s.line < 1 || s.line > 8) return true; // Bug to fix
     for (int i = 0; i<64; i++) {
-        if (checkIfPiece (this->squares[i]) && 
-            this->white != this->squares[i]->isWhite()) {
-
-                if (this->squares[i]->getName() == 'r') {
-                    if (this->magic_bitboard.check_square_rook(this->squares[i], squareToIdx(s), this->occupancy))
-                        return true;
-                }
-                
-                else if (this->squares[i]->getName() == 'b') {
-                    if (this->magic_bitboard.check_square_bishop(this->squares[i], squareToIdx(s), this->occupancy))
-                        return true;
-                }
-
-                else if (this->squares[i]->getName() == 'q') {
-                    if (this->magic_bitboard.check_square_queen(this->squares[i], squareToIdx(s), this->occupancy))
-                        return true;
-                }
-                
-                else if (this->squares[i]->en_prise (s, this->squares))
-                    return true;
+        if (checkIfPiece (this->squares[i]) && this->squares[i]->isWhite() != this->white) {
+            if (this->squares[i]->en_prise (s, this->squares, this->occupancy))
+                return true;
             }
     }
     return false;
@@ -356,9 +339,8 @@ void Board::play_castle (ply p) {
     this->nb_moves++;
 }
 
-bool Board::check_move_min (Square dep, Square stop) {
-    int idx_dep = squareToIdx(dep);
-    return this->squares[idx_dep]->check_move(stop, this->squares);
+bool Board::check_move_min (int start_idx, Square stop) {
+    return this->squares[start_idx]->check_move(stop, this->squares, this->occupancy);
 }
 
 bool isPromote (Piece* p) {
@@ -369,87 +351,33 @@ bool isPromote (Piece* p) {
     return false;
 }
 
-/*bool Board::check_move (ply p) {
-    Square dep = p.dep;
-    Square stop = p.stop;
-    int idx_dep = squareToIdx(dep);
-    int idx_stop = squareToIdx(stop);
-
-    /*
-        If the move is playable, play it and then check if the king is in check. 
-        If it is the case, return to the previous position.
-    */
-    /*if (check_move_min (dep, stop)) {
-        Piece* temp = this->squares[idx_dep];
-        Piece* temp_stop = this->squares[idx_stop];
-
-
-        temp->setPosition(stop);
-        this->squares[idx_stop] = temp;
-
-        this->squares[idx_dep] = new Empty();
-
-        bool check = isCheck();
-
-        delete this->squares[idx_dep];
-
-        this->squares[idx_dep] = temp;
-        this->squares[idx_dep]->setPosition(dep);
-        this->squares[idx_stop] = temp_stop;
-        return !check;
-    }
-
-    // If the move was illegal, we check if it was a castle.
-    return check_castle({dep, stop});
-}*/
-
 bool Board::check_move (ply p) {
     Square start = p.dep;
     Square stop = p.stop;
-    int start_id = squareToIdx(start);
-    int stop_id = squareToIdx(stop);
+    int start_idx = squareToIdx(start);
+    int stop_idx = squareToIdx(stop);
 
-    bool is_ok = false;
-    bool is_RBQ = false;
-    if (this->squares[start_id]->getName() == 'r') {
-        is_RBQ = true;
-        is_ok = this->magic_bitboard.check_square_rook(this->squares[start_id], stop_id, this->occupancy);
-    }
-
-    else if (this->squares[start_id]->getName() == 'b') {
-        is_RBQ = true;
-        is_ok = this->magic_bitboard.check_square_bishop(this->squares[start_id], stop_id, this->occupancy);
-    }
-
-    else if (this->squares[start_id]->getName() == 'q') {
-        is_RBQ = true;
-        is_ok = this->magic_bitboard.check_square_queen(this->squares[start_id], stop_id, this->occupancy);
-    }
-
-    if (is_RBQ && !is_ok) return false;
-
-
-    else if (is_ok || check_move_min(start, stop)) {
-        Piece* temp = this->squares[start_id];
-        Piece* temp_stop = this->squares[stop_id];
+    if (check_move_min(start_idx, stop)) {
+        Piece* temp = this->squares[start_idx];
+        Piece* temp_stop = this->squares[stop_idx];
 
 
         temp->setPosition(stop);
-        this->squares[stop_id] = temp;
+        this->squares[stop_idx] = temp;
 
-        this->squares[start_id] = new Empty();
+        this->squares[start_idx] = new Empty();
 
         U64 old_occupancy = this->occupancy;
-        pop_bit (this->occupancy, start_id);
-        set_bit (this->occupancy, stop_id);
+        pop_bit (this->occupancy, start_idx);
+        set_bit (this->occupancy, stop_idx);
 
         bool check = isCheck();
 
-        delete this->squares[start_id];
+        delete this->squares[start_idx];
 
-        this->squares[start_id] = temp;
-        this->squares[start_id]->setPosition(start);
-        this->squares[stop_id] = temp_stop;
+        this->squares[start_idx] = temp;
+        this->squares[start_idx]->setPosition(start);
+        this->squares[stop_idx] = temp_stop;
 
         this->occupancy = old_occupancy;
 
@@ -498,16 +426,16 @@ bool Board::play_move (ply p, bool force) {
             // Promotion
             if (p.promote) {
                 if (p.prom == 'q') {
-                    this->squares[idx_stop] = new Queen(stop, temp->isWhite());
+                    this->squares[idx_stop] = new Queen(stop, temp->isWhite(), &this->magic_bitboard);
                 }
                 else if (p.prom == 'n') {
                     this->squares[idx_stop] = new Knight(stop, temp->isWhite());
                 }
                 else if (p.prom == 'r') {
-                    this->squares[idx_stop] = new Rook(stop, temp->isWhite());
+                    this->squares[idx_stop] = new Rook(stop, temp->isWhite(), &this->magic_bitboard);
                 }
                 else if (p.prom == 'b') {
-                    this->squares[idx_stop] = new Bishop(stop, temp->isWhite());
+                    this->squares[idx_stop] = new Bishop(stop, temp->isWhite(), &this->magic_bitboard);
                 }
                 this->nb_pawn--;
                 delete temp;
@@ -632,42 +560,6 @@ void Board::computeLegalMoves () {
     }
 }
 
-
-
-
-/*void Board::computeLegalMoves () {
-    this->legal_moves = vector<ply> ();
-    this->nb_piece = 0;
-    this->nb_pawn = 0;
-
-    for(int i = 0; i<64; i++) {
-        if (checkIfPiece(this->squares[i])) {
-            nb_piece++;
-            if (this->squares[i]->getName() == 'p') this->nb_pawn++;
-
-            if (this->squares[i]->isWhite() == this->white) {
-
-                for (int j = 0; j<64; j++) {
-
-                    Square dep = this->squares[i]->getPosition();
-                    Square stop = IdxToSquare(j);
-                    int line = this->white ? 8 : 1;
-
-                    if (check_move({dep, stop})) {
-                        if (this->squares[i]->getName() == 'p' && stop.line == line) {
-                            this->legal_moves.push_back({dep, stop, true, 'q'});
-                            this->legal_moves.push_back({dep, stop, true, 'n'});
-                            this->legal_moves.push_back({dep, stop, true, 'r'});
-                            this->legal_moves.push_back({dep, stop, true, 'b'});
-                        }
-                        else
-                            this->legal_moves.push_back({dep, stop});
-                    }
-                }
-            }
-        }
-    }
-}*/
 
 bool Board::isCheckmate (int size) {
     return size == 0 && isCheck();

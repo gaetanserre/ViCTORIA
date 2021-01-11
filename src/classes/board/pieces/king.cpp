@@ -10,7 +10,7 @@ King::King (Square position, bool white) : Piece(position, white) {
     this->table_end_game = &king_table_end_game[0];
 }
 
-bool King::check_move(Square goal, Piece* squares[]) {
+bool King::check_move(Square goal, Piece* squares[], U64 occupancy) {
 
     if (this->PlusOrMinus(this->position.line, goal.line, 1)) {
         return this->position.row == goal.row ||

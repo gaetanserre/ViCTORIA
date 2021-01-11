@@ -300,7 +300,7 @@ void init_sliders_attacks(int is_bishop)
             {
                 // init occupancies, magic index & attacks
                 U64 occupancy = set_occupancy(count, bit_count, mask);
-                U64 magic_index = occupancy * bishop_magics[square] >> 64 - bishop_rellevant_bits[square];
+                U64 magic_index = occupancy * bishop_magics[square] >> (64 - bishop_rellevant_bits[square]);
                 bishop_attacks[square][magic_index] = bishop_attacks_on_the_fly(square, occupancy);                
             }
             
@@ -309,7 +309,7 @@ void init_sliders_attacks(int is_bishop)
             {
                 // init occupancies, magic index & attacks
                 U64 occupancy = set_occupancy(count, bit_count, mask);
-                U64 magic_index = occupancy * rook_magics[square] >> 64 - rook_rellevant_bits[square];
+                U64 magic_index = occupancy * rook_magics[square] >> (64 - rook_rellevant_bits[square]);
                 rook_attacks[square][magic_index] = rook_attacks_on_the_fly(square, occupancy);                
             }
         }
@@ -322,7 +322,7 @@ U64 get_bishop_attacks(int square, U64 occupancy) {
 	// calculate magic index
 	occupancy &= bishop_masks[square];
 	occupancy *=  bishop_magics[square];
-	occupancy >>= 64 - bishop_rellevant_bits[square];
+	occupancy >>= (64 - bishop_rellevant_bits[square]);
 	
 	// return rellevant attacks
 	return bishop_attacks[square][occupancy];
@@ -335,40 +335,35 @@ U64 get_rook_attacks(int square, U64 occupancy) {
 	// calculate magic index
 	occupancy &= rook_masks[square];
 	occupancy *=  rook_magics[square];
-	occupancy >>= 64 - rook_rellevant_bits[square];
+	occupancy >>= (64 - rook_rellevant_bits[square]);
 	
 	// return rellevant attacks
 	return rook_attacks[square][occupancy];
 }
 
-Magic_Bitboard::Magic_Bitboard () {
+void Magic_Bitboard::init () {
     init_sliders_attacks(bishop);
     init_sliders_attacks(rook);
 }
 
-bool Magic_Bitboard::check_square_rook (Piece* rook, int goal, U64 occupancy) {
-    U64 rook_attacks = get_rook_attacks(squareToIdx(rook->getPosition()), occupancy);
-    //print_bitboard(rook_attacks);
+bool Magic_Bitboard::check_square_rook (int start, int goal, U64 occupancy) {
+    U64 rook_attacks = get_rook_attacks(start, occupancy);
     return get_bit(rook_attacks, goal);
 }
 
 
-bool Magic_Bitboard::check_square_bishop (Piece* bishop, int goal, U64 occupancy) {
-    U64 bishop_attacks = get_bishop_attacks(squareToIdx(bishop->getPosition()), occupancy);
-    //print_bitboard(bishop_attacks);
+bool Magic_Bitboard::check_square_bishop (int start, int goal, U64 occupancy) {
+    U64 bishop_attacks = get_bishop_attacks(start, occupancy);
     return get_bit(bishop_attacks, goal);
 }
 
-bool Magic_Bitboard::check_square_queen (Piece* queen, int goal, U64 occupancy) {
-    int start = squareToIdx(queen->getPosition());
+bool Magic_Bitboard::check_square_queen (int start, int goal, U64 occupancy) {
     U64 bishop_attacks = get_bishop_attacks(start, occupancy);
-    //print_bitboard(bishop_attacks);
 
     if (get_bit(bishop_attacks, goal)) return true;
 
     else {
         U64 rook_attacks = get_rook_attacks(start, occupancy);
-        //print_bitboard(rook_attacks);
         return get_bit(rook_attacks, goal);
     }
 }

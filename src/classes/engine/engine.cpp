@@ -133,7 +133,7 @@ void Engine::parse_expr(string expr) {
         double dur = stopChrono(start);
         //this->best_move.print_info(depth, this->board->isWhite());
         best_move.print();
-        printf("%.3f seconds\n", dur);
+        printf("%.3f second(s)\n", dur);
     }
     
 
@@ -153,7 +153,7 @@ void Engine::parse_expr(string expr) {
         this->board->computeLegalMoves();
         double dur = stopChrono(start);
         this->board->printLegalMoves();
-        printf("%f seconds\n", dur);
+        printf("%lf second(s)\n", dur);
     }
 
     else if (expr == "eval") {
@@ -164,7 +164,7 @@ void Engine::parse_expr(string expr) {
         Score s = evalPosition(this->board);
         double dur = stopChrono(start);
         s.print_info(1, this->board->isWhite());
-        printf("\n%lf seconds.\n", dur);
+        printf("\n%lf second(s).\n", dur);
     }
 
     else if (expr == "uci") {

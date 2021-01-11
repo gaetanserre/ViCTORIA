@@ -34,10 +34,10 @@ magic_bitboard.o : ../src/classes/bitboard/magic_bitboard.cpp
 board.o: ../src/classes/board/board.cpp
 	g++ $< $(args) -c
 
-engine.o: ../src/classes/AI/engine.cpp score.o
+engine.o: ../src/classes/engine/engine.cpp score.o
 	g++ $< $(args) -c
 
-score.o: ../src/classes/AI/score.cpp
+score.o: ../src/classes/engine/score.cpp
 	g++ $< $(args) -c
 
 clean:

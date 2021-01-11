@@ -21,7 +21,7 @@ struct ply {
 
 class Board {
     public:
-        Board (){};
+        Board (){ this->magic_bitboard.init(); };
         ~Board();
 
         Piece* squares [64];
@@ -65,7 +65,7 @@ class Board {
     private:
 
 
-        bool check_move_min(Square dep, Square stop);
+        bool check_move_min(int start_idx, Square stop);
         bool isTakeable(Square s);
 
         bool check_castle (ply p);

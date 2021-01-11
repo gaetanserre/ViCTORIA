@@ -17,7 +17,7 @@ int Pawn::forward (int n) {
     return (this->white ? n : -n);
 }
 
-bool Pawn::check_move(Square goal, Piece* squares[]) {
+bool Pawn::check_move(Square goal, Piece* squares[], U64 occupancy) {
 
     bool piece = false;
 
@@ -51,7 +51,7 @@ bool Pawn::check_move(Square goal, Piece* squares[]) {
     } else return false;
 }
 
-bool Pawn::en_prise(Square goal, Piece* squares[]) {
+bool Pawn::en_prise(Square goal, Piece* squares[], U64 occupancy) {
     if (this->PlusOrMinus(this->position.row, goal.row, 1)) {
         if (this->position.line + forward(1) == goal.line)
         

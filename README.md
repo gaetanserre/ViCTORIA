@@ -13,3 +13,6 @@ make
 
 + Stalemate by repetitions
 
+## Features
++ Alpha-Beta pruning: ??% more efficient
++ Magic bitboard for sliding pieces: 200% more efficient

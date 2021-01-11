@@ -5,6 +5,7 @@
 #include <vector>
 #include "../square.h"
 #include "table.h"
+#include "../../bitboard/magic_bitboard.h"
 
 class Piece {
     public:
@@ -18,8 +19,8 @@ class Piece {
         bool isWhite() { return this->white; };
 
         bool checkIfPieceIsTakeable(Piece* p);
-        virtual bool check_move(Square goal, Piece* squares[]) = 0;
-        virtual bool en_prise(Square goal, Piece* squares[]) = 0;
+        virtual bool check_move(Square goal, Piece* squares[], U64 occupancy) = 0;
+        virtual bool en_prise(Square goal, Piece* squares[], U64 occupancy) = 0;
 
         float getPieceValue (bool end_game);
 

@@ -2,26 +2,17 @@
 #include "bishop.h"
 #include "rook.h"
 
-Queen::Queen (Square position, bool white) : Piece(position, white) {
+Queen::Queen (Square position, bool white, Magic_Bitboard* mg) : Piece(position, white) {
     this->name = 'q';
 
     this->pieceValue = 900;
 
     this->table = &queen_table[0];
     this->table_end_game = &queen_table[0];
+
+    this->mg = mg;
 }
 
-bool Queen::check_move(Square goal, Piece* squares[]) {
-    // Test if there is a not takeable piece at the goal
-    if (checkIfPiece(squares[squareToIdx(goal)])) {
-        if (!checkIfPieceIsTakeable(squares[squareToIdx(goal)])) {
-            return false;
-        }
-    }
-
-    Bishop bishop(this->position, this->white);
-    Rook rook (this->position, this->white);
-
-    return bishop.check_move(goal, squares) || rook.check_move(goal, squares);
-
+bool Queen::check_move(Square goal, Piece* squares[], U64 occupancy) {
+    return mg->check_square_queen(squareToIdx(this->position), squareToIdx(goal), occupancy);
 };
