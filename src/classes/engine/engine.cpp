@@ -114,7 +114,7 @@ void Engine::parse_expr(string expr) {
        /*
             We check if we are in end game
        */
-        int depth = end_game ? 5 : 4;
+        int depth = end_game ? 6 : 4;
         
         bool direct_analysis = false;
 
