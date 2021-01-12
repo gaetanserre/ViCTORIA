@@ -393,6 +393,18 @@ bool Board::check_move (ply p) {
         pop_bit (this->occupancy, start_idx);
         set_bit (this->occupancy, stop_idx);
 
+        // We check for en passant
+        int e_p_idx;
+        bool e_p = false;
+        Piece* e_p_pawn;
+        if (temp->getName() == 'p' && stop == this->en_passant_square) {
+            e_p = true;
+
+            e_p_idx = squareToIdx (Square (this->en_passant_square.row, start.line));
+            e_p_pawn = this->squares[e_p_idx];
+            this->squares[e_p_idx] = new Empty();
+        }
+
         bool check = isCheck();
 
         delete this->squares[start_idx];
@@ -402,6 +414,12 @@ bool Board::check_move (ply p) {
         this->squares[stop_idx] = temp_stop;
 
         this->occupancy = old_occupancy;
+
+        // If there was en passant
+        if (e_p) {
+            delete this->squares[e_p_idx];
+            this->squares[e_p_idx] = e_p_pawn;
+        }
 
         return !check;
 
@@ -498,30 +516,15 @@ bool Board::play_move (ply p, bool force) {
                     if (stop == this->en_passant_square) {
                         this->last_move_capture = true;
 
-                        if (this->white) {
-                            int idx = squareToIdx(Square(stop.row, stop.line-1));
+                        int idx = squareToIdx(Square(stop.row, dep.line));
+                        delete this->squares[idx];
+                        this->squares[idx] = new Empty();
 
-                            // Prevent memory leak
-                            delete this->squares[idx];
-
-                            this->squares[idx] = new Empty();
-
-                            pop_bit (this->occupancy, idx);
-
-                        } else {
-                            int idx = squareToIdx(Square(stop.row, stop.line+1));
-                            
-                            // Prevent memory leak
-                            delete this->squares[idx];
-                            
-                            this->squares[idx] = new Empty();
-
-                            pop_bit (this->occupancy, idx);
-
-                        }
+                        pop_bit (this->occupancy, idx);
 
                         this->en_passant = false;
                     }
+                    
                 // en passant become false after moving a piece that is not a pawn
                 } else 
                     this->en_passant = false;
