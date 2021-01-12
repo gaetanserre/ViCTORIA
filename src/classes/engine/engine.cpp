@@ -49,6 +49,9 @@ void Engine::parse_expr(string expr) {
         delete this->board;
         this->board = new Board ();
 
+        this->positions.clear();
+        this->moves.clear();
+
         int moves_idx = 8;
 
         if (res[1] == "fen") {
@@ -65,6 +68,7 @@ void Engine::parse_expr(string expr) {
 
             this->startpos = fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
 
+
         } else if (res[1] == "startpos") {
             this->board->init();
             moves_idx = 2;
@@ -72,23 +76,25 @@ void Engine::parse_expr(string expr) {
             this->startpos = true;
         }
 
-        this->moves.clear();
-
+        this->positions.push_back(this->board->getFen(false));
 
         if (res.size() > moves_idx+1 && res[moves_idx] == "moves") {
             for (int i = moves_idx+1; i<res.size(); i++) {
                 this->board->computeLegalMoves();
                 this->board->play_move(res[i]);
                 this->moves.push_back(Board::StringToPly(res[i]));
+                this->positions.push_back(this->board->getFen(false));
             }
         }
     }
     
-
     else if (res.size() == 2 && res[0] == "play") {
         
         this->board->computeLegalMoves();
         this->board->play_move(res[1]);
+
+        this->positions.push_back(this->board->getFen(false));
+
         this->board->printPieces();
 
         print_bitboard(this->board->occupancy);
@@ -381,6 +387,15 @@ bool Engine::NullPruning (Score beta, int depth, Score &res) {
     return false;
 }
 
+bool Engine::checkRepetitions (string position) {
+    int count = 1;
+    for (int i = 0; i<this->positions.size() - 1; i++) {
+        if (positions[i] == position)
+            count ++;
+    }
+    return count == 3;
+}
+
 
 int nodes = 0;
 Score Engine::AlphaBeta (int depth, Score alpha, Score beta) {
@@ -389,6 +404,17 @@ Score Engine::AlphaBeta (int depth, Score alpha, Score beta) {
     this->board->computeLegalMoves();
     vector<ply> legal_moves = this->board->getLegalMoves();
     int size = legal_moves.size();
+
+
+    // We don't check for repetitions at the root
+    if (nodes > 1) {
+        string pos = this->board->getFen(false);
+
+        this->positions.push_back (pos);
+    
+
+        if (checkRepetitions (pos)) return Score (0);
+    }
 
     if (depth == 0 || size == 0) return evalPosition(this->board);
 
@@ -399,8 +425,12 @@ Score Engine::AlphaBeta (int depth, Score alpha, Score beta) {
 
     for (int i = 0; i<size; i++) {
         this->board->play_move(legal_moves[i], true);
+        
         Score score = AlphaBeta (depth - 1, Score(-beta.score), Score(-alpha.score));
+
         this->board->undo_move();
+        this->positions.pop_back();
+
 
         score.score = -score.score;
         score.plies.push_back(legal_moves[i]);

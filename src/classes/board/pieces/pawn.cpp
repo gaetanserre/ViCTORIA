@@ -53,13 +53,7 @@ bool Pawn::check_move(Square goal, Piece* squares[], U64 occupancy) {
 
 bool Pawn::en_prise(Square goal, Piece* squares[], U64 occupancy) {
     if (PlusOrMinus(this->position.row, goal.row, 1)) {
-        if (this->position.line + forward(1) == goal.line)
+        return this->position.line + forward(1) == goal.line;
         
-            return 
-                this->checkIfPieceIsTakeable(squares[squareToIdx(goal)]) ||
-                (*(this->en_passant) && (*this->en_passant_square) == goal);
-            
-        else return false;
-
     } else return false;
 }

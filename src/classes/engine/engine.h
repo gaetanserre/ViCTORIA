@@ -46,8 +46,8 @@ class Engine {
         Score evalPosition(Board* board);
 
         bool NullPruning (Score beta, int depth, Score &res);
-        Score inDepthAnalysisAux (int depth, Score alpha, Score beta);
 
+        bool checkRepetitions (string position);
 
         Score alphaBetaMax (int depth, Score alpha, Score beta);
         Score alphaBetaMin (int depth, Score alpha, Score beta);
@@ -64,4 +64,5 @@ class Engine {
         Score best_move;
 
         vector<ply> moves;
+        vector<string> positions;
 };

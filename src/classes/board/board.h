@@ -33,7 +33,7 @@ class Board {
         bool play_move(ply p, bool force = false);
         bool play_move(string p);
 
-        string getFen();
+        string getFen(bool nb_move = true);
 
         vector<ply> getLegalMoves() { return this->legal_moves; };
         void setLegalMoves(vector<ply> legal_moves) { this->legal_moves = legal_moves; };

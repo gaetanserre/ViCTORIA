@@ -216,7 +216,7 @@ bool Board::check_castle (ply p) {
     Square dep = p.dep; Square stop = p.stop;
 
     Square l[3];
-    int size;
+    int size = 2;
     bool castling = false;
     int line = this->white ? 1 : 8;
     bool c_short = this->white ? this->castling_short_w : this->castling_short_b;
@@ -227,14 +227,11 @@ bool Board::check_castle (ply p) {
         if (dep == Square('e', line)) {
             if (stop == Square('g', line) && c_short) {
                 l[0] = Square('f', line); l[1] = Square('g', line);
-                size = 2;
                 castling = true;
             }
 
             if (stop == Square('c', line) && c_long) {
                 l[0] = Square('d', line); l[1] = Square('c', line);
-                l[2] = Square('b', line);
-                size = 3;
                 castling = true;
             }
         }
@@ -293,46 +290,70 @@ void Board::play_castle (ply p) {
     bool c_short = stop == Square('g', line);
 
     if (c_short) {
+
+        int idx_h = squareToIdx(Square('h', line));
+        int idx_e = squareToIdx(Square('e', line));
+        int idx_f = squareToIdx(Square('f', line));
+        int idx_g = squareToIdx(Square('g', line));
+
         //Move king
-        Piece* temp = this->squares[squareToIdx(Square('e', line))];
+        Piece* temp = this->squares[idx_e];
         temp->setPosition(Square('g', line));
 
         // Prevent memory leak
-        delete this->squares[squareToIdx(Square('g', line))];
-        this->squares[squareToIdx(Square('g', line))] = temp;
+        delete this->squares[idx_g];
+        this->squares[idx_g] = temp;
 
-        this->squares[squareToIdx(Square('e', line))] = new Empty();
+        this->squares[idx_e] = new Empty();
 
         //Move rook
-        Piece* temp2 = this->squares[squareToIdx(Square('h', line))];
+        Piece* temp2 = this->squares[idx_h];
         temp2->setPosition(Square('f',line));
 
         // Prevent memory leak
-        delete this->squares[squareToIdx(Square('f', line))];
-        this->squares[squareToIdx(Square('f', line))] = temp2;
+        delete this->squares[idx_f];
+        this->squares[idx_f] = temp2;
 
-        this->squares[squareToIdx(Square('h', line))] = new Empty();
+        this->squares[idx_h] = new Empty();
+
+        pop_bit (this->occupancy, idx_h);
+        pop_bit (this->occupancy, idx_e);
+
+        set_bit (this->occupancy, idx_f);
+        set_bit (this->occupancy, idx_g);
 
     } else {
+
+        int idx_e = squareToIdx(Square('e', line));
+        int idx_c = squareToIdx(Square('c', line));
+        int idx_d = squareToIdx(Square('d', line));
+        int idx_a = squareToIdx(Square('a', line));
+
         //Move king
-        Piece* temp = this->squares[squareToIdx(Square('e', line))];
+        Piece* temp = this->squares[idx_e];
         temp->setPosition(Square('c', line));
 
         // Prevent memory leak
-        delete this->squares[squareToIdx(Square('c', line))];
-        this->squares[squareToIdx(Square('c', line))] = temp;
+        delete this->squares[idx_c];
+        this->squares[idx_c] = temp;
 
-        this->squares[squareToIdx(Square('e', line))] = new Empty();
+        this->squares[idx_e] = new Empty();
 
         //Move rook
-        Piece* temp2 = this->squares[squareToIdx(Square('a', line))];
+        Piece* temp2 = this->squares[idx_a];
         temp2->setPosition(Square('d',line));
 
         // Prevent memory leak
-        delete this->squares[squareToIdx(Square('d', line))];
-        this->squares[squareToIdx(Square('d', line))] = temp2;
+        delete this->squares[idx_d];
+        this->squares[idx_d] = temp2;
         
-        this->squares[squareToIdx(Square('a', line))] = new Empty();
+        this->squares[idx_a] = new Empty();
+
+        pop_bit (this->occupancy, idx_e);
+        pop_bit (this->occupancy, idx_a);
+
+        set_bit (this->occupancy, idx_c);
+        set_bit (this->occupancy, idx_d);
     }
 
     remove_castles();
@@ -593,7 +614,7 @@ void Board::undo_move() {
     init(fen);
 }
 
-string Board::getFen () {
+string Board::getFen (bool nb_move) {
     string fen = "";
 
     int empty = 0;
@@ -648,9 +669,10 @@ string Board::getFen () {
     if (this->en_passant)
         fen += this->en_passant_square.row + to_string(this->en_passant_square.line) + " ";
     else
-        fen += "- ";
+        fen += "-";
 
-    fen += "0 " + to_string((this->nb_moves - 1) / 2 + 1);
+    if (nb_move)
+        fen += " 0 " + to_string((this->nb_moves - 1) / 2 + 1);
 
     return fen;
 }
