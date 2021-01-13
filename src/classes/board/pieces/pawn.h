@@ -2,7 +2,7 @@
 
 class Pawn: public Piece {
     public:
-        Pawn(Square position, bool white, bool start_pos,
+        Pawn(Square position, bool white,
            bool* en_passant, Square* en_passant_square);
         
         virtual ~Pawn () {};
@@ -12,7 +12,6 @@ class Pawn: public Piece {
 
     private:
         int forward (int n);
-        bool start_pos;
 
         bool* en_passant;
         Square* en_passant_square;

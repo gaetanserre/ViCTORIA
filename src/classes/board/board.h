@@ -12,7 +12,7 @@
 #include <cstring>
 using namespace std;
 
-struct ply {
+struct Ply {
     Square dep;
     Square stop;
     bool promote = false;
@@ -30,16 +30,10 @@ class Board {
         void printPieces();
         void printLegalMoves();
 
-        bool play_move(ply p, bool force = false);
+        bool play_move(Ply p, bool force = false);
         bool play_move(string p);
 
         string getFen(bool nb_move = true);
-
-        vector<ply> getLegalMoves() { return this->legal_moves; };
-        void setLegalMoves(vector<ply> legal_moves) { this->legal_moves = legal_moves; };
-        void changeSide() { this->white = ! this->white; };
-        bool isWhite() { return this->white; };
-        void setWhite(bool isWhite) { this->white = isWhite; } 
 
         bool isCheck();
         bool isCheckmate(int size);
@@ -49,13 +43,24 @@ class Board {
 
         void undo_move ();
 
-
+        /************* Begin Setters/Getters/Tools *************/
+        
+        vector<Ply> getLegalMoves() { return this->legal_moves; };
+        void setLegalMoves(vector<Ply> legal_moves) { this->legal_moves = legal_moves; };
+        void changeSide() { this->white = ! this->white; };
+        bool isWhite() { return this->white; };
+        void setWhite(bool isWhite) { this->white = isWhite; } 
         void resetFens() { this->fens = vector<string> (); };
+        void setEnPassant (bool b) { this->en_passant = b; }
+
+        /************* End Setters/Getters/Tools *************/
+
+        static Ply StringToPly (string ply);        
+
+
 
         int nb_piece;
         int nb_pawn;
-
-        static ply StringToPly (string ply);
 
         vector<string> fens;
 
@@ -70,15 +75,17 @@ class Board {
         bool check_move_min(int start_idx, Square stop);
         bool isTakeable(Square s);
 
-        bool check_castle (ply p);
+        bool check_castle (Ply p);
         void remove_castles();
         void remove_s_castle();
         void remove_l_castle();
-        void play_castle (ply p);
+        void play_castle (Ply p);
 
-        bool check_move(ply p);
+        bool check_move(Ply p);
 
-        vector<ply> legal_moves;
+
+
+        vector<Ply> legal_moves;
         bool white;
 
         Piece* white_king;

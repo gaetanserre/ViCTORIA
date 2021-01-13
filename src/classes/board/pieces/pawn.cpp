@@ -1,9 +1,8 @@
 #include "pawn.h"
 
-Pawn::Pawn(Square position, bool white, bool start_pos,
+Pawn::Pawn(Square position, bool white,
            bool* en_passant, Square* en_passant_square) : Piece(position, white) {
     this->name = 'p';
-    this->start_pos = start_pos;
     this->en_passant = en_passant;
     this->en_passant_square = en_passant_square;
 
@@ -20,6 +19,7 @@ int Pawn::forward (int n) {
 bool Pawn::check_move(Square goal, Piece* squares[], U64 occupancy) {
 
     bool piece = false;
+    bool start_pos = this->white ? (this->position.line == 2) : (this->position.line == 7);
 
     // Test if there is a not takeable piece at the goal
     if (checkIfPiece(squares[squareToIdx(goal)])) {
@@ -33,7 +33,7 @@ bool Pawn::check_move(Square goal, Piece* squares[], U64 occupancy) {
         if (this->position.line + forward(1) == goal.line)
             return !piece;
         
-        else if ((this->position.line + forward(2) == goal.line) && this->start_pos) {
+        else if ((this->position.line + forward(2) == goal.line) && start_pos) {
             // Check if there is a piece between the pawn and the goal
             return !piece &&
                    ! checkIfPiece(squares[squareToIdx(Square(goal.row, goal.line - forward(1)))]);

@@ -90,7 +90,7 @@ void Board::init (string fen) {
             set_bit(this->occupancy, squareToIdx(position));
 
         } else if (fen[i] == 'p') {
-            this->squares[idx] = new Pawn(position, false, line == 7,
+            this->squares[idx] = new Pawn(position, false,
                     &(this->en_passant), &(this->en_passant_square));
             this->nb_piece++;
             this->nb_pawn++;
@@ -131,7 +131,7 @@ void Board::init (string fen) {
             set_bit(this->occupancy, squareToIdx(position));
 
         } else if (fen[i] == 'P') {
-            this->squares[idx] = new Pawn(position, true, line == 2,
+            this->squares[idx] = new Pawn(position, true,
                     &(this->en_passant), &(this->en_passant_square));
             this->nb_piece++;
             this->nb_pawn++;
@@ -183,7 +183,7 @@ void Board::printPieces () {
 
 void Board::printLegalMoves () {
     computeLegalMoves();
-    for (ply p : this->legal_moves) {
+    for (Ply p : this->legal_moves) {
         if (p.promote)
             cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << p.prom << endl;
         else
@@ -212,7 +212,7 @@ bool Board::isCheck () {
     }
 }
 
-bool Board::check_castle (ply p) {
+bool Board::check_castle (Ply p) {
     Square dep = p.dep; Square stop = p.stop;
 
     Square l[3];
@@ -284,7 +284,7 @@ void Board::remove_castles () {
 /*
     We assume that we already call check_castle
 */
-void Board::play_castle (ply p) {
+void Board::play_castle (Ply p) {
     Square dep = p.dep; Square stop = p.stop;
     int line = this->white ? 1 : 8;
     bool c_short = stop == Square('g', line);
@@ -357,7 +357,7 @@ void Board::play_castle (ply p) {
     }
 
     remove_castles();
-    this->white = not white;
+    this->white = !this->white;
     this->nb_moves++;
 }
 
@@ -373,7 +373,7 @@ bool isPromote (Piece* p) {
     return false;
 }
 
-bool Board::check_move (ply p) {
+bool Board::check_move (Ply p) {
     Square start = p.dep;
     Square stop = p.stop;
     int start_idx = squareToIdx(start);
@@ -382,7 +382,6 @@ bool Board::check_move (ply p) {
     if (check_move_min(start_idx, stop)) {
         Piece* temp = this->squares[start_idx];
         Piece* temp_stop = this->squares[stop_idx];
-
 
         temp->setPosition(stop);
         this->squares[stop_idx] = temp;
@@ -397,9 +396,8 @@ bool Board::check_move (ply p) {
         int e_p_idx;
         bool e_p = false;
         Piece* e_p_pawn;
-        if (temp->getName() == 'p' && stop == this->en_passant_square) {
+        if (this->en_passant && temp->getName() == 'p' && stop == this->en_passant_square) {
             e_p = true;
-
             e_p_idx = squareToIdx (Square (this->en_passant_square.row, start.line));
             e_p_pawn = this->squares[e_p_idx];
             this->squares[e_p_idx] = new Empty();
@@ -426,14 +424,14 @@ bool Board::check_move (ply p) {
     } else return check_castle({start, stop});
 }
 
-bool Board::play_move (ply p, bool force) {
+bool Board::play_move (Ply p, bool force) {
     Square dep = p.dep;
     Square stop = p.stop;
 
     bool found = false;
 
     if (! force) {
-        for (ply m : this->legal_moves) {
+        for (Ply m : this->legal_moves) {
             if (m.dep == p.dep && m.stop == p.stop) {
                 found = true;
                 break;
@@ -444,16 +442,19 @@ bool Board::play_move (ply p, bool force) {
     if (found || force) {
 
         this->fens.push_back(getFen());
+        
+        this->en_passant = false;
 
         int line = this->white ? 1 : 8;
         bool castling = false;
+        int idx_dep = squareToIdx(dep);
 
         if (dep == Square('e', line)) {
-            castling = stop == Square('g', line) || stop == Square('c', line);    
+            castling = (stop == Square('g', line) || stop == Square('c', line)) && 
+                        this->squares[idx_dep]->getName() == 'k';    
         }
 
         if (! castling) {
-            int idx_dep = squareToIdx(dep);
             int idx_stop = squareToIdx(stop);
 
             Piece* temp = this->squares[idx_dep];
@@ -489,7 +490,7 @@ bool Board::play_move (ply p, bool force) {
                     If we want to play the move, we check castles are still possible 
                 */
                 if (temp->getName() == 'k') remove_castles();
-                if (temp->getName() == 'k') {
+                if (temp->getName() == 'r') {
                     if (dep.row == 'a') {
                         remove_l_castle();
                     }
@@ -505,29 +506,25 @@ bool Board::play_move (ply p, bool force) {
                     // If pawn move 2 squares ahead
                     if (abs(dep.line - stop.line) == 2) {
                         this->en_passant = true;
+
                         if (this->white)
                             this->en_passant_square = Square(stop.row, stop.line-1);
                         else
                             this->en_passant_square = Square(stop.row, stop.line+1);
-                    } else
-                        this->en_passant = false;
+                    }
 
                     // If takes en passant
-                    if (stop == this->en_passant_square) {
+                    else if (stop == this->en_passant_square) {
+                        int idx = squareToIdx(Square(stop.row, dep.line));
+
                         this->last_move_capture = true;
 
-                        int idx = squareToIdx(Square(stop.row, dep.line));
                         delete this->squares[idx];
                         this->squares[idx] = new Empty();
 
                         pop_bit (this->occupancy, idx);
-
-                        this->en_passant = false;
                     }
-                    
-                // en passant become false after moving a piece that is not a pawn
-                } else 
-                    this->en_passant = false;
+                }
                 
                 this->squares[idx_stop] = temp;
             }
@@ -555,7 +552,7 @@ bool Board::play_move (string p) {
 }
 
 void Board::computeLegalMoves () {
-    this->legal_moves = vector<ply> ();
+    this->legal_moves = vector<Ply> ();
     this->nb_piece = 0;
     this->nb_pawn = 0;
 
@@ -680,14 +677,14 @@ string Board::getFen (bool nb_move) {
     return fen;
 }
 
-ply Board::StringToPly (string Ply) {
-    Square dep = Square(Ply[0], int(Ply[1] - '0'));
-    Square stop = Square(Ply[2], int(Ply[3] - '0'));
+Ply Board::StringToPly (string ply) {
+    Square dep = Square(ply[0], int(ply[1] - '0'));
+    Square stop = Square(ply[2], int(ply[3] - '0'));
 
-    ply p;
+    Ply p;
 
-    if (Ply.size() == 5) {
-        p = {dep, stop, true, Ply[4]};
+    if (ply.size() == 5) {
+        p = {dep, stop, true, ply[4]};
     } else
         p = {dep, stop, false, ' '};
     

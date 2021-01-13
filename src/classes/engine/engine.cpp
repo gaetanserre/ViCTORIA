@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <time.h>
 
+clock_t startChrono() { 
+    return clock();
+}
+
+double stopChrono(clock_t start) {
+    return (double)(clock() - start) / 1000; //µs to ms
+}
+
 
 Engine::Engine() {
     this->name = "AlphaBeta Chess 1.0";
@@ -17,6 +25,8 @@ Engine::~Engine() {
 }
 
 
+/*************** End parse expression functions ***************/
+
 vector<string> split (const string &s, char delim) {
     vector<string> result;
     stringstream ss (s);
@@ -28,16 +38,6 @@ vector<string> split (const string &s, char delim) {
 
     return result;
 }
-
-clock_t startChrono() { 
-    return clock();
-}
-
-double stopChrono(clock_t start) {
-    return (double)(clock() - start) / 1000; //µs to ms
-}
-
-
 
 void Engine::parse_expr(string expr) {
 
@@ -120,7 +120,7 @@ void Engine::parse_expr(string expr) {
        /*
             We check if we are in end game
        */
-        int depth = end_game ? 6 : 4;
+        int depth = end_game ? 7 : 5;
         
         bool direct_analysis = false;
 
@@ -167,6 +167,14 @@ void Engine::parse_expr(string expr) {
         s.print_info(1, 1, dur, this->board->isWhite());
     }
 
+    else if (expr == "sort") {
+        vector<Move> res = this->sortMoves();
+        for (Move m : res) {
+            Score::print_ply(m.ply);
+            cout << " : " << m.score << endl;
+        }
+    }
+
     else if (expr == "uci") {
         cout << "id name " << this->name << endl;
         cout << "uciok" << endl;
@@ -184,15 +192,18 @@ void Engine::parse_expr(string expr) {
         cout << "Unknown command: " << expr << endl;
     }
 }
+/*************** End parse expression functions ***************/
 
 
+
+/*************** Begin search in opening book functions ***************/
 
 // Checks if the line corresponds to a game
 bool isGame (string line) {
     return line[0] != '[' && line.size() > 1;
 }
 
-bool isPly (string line, ply p) {
+bool isPly (string line, Ply p) {
     if (line[0] == p.dep.row && line[1] == char(p.dep.line + '0')) {
         return line [2] == p.stop.row && line[3] == char(p.stop.line + '0');
     }
@@ -215,13 +226,15 @@ void eraseNchars (string &line, int n) {
 }
 
 // Convert the first ply in line into a ply
-ply lineToPly (string line) {
+Ply lineToPly (string line) {
     string move = "";
     for (int i = 0; i<4; i++)
         move += line[i];
 
     return Board::StringToPly(move);
 }
+
+
 
 
 // We search for the next move in a opening book
@@ -247,7 +260,7 @@ Score Engine::searchOpeningBook (int depth) {
 
                 // We check if the game contains the moves already played.
                 bool found = true;
-                for (ply p : this->moves) {
+                for (Ply p : this->moves) {
                     if (isPly (line, p)) {
                         eraseNchars(line, 5);
                     } else {
@@ -278,8 +291,14 @@ Score Engine::searchOpeningBook (int depth) {
     return MultiDepthAnalysis(depth);
 }
 
+/*************** End search in opening book functions ***************/
+
+
+
+/*************** Begin evaluation funcion ***************/
+
 Score Engine::evalPosition(Board* board) {
-    vector<ply> legal_moves = board->getLegalMoves();
+    vector<Ply> legal_moves = board->getLegalMoves();
     int size = legal_moves.size();
     
     if (size == 0) {
@@ -360,23 +379,28 @@ Score Engine::evalPosition(Board* board) {
             
         // Compute mobility for the other side
         board->changeSide();
+        board->setEnPassant(false);
         board->computeLegalMoves();
+        
         *other_mobility = board->getLegalMoves().size();
         board->changeSide();
 
         int mobility_score = mobilityV * (mobility_white - mobility_black);
         int score = (material_score + mobility_score) * (board->isWhite() ? 1 : -1);
 
-        //cout << material_score << " " << mobility_white << " " << mobility_black << endl;
-
         return Score(score);
 
     }
 }
 
+/*************** End evaluation funcion ***************/
+
+
+/*************** Begin Heuristics funcs ***************/
+
 bool Engine::NullPruning (Score beta, int depth, Score &res) {
     this->board->changeSide();
-    Score score = AlphaBeta (depth - 1 - 2, Score (-beta.score), Score (-beta.score+1));
+    Score score = AlphaBetaNegamax (depth - 1 - 2, Score (-beta.score), Score (-beta.score+1));
     this->board->changeSide();
     score.score = -score.score;
 
@@ -387,6 +411,12 @@ bool Engine::NullPruning (Score beta, int depth, Score &res) {
     return false;
 }
 
+/*************** End Heuristics funcs ***************/
+
+
+
+/*************** Begin useful funcs for deep search ***************/
+
 bool Engine::checkRepetitions (string position) {
     int count = 1;
     for (int i = 0; i<this->positions.size() - 1; i++) {
@@ -396,13 +426,75 @@ bool Engine::checkRepetitions (string position) {
     return count == 3;
 }
 
+bool isCapture (int idx_p1, int idx_p2, Piece** board) {
+    return checkIfPiece (board[idx_p1]) && checkIfPiece (board[idx_p2]);
+}
 
+int getPieceIdx (char name) {
+    switch (name) {
+        case 'k':
+            return 0;
+        case 'p':
+            return 1;
+        case 'n':
+            return 2;
+        case 'b':
+            return 3;
+        case 'r':
+            return 4;
+        case 'q':
+            return 5;
+        default:
+            return -1;
+    }
+}
+
+vector<Move> Engine::sortMoveByCapture (vector<Ply> move_list) {
+    vector<Move> res;
+
+    for (int i = 0; i < move_list.size(); i++) {
+        int idx1 = squareToIdx(move_list[i].dep);
+        int idx2 = squareToIdx(move_list[i].stop);
+
+        Move m = {
+            move_list[i],
+            0
+        };
+
+        if (isCapture (idx1, idx2, this->board->squares)) {
+            m = {
+                move_list[i],
+                capture_table
+                [getPieceIdx (this->board->squares[idx1]->getName())]
+                [getPieceIdx (this->board->squares[idx2]->getName())]
+            };
+        }
+        res.push_back (m);
+    }
+    return res;
+}
+
+vector<Move> Engine::sortMoves () {
+    this->board->computeLegalMoves();
+    vector<Ply> legal_moves = this->board->getLegalMoves();
+    vector <Move> res = sortMoveByCapture(legal_moves);
+
+    sort (res.begin(), res.end(), [](Move m1, Move m2) { return m1.score > m2.score; });
+
+    return res;
+}
+
+/*************** End useful funcs for deep search ***************/
+
+
+
+/*************** Begin negamax alpha beta deep search ***************/
 int nodes = 0;
-Score Engine::AlphaBeta (int depth, Score alpha, Score beta) {
+/*Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     nodes++;
 
     this->board->computeLegalMoves();
-    vector<ply> legal_moves = this->board->getLegalMoves();
+    vector<Ply> legal_moves = this->board->getLegalMoves();
     int size = legal_moves.size();
 
 
@@ -418,15 +510,10 @@ Score Engine::AlphaBeta (int depth, Score alpha, Score beta) {
 
     if (depth == 0 || size == 0) return evalPosition(this->board);
 
-    /*if (depth >= 3 && !this->board->isCheck()) {
-        Score res;
-        if (NullPruning (beta, depth, res)) return res;
-    }*/
-
     for (int i = 0; i<size; i++) {
         this->board->play_move(legal_moves[i], true);
         
-        Score score = AlphaBeta (depth - 1, Score(-beta.score), Score(-alpha.score));
+        Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
 
         this->board->undo_move();
         this->positions.pop_back();
@@ -443,77 +530,61 @@ Score Engine::AlphaBeta (int depth, Score alpha, Score beta) {
         alpha = Score::max (score, alpha);
     }
     return alpha;
+}*/
 
-}
-
-Score Engine::alphaBetaMax (int depth, Score alpha, Score beta) {
+Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     nodes++;
 
-    this->board->computeLegalMoves();
-    vector<ply> legal_moves = this->board->getLegalMoves();
-    int size = legal_moves.size();
+    //this->board->computeLegalMoves();
+    vector<Move> move_list = sortMoves ();
+    
+    int size = move_list.size();
+
+    // We don't check for repetitions at the root
+    if (nodes > 1) {
+        string pos = this->board->getFen(false);
+
+        this->positions.push_back (pos);
+    
+
+        if (checkRepetitions (pos)) return Score (0);
+    }
 
     if (depth == 0 || size == 0) return evalPosition(this->board);
 
-    if (depth >= 3 && !this->board->isCheck()) {
-        Score res;
-        if (NullPruning (beta, depth, res)) return res;
-    }
-    
     for (int i = 0; i<size; i++) {
-        this->board->play_move(legal_moves[i], true);
-        Score score = alphaBetaMin (depth - 1, alpha, beta);
+        this->board->play_move(move_list[i].ply, true);
+        
+        Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
+
         this->board->undo_move();
+        this->positions.pop_back();
 
-        bool checkmate = score.score == mate_value || score.score == -mate_value;
 
-        if (score != alpha || checkmate) {
-            score.plies.push_back(legal_moves[i]);
+        score.score = -score.score;
+        score.plies.push_back(move_list[i].ply);
+        
+        if (alpha.score >= beta.score) {
+            bool check_mate = alpha.score == mate_value && alpha.plies.size() >= 1;
+            return (check_mate ? alpha : beta);
         }
-
-        if (score.score >= beta.score)
-            return (checkmate ? score : beta);
         
         alpha = Score::max (score, alpha);
     }
     return alpha;
 }
 
-Score Engine::alphaBetaMin (int depth, Score alpha, Score beta) {
-    nodes++;
+/*************** End negamax alpha beta deep search ***************/
 
-    this->board->computeLegalMoves();
-    vector<ply> legal_moves = this->board->getLegalMoves();
-    int size = legal_moves.size();
 
-    if (depth == 0 || size == 0) return evalPosition(this->board);
-
-    
-    for (int i = 0; i<size; i++) {
-        this->board->play_move(legal_moves[i], true);
-        Score score = alphaBetaMax (depth - 1, alpha, beta);
-        this->board->undo_move();
-
-        bool checkmate = score.score == mate_value || score.score == -mate_value;
-
-        if (score != beta || checkmate) {
-            score.plies.push_back(legal_moves[i]);
-        }
-
-        if (score.score <= alpha.score)
-            return (checkmate ? score : alpha);
-        
-        beta = Score::min (score, beta);
-    }
-    return beta;
-}
+/*************** Begin in depth analysis functions ***************/
 
 Score Engine::inDepthAnalysis (int depth) {
 
     Score alpha (-mate_value); // Black checkmate
     Score beta (mate_value); // White Checkmate
 
-    Score bestMove = AlphaBeta (depth, alpha, beta);
+    Score bestMove = AlphaBetaNegamax (depth, alpha, beta);
 
     reverse(bestMove.plies.begin(), bestMove.plies.end());
 
@@ -546,3 +617,5 @@ Score Engine::MultiDepthAnalysis (int depth) {
     }
     return maxScore;
 }
+
+/*************** End in depth analysis functions ***************/

@@ -12,3 +12,4 @@ make
 ## Features
 + Alpha-Beta pruning: 300% more efficient
 + Magic bitboard for sliding pieces: 200% more efficient
++ Simple move ordering (captures)

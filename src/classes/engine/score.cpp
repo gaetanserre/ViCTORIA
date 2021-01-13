@@ -1,4 +1,4 @@
-#include "engine.h"
+#include "score.h"
 
 
 void Score::print() {
@@ -40,14 +40,14 @@ void Score::print_info(int depth, int nodes, int time_ms, bool white) {
     cout << " time " << time_ms;
 
     cout << " pv ";
-    for (ply p : this->plies) {
+    for (Ply p : this->plies) {
         Score::print_ply(p);
         cout << " ";
     }
     cout << endl;
 }
 
-void Score::print_ply(ply p) {
+void Score::print_ply(Ply p) {
     p.dep.print();
     p.stop.print();
     if (p.promote)
