@@ -374,12 +374,18 @@ bool isPromote (Piece* p) {
 }
 
 bool Board::check_move (Ply p) {
+    
     Square start = p.dep;
     Square stop = p.stop;
     int start_idx = squareToIdx(start);
     int stop_idx = squareToIdx(stop);
 
-    if (check_move_min(start_idx, stop)) {
+    if (check_castle(p)) {
+        return true;
+
+    } else if (check_move_min(start_idx, stop)) {
+
+
         Piece* temp = this->squares[start_idx];
         Piece* temp_stop = this->squares[stop_idx];
 
@@ -421,7 +427,9 @@ bool Board::check_move (Ply p) {
 
         return !check;
 
-    } else return check_castle({start, stop});
+    } else {
+        return false;
+    }
 }
 
 bool Board::play_move (Ply p, bool force) {

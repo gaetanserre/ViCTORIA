@@ -490,48 +490,6 @@ vector<Move> Engine::sortMoves () {
 
 /*************** Begin negamax alpha beta deep search ***************/
 int nodes = 0;
-/*Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
-    nodes++;
-
-    this->board->computeLegalMoves();
-    vector<Ply> legal_moves = this->board->getLegalMoves();
-    int size = legal_moves.size();
-
-
-    // We don't check for repetitions at the root
-    if (nodes > 1) {
-        string pos = this->board->getFen(false);
-
-        this->positions.push_back (pos);
-    
-
-        if (checkRepetitions (pos)) return Score (0);
-    }
-
-    if (depth == 0 || size == 0) return evalPosition(this->board);
-
-    for (int i = 0; i<size; i++) {
-        this->board->play_move(legal_moves[i], true);
-        
-        Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
-
-        this->board->undo_move();
-        this->positions.pop_back();
-
-
-        score.score = -score.score;
-        score.plies.push_back(legal_moves[i]);
-        
-        if (alpha.score >= beta.score) {
-            bool check_mate = alpha.score == mate_value && alpha.plies.size() >= 1;
-            return (check_mate ? alpha : beta);
-        }
-        
-        alpha = Score::max (score, alpha);
-    }
-    return alpha;
-}*/
-
 Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     nodes++;
 
@@ -609,10 +567,7 @@ Score Engine::MultiDepthAnalysis (int depth) {
             We check if there is a inevitable checkmate.
             If a checkmate in n moves has been found, it's useless to go deeper than depth n
         */
-        if (maxScore.score == mate_value && this->board->isWhite())
-            return maxScore;
-        
-        if (maxScore.score == -mate_value && !this->board->isWhite())
+        if (maxScore.score == mate_value)
             return maxScore;
     }
     return maxScore;
