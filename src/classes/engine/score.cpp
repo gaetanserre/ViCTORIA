@@ -4,11 +4,9 @@
 void Score::print() {
 
     if (plies.size() > 0) {
-        cout << "bestmove ";
-        print_ply(this->plies[0]);
+        cout << "bestmove " << this->plies[0].toString();
         if (plies.size() > 1) {
-            cout << " ponder ";
-            Score::print_ply(this->plies[1]);
+            cout << " ponder " << this->plies[1].toString();
         }
         cout << endl;
     }
@@ -39,19 +37,11 @@ void Score::print_info(int depth, int nodes, int time_ms, bool white) {
 
     cout << " time " << time_ms;
 
-    cout << " pv ";
+    cout << " pv";
     for (Ply p : this->plies) {
-        Score::print_ply(p);
-        cout << " ";
+        cout << " " << p.toString(); 
     }
     cout << endl;
-}
-
-void Score::print_ply(Ply p) {
-    p.dep.print();
-    p.stop.print();
-    if (p.promote)
-        cout << p.prom;
 }
 
 bool Score::operator== (Score s) {

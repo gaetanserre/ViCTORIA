@@ -45,6 +45,11 @@ class Engine {
 
         void searchOpeningBook (int depth);
 
+        const int maxDepth = 64;
+        int searchPly = 0;
+        vector<Ply> killerMoves;
+
+
         bool startpos = true;
         bool end_game;
 

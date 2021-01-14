@@ -593,13 +593,14 @@ void Board::computeLegalMoves () {
 
                         if (check_move({dep, stop})) {
                             if (this->squares[i]->getName() == 'p' && stop.line == line) {
-                                this->legal_moves.push_back({dep, stop, true, 'q'});
-                                this->legal_moves.push_back({dep, stop, true, 'n'});
-                                this->legal_moves.push_back({dep, stop, true, 'r'});
-                                this->legal_moves.push_back({dep, stop, true, 'b'});
+                                
+                                this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
+                                this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
+                                this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
+                                this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
                             }
                             else
-                                this->legal_moves.push_back({dep, stop});
+                                this->legal_moves.push_back(Ply (dep, stop));
                         }
                     }
                 }
@@ -701,12 +702,9 @@ Ply Board::StringToPly (string ply) {
     Square dep = Square(ply[0], int(ply[1] - '0'));
     Square stop = Square(ply[2], int(ply[3] - '0'));
 
-    Ply p;
 
     if (ply.size() == 5) {
-        p = {dep, stop, true, ply[4]};
+        return Ply (dep, stop, true, ply[4]);
     } else
-        p = {dep, stop, false, ' '};
-    
-    return p;
+        return Ply (dep, stop);
 }

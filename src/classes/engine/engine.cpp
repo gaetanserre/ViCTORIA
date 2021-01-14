@@ -16,6 +16,8 @@ Engine::Engine() {
     this->board = new Board();
     this->board->init();
 
+    this->killerMoves = vector<Ply> (this->maxDepth);
+
     cout << this->name << endl;
 }
 
@@ -133,6 +135,7 @@ void Engine::parse_expr(string expr) {
 
         if (res.size() > 2 && res[1] == "depth") {
             depth = stoi(res[2]);
+            depth = depth > this->maxDepth ? this->maxDepth : depth; 
             direct_analysis = true;
         }
 
@@ -177,8 +180,7 @@ void Engine::parse_expr(string expr) {
     else if (expr == "sort") {
         vector<Move> res = this->sortMoves();
         for (Move m : res) {
-            Score::print_ply(m.ply);
-            cout << " : " << m.score << endl;
+            cout << m.ply.toString() << " : " << m.score << endl;
         }
     }
 
@@ -439,8 +441,8 @@ bool Engine::checkRepetitions (string position) {
     return count == 3;
 }
 
-bool isCapture (int idx_p1, int idx_p2, Piece** board) {
-    return checkIfPiece (board[idx_p1]) && checkIfPiece (board[idx_p2]);
+bool isCapture (int idx_p1, int idx_p2, U64 occupancy) {
+    return get_bit(occupancy, idx_p1) && get_bit (occupancy, idx_p2);
 }
 
 int getPieceIdx (char name) {
@@ -475,20 +477,21 @@ vector<Move> Engine::PlyToMove (vector<Ply> move_list) {
             0
         };
 
-        if (
-            size > 0
-            && move_list[i].dep == this->best_move.plies[0].dep
-            && move_list[i].stop == this->best_move.plies[0].stop
-        ) 
-        {
+        if (size > 0 && move_list[i] == this->best_move.plies[0]) {
             m.score = 1000;
-        }
-
-        else if (isCapture (idx1, idx2, this->board->squares)) {
-            m.score = capture_table
+        } 
+    
+        else if (isCapture (idx1, idx2, this->board->occupancy)) {
+            m.score = 900;
+            m.score += capture_table
                       [getPieceIdx (this->board->squares[idx1]->getName())]
                       [getPieceIdx (this->board->squares[idx2]->getName())];
         }
+
+        else if (this->killerMoves[searchPly] == move_list[i]) {
+            m.score = 800;
+        }
+
         res.push_back (m);
     }
     return res;
@@ -531,10 +534,12 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
     for (int i = 0; i<size; i++) {
         this->board->play_move(move_list[i].ply, true);
+        this->searchPly++;
         
         Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
 
         this->board->undo_move();
+        this->searchPly--;
         this->positions.pop_back();
 
 
@@ -542,6 +547,13 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         score.plies.push_back(move_list[i].ply);
         
         if (alpha.score >= beta.score) {
+
+            int i1 = squareToIdx (move_list[i].ply.dep);
+            int i2 = squareToIdx (move_list[i].ply.stop);
+            if (!isCapture(i1, i2, this->board->occupancy)) {
+                this->killerMoves[this->searchPly] = move_list[i].ply;
+            }
+
             bool check_mate = alpha.score == mate_value && alpha.plies.size() >= 1;
             return (check_mate ? alpha : beta);
         }
@@ -574,6 +586,8 @@ void Engine::inDepthAnalysis (int depth) {
 void Engine::MultiDepthAnalysis (int depth) {
     for (int i = 1; i<= depth; i++) {
         nodes = 0;
+
+        this->searchPly = 0;
 
         clock_t start = startChrono();
         inDepthAnalysis(i);

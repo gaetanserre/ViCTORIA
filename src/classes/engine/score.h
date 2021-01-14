@@ -22,7 +22,6 @@ class Score {
 
         void print();
         void print_info(int depth, int nodes, int time_ms, bool white);
-        static void print_ply (Ply p);
 
         int score;
         vector<Ply> plies;

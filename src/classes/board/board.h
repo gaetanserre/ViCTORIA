@@ -5,19 +5,12 @@
 #include "pieces/queen.h"
 #include "pieces/king.h"
 #include "pieces/empty.h"
-
 #include "../bitboard/magic_bitboard.h"
+#include "ply.h"
 
 #include <vector>
 #include <cstring>
 using namespace std;
-
-struct Ply {
-    Square dep;
-    Square stop;
-    bool promote = false;
-    char prom;
-};
 
 class Board {
     public:
