@@ -6,7 +6,9 @@
 ```
 cd build
 make
-../out./IA_chess "fen(optional)"
+../out./AlphaBeta_chess
+[position fen type_your_fen] (optional)
+go
 ```
 
 ## Features
