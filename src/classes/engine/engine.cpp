@@ -244,29 +244,36 @@ Ply lineToPly (string line) {
 
 
 
-
-// We search for the next move in a opening book
+/*
+    We search for the next move in a opening book
+    This function is called only if the starting position was
+    the standard starting position in chess
+*/
 void Engine::searchOpeningBook (int depth) {
+
+    /*
+        If no move has been played, it's white turn and we return e2e4
+        which is one of the most strongest opening
+    */
+    if (this->moves.size() == 0) {
+        Score s;
+        s.plies.push_back({Square("e2"), Square("e4")});
+        s.print_info(1, 1, 0, true);
+        this->best_move = s;
+        return;
+    }
+
     ifstream opening_book;
     opening_book.open ("/home/gaetan/Documents/Projets/Chess/chess_books/opening_book-2.5M.pgn");
 
     if (opening_book.is_open()) {
+        cout << "Searching in opening book.." << endl;
         string line;
         while (getline(opening_book, line)) {
 
             // We check if the line corresponds to a game
             if (isGame (line)) {
                 
-                // If no move has been played, we return the first opening that fits the color
-                if (this->moves.size() == 0 && isWin(line, this->board->isWhite())) {
-                    Score s;
-                    s.plies.push_back(lineToPly(line));
-                    opening_book.close();
-                    s.print_info(1, 1, 0, this->board->isWhite());
-                    this->best_move = s;
-                    return;
-                }
-
                 // We check if the game contains the moves already played.
                 bool found = true;
                 for (Ply p : this->moves) {
@@ -280,18 +287,12 @@ void Engine::searchOpeningBook (int depth) {
 
                 // If yes, we return it
                 if (found && isWin(line, this->board->isWhite())) {
-                    if (line.size() > 4) {
-                        Score s;
-                        s.plies.push_back(lineToPly(line));
-                        opening_book.close();
-                        s.print_info(1, 1, 0, this->board->isWhite());
-                        this->best_move = s;
-                        return;
-                    } else {
-                        opening_book.close();
-                        MultiDepthAnalysis(depth);
-                        return;
-                    }
+                    Score s;
+                    s.plies.push_back(lineToPly(line));
+                    opening_book.close();
+                    s.print_info(1, 1, 0, this->board->isWhite());
+                    this->best_move = s;
+                    return;
                 }
             }
         }
@@ -512,7 +513,6 @@ int nodes = 0;
 Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     nodes++;
 
-    //this->board->computeLegalMoves();
     vector<Move> move_list = sortMoves ();
     
     int size = move_list.size();
