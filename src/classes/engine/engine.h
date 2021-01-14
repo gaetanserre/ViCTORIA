@@ -29,7 +29,7 @@ class Engine {
         /*************** Begin useful funcs for deep search ***************/
         bool checkRepetitions (string position);
 
-        vector<Move> sortMoveByCapture (vector<Ply> move_list);
+        vector<Move> PlyToMove (vector<Ply> move_list);
         vector<Move> sortMoves ();
         /*************** End useful funcs for deep search ***************/
 
@@ -40,10 +40,10 @@ class Engine {
 
         Score AlphaBetaNegamax (int depth, Score alpha, Score beta);
 
-        Score inDepthAnalysis (int depth);
-        Score MultiDepthAnalysis (int depth);
+        void inDepthAnalysis (int depth);
+        void MultiDepthAnalysis (int depth);
 
-        Score searchOpeningBook (int depth);
+        void searchOpeningBook (int depth);
 
         bool startpos = true;
         bool end_game;

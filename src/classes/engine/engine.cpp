@@ -114,7 +114,14 @@ void Engine::parse_expr(string expr) {
     }
     
     else if (res.size() > 0 && res[0] == "go") {
+        /*
+            We reset the old best move
+        */
+        this->best_move = Score();
 
+        /*
+            We define what end game is 
+        */
         this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
 
        /*
@@ -130,9 +137,9 @@ void Engine::parse_expr(string expr) {
         }
 
         if (this->moves.size() < 14 && this->startpos && !direct_analysis)
-            this->best_move = searchOpeningBook(depth);
+            searchOpeningBook(depth);
         else
-            this->best_move = MultiDepthAnalysis(depth);
+            MultiDepthAnalysis(depth);
 
         best_move.print();
     }
@@ -177,6 +184,7 @@ void Engine::parse_expr(string expr) {
 
     else if (expr == "uci") {
         cout << "id name " << this->name << endl;
+        cout << "id author Gaetan Serre" << endl;
         cout << "uciok" << endl;
     }
 
@@ -238,7 +246,7 @@ Ply lineToPly (string line) {
 
 
 // We search for the next move in a opening book
-Score Engine::searchOpeningBook (int depth) {
+void Engine::searchOpeningBook (int depth) {
     ifstream opening_book;
     opening_book.open ("/home/gaetan/Documents/Projets/Chess/chess_books/opening_book-2.5M.pgn");
 
@@ -255,7 +263,8 @@ Score Engine::searchOpeningBook (int depth) {
                     s.plies.push_back(lineToPly(line));
                     opening_book.close();
                     s.print_info(1, 1, 0, this->board->isWhite());
-                    return s;
+                    this->best_move = s;
+                    return;
                 }
 
                 // We check if the game contains the moves already played.
@@ -276,19 +285,22 @@ Score Engine::searchOpeningBook (int depth) {
                         s.plies.push_back(lineToPly(line));
                         opening_book.close();
                         s.print_info(1, 1, 0, this->board->isWhite());
-                        return s;
+                        this->best_move = s;
+                        return;
                     } else {
                         opening_book.close();
-                        return MultiDepthAnalysis(depth);
+                        MultiDepthAnalysis(depth);
+                        return;
                     }
                 }
             }
         }
         opening_book.close();
-        return MultiDepthAnalysis(depth);
+        MultiDepthAnalysis(depth);
+        return;
     }
 
-    return MultiDepthAnalysis(depth);
+    MultiDepthAnalysis(depth);
 }
 
 /*************** End search in opening book functions ***************/
@@ -449,8 +461,9 @@ int getPieceIdx (char name) {
     }
 }
 
-vector<Move> Engine::sortMoveByCapture (vector<Ply> move_list) {
+vector<Move> Engine::PlyToMove (vector<Ply> move_list) {
     vector<Move> res;
+    int size = this->best_move.plies.size();
 
     for (int i = 0; i < move_list.size(); i++) {
         int idx1 = squareToIdx(move_list[i].dep);
@@ -461,13 +474,19 @@ vector<Move> Engine::sortMoveByCapture (vector<Ply> move_list) {
             0
         };
 
-        if (isCapture (idx1, idx2, this->board->squares)) {
-            m = {
-                move_list[i],
-                capture_table
-                [getPieceIdx (this->board->squares[idx1]->getName())]
-                [getPieceIdx (this->board->squares[idx2]->getName())]
-            };
+        if (
+            size > 0
+            && move_list[i].dep == this->best_move.plies[0].dep
+            && move_list[i].stop == this->best_move.plies[0].stop
+        ) 
+        {
+            m.score = 1000;
+        }
+
+        else if (isCapture (idx1, idx2, this->board->squares)) {
+            m.score = capture_table
+                      [getPieceIdx (this->board->squares[idx1]->getName())]
+                      [getPieceIdx (this->board->squares[idx2]->getName())];
         }
         res.push_back (m);
     }
@@ -477,7 +496,7 @@ vector<Move> Engine::sortMoveByCapture (vector<Ply> move_list) {
 vector<Move> Engine::sortMoves () {
     this->board->computeLegalMoves();
     vector<Ply> legal_moves = this->board->getLegalMoves();
-    vector <Move> res = sortMoveByCapture(legal_moves);
+    vector <Move> res = PlyToMove(legal_moves);
 
     sort (res.begin(), res.end(), [](Move m1, Move m2) { return m1.score > m2.score; });
 
@@ -537,7 +556,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 /*************** Begin in depth analysis functions ***************/
 
-Score Engine::inDepthAnalysis (int depth) {
+void Engine::inDepthAnalysis (int depth) {
 
     Score alpha (-mate_value); // Black checkmate
     Score beta (mate_value); // White Checkmate
@@ -548,29 +567,27 @@ Score Engine::inDepthAnalysis (int depth) {
 
     if (!this->board->isWhite()) bestMove.score *= -1;
     
-    return bestMove;
+    this->best_move = bestMove;
 }
 
 
-Score Engine::MultiDepthAnalysis (int depth) {
-    Score maxScore;
+void Engine::MultiDepthAnalysis (int depth) {
     for (int i = 1; i<= depth; i++) {
         nodes = 0;
 
         clock_t start = startChrono();
-        maxScore = inDepthAnalysis(i);
+        inDepthAnalysis(i);
         int dur = stopChrono(start);
 
-        maxScore.print_info(i, nodes, dur, this->board->isWhite());
+        this->best_move.print_info(i, nodes, dur, this->board->isWhite());
 
         /* 
             We check if there is a inevitable checkmate.
             If a checkmate in n moves has been found, it's useless to go deeper than depth n
         */
-        if (maxScore.score == mate_value)
-            return maxScore;
+        if (this->best_move.score == mate_value)
+            return;
     }
-    return maxScore;
 }
 
 /*************** End in depth analysis functions ***************/
