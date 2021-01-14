@@ -470,6 +470,18 @@ bool Board::play_move (Ply p, bool force) {
 
             this->last_move_capture = checkIfPiece(this->squares[idx_stop]);
 
+            /*
+                We check if we are capturing a rook, we need to remove castles
+            */
+           if (this->squares[idx_stop]->getName() == 'r') {
+               if (stop.row == 'a') {
+                        remove_l_castle();
+                    }
+                if (stop.row == 'h') {
+                        remove_s_castle();
+                }
+           }
+
             delete this->squares[idx_stop];
 
             pop_bit(this->occupancy, idx_dep);
@@ -495,7 +507,7 @@ bool Board::play_move (Ply p, bool force) {
             } else {
                 temp->setPosition(stop);
                 /*
-                    If we want to play the move, we check castles are still possible 
+                    We remove castles if we move the king or one of the rook
                 */
                 if (temp->getName() == 'k') remove_castles();
                 if (temp->getName() == 'r') {
