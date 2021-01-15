@@ -1,8 +1,8 @@
-args = -std=c++2a -O3
+args = -std=c++2a -O3 -pthread
 
-all: AlphaBeta_Chess
+all: Victoria
 
-AlphaBeta_Chess : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o engine.o ../src/main.cpp
+Victoria : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o engine.o parse_expr.o ../src/main.cpp
 	rm -rf ../out
 	mkdir ../out
 	g++ $^ $(args) -o ../out/$@
@@ -35,6 +35,9 @@ board.o: ../src/classes/board/board.cpp
 	g++ $< $(args) -c
 
 engine.o: ../src/classes/engine/engine.cpp score.o
+	g++ $< $(args) -c
+
+parse_expr.o: ../src/classes/engine/parse_expr.cpp
 	g++ $< $(args) -c
 
 score.o: ../src/classes/engine/score.cpp

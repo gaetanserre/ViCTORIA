@@ -45,6 +45,10 @@ class Board {
         void setWhite(bool isWhite) { this->white = isWhite; } 
         void resetFens() { this->fens = vector<string> (); };
         void setEnPassant (bool b) { this->en_passant = b; }
+        int getNbCastlings (bool white) {
+            if (white) return this->castling_long_w + this->castling_short_w;
+            else return this->castling_long_b + this->castling_short_b;
+        }
 
         /************* End Setters/Getters/Tools *************/
 

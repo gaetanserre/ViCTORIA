@@ -1,18 +1,8 @@
 #include "engine.h"
 #include <stdio.h>
-#include <time.h>
-
-clock_t startChrono() { 
-    return clock();
-}
-
-double stopChrono(clock_t start) {
-    return (double)(clock() - start) / 1000; //µs to ms
-}
-
 
 Engine::Engine() {
-    this->name = "AlphaBeta Chess 1.0";
+    this->name = "Victoria 1.0";
     this->board = new Board();
     this->board->init();
 
@@ -25,186 +15,6 @@ Engine::Engine() {
 Engine::~Engine() {
     delete this->board;
 }
-
-
-/*************** End parse expression functions ***************/
-
-vector<string> split (const string &s, char delim) {
-    vector<string> result;
-    stringstream ss (s);
-    string item;
-
-    while (getline (ss, item, delim)) {
-        result.push_back (item);
-    }
-
-    return result;
-}
-
-void Engine::parse_expr(string expr) {
-
-    vector<string> res = split(expr, ' ');
-
-    // parse expression of type : position fen [fen] moves [moves]
-    if (res.size() > 1 && res[0] == "position") {
-
-        delete this->board;
-        this->board = new Board ();
-
-        this->positions.clear();
-        this->moves.clear();
-
-        int moves_idx = 8;
-
-        if (res[1] == "fen") {
-            string fen = "";
-            for (int i = 2; i<8; i++) {
-                fen += res[i] + " ";
-            }
-            replace(fen.begin(), fen.end(), 'A', 'K');
-            replace(fen.begin(), fen.end(), 'H', 'Q');
-            replace(fen.begin(), fen.end(), 'a', 'k');
-            replace(fen.begin(), fen.end(), 'h', 'q');
-
-            this->board->init(fen);
-
-            this->startpos = fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
-
-
-        } else if (res[1] == "startpos") {
-            this->board->init();
-            moves_idx = 2;
-
-            this->startpos = true;
-        }
-
-        this->positions.push_back(this->board->getFen(false));
-
-        if (res.size() > moves_idx+1 && res[moves_idx] == "moves") {
-            for (int i = moves_idx+1; i<res.size(); i++) {
-                this->board->computeLegalMoves();
-                this->board->play_move(res[i]);
-                this->moves.push_back(Board::StringToPly(res[i]));
-                this->positions.push_back(this->board->getFen(false));
-            }
-        }
-    }
-    
-    else if (res.size() == 2 && res[0] == "play") {
-        
-        this->board->computeLegalMoves();
-        this->board->play_move(res[1]);
-
-        this->positions.push_back(this->board->getFen(false));
-
-        this->board->printPieces();
-
-        print_bitboard(this->board->occupancy);
-
-        this->moves.push_back(Board::StringToPly(res[1]));
-
-        this->board->computeLegalMoves();
-        int size = this->board->getLegalMoves().size();
-        if (this->board->isCheckmate(size)) {
-            cout << (this->board->isWhite() ? "black" : "white") << " wins." << endl;
-        }
-
-        if (this->board->isStalemate(size)) {
-            cout << "Stalemate." << endl;
-        }
-
-    }
-    
-    else if (res.size() > 0 && res[0] == "go") {
-        /*
-            We reset the old best move
-        */
-        this->best_move = Score();
-
-        /*
-            We define what end game is 
-        */
-        this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
-
-       /*
-            We check if we are in end game
-       */
-        int depth = end_game ? 7 : 5;
-        
-        bool direct_analysis = false;
-
-        if (res.size() > 2 && res[1] == "depth") {
-            depth = stoi(res[2]);
-            depth = depth > this->maxDepth ? this->maxDepth : depth; 
-            direct_analysis = true;
-        }
-
-        if (this->moves.size() < 14 && this->startpos && !direct_analysis)
-            searchOpeningBook(depth);
-        else
-            MultiDepthAnalysis(depth);
-
-        best_move.print();
-    }
-    
-
-    else if (expr == "fen") {
-
-        cout << this->board->getFen() << endl;
-    }
-
-    else if (expr == "undo") {
-        this->board->undo_move();
-        this->board->printPieces();
-        this->moves.pop_back();
-    }
-
-    else if (expr == "legal") {
-        clock_t start = startChrono();
-        this->board->computeLegalMoves();
-        double dur = stopChrono(start);
-        this->board->printLegalMoves();
-        printf("%lf millisecond(s)\n", dur);
-    }
-
-    else if (expr == "eval") {
-        this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
-
-        this->board->computeLegalMoves();
-        clock_t start = startChrono();
-        Score s = evalPosition(this->board);
-        int dur = stopChrono(start);
-        s.print_info(1, 1, dur, this->board->isWhite());
-    }
-
-    else if (expr == "sort") {
-        vector<Move> res = this->sortMoves();
-        for (Move m : res) {
-            cout << m.ply.toString() << " : " << m.score << endl;
-        }
-    }
-
-    else if (expr == "uci") {
-        cout << "id name " << this->name << endl;
-        cout << "id author Gaetan Serre" << endl;
-        cout << "uciok" << endl;
-    }
-
-    else if (expr == "isready") {
-        cout << "readyok" << endl;
-    }
-
-    else if (expr == "stop") {
-        this->best_move.print();
-    }
-
-    else if (expr != "quit") {
-        cout << "Unknown command: " << expr << endl;
-    }
-}
-/*************** End parse expression functions ***************/
-
-
 
 /*************** Begin search in opening book functions ***************/
 
@@ -266,7 +76,7 @@ void Engine::searchOpeningBook (int depth) {
     }
 
     ifstream opening_book;
-    opening_book.open ("/home/gaetan/Documents/Projets/Chess/chess_books/opening_book-2.5M.pgn");
+    opening_book.open (this->opening_table_path);
 
     if (opening_book.is_open()) {
         cout << "Searching in opening book.." << endl;
@@ -299,10 +109,11 @@ void Engine::searchOpeningBook (int depth) {
             }
         }
         opening_book.close();
+        this->not_in_opening_table = true;
         MultiDepthAnalysis(depth);
         return;
     }
-
+    this->not_in_opening_table = true;
     MultiDepthAnalysis(depth);
 }
 
@@ -326,7 +137,7 @@ Score Engine::evalPosition(Board* board) {
         int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
             wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
         
-        int material_score = 0;
+        int material_score = board->getNbCastlings(board->isWhite()) * 10;
 
         for (int i = 0; i<64; i++) {
 
@@ -533,6 +344,14 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     if (depth == 0 || size == 0) return evalPosition(this->board);
 
     for (int i = 0; i<size; i++) {
+
+        /*
+            If we want to kill the thread, we return a random Score to skip all variants
+        */
+        if (this->terminate_thread) {
+            return Score();
+        }
+
         this->board->play_move(move_list[i].ply, true);
         this->searchPly++;
         
@@ -579,12 +398,16 @@ void Engine::inDepthAnalysis (int depth) {
 
     if (!this->board->isWhite()) bestMove.score *= -1;
     
-    this->best_move = bestMove;
+    /*
+        If we want to kill the thread, we don't want best_move to be modified
+    */
+    if (!this->terminate_thread) this->best_move = bestMove;
 }
 
 
 void Engine::MultiDepthAnalysis (int depth) {
     for (int i = 1; i<= depth; i++) {
+        if (this->terminate_thread) return;
         nodes = 0;
 
         this->searchPly = 0;
@@ -593,7 +416,13 @@ void Engine::MultiDepthAnalysis (int depth) {
         inDepthAnalysis(i);
         int dur = stopChrono(start);
 
-        this->best_move.print_info(i, nodes, dur, this->board->isWhite());
+        /*
+            If we want to kill the thread,
+            we don't want to print the move that hasn't been really calculated
+            since we returned a random Score from the Negamax function
+        */
+        if (!this->terminate_thread)
+            this->best_move.print_info(i, nodes, dur, this->board->isWhite());
 
         /* 
             We check if there is a inevitable checkmate.
