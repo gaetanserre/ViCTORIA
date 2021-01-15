@@ -3,31 +3,31 @@
 
 class Square {
     public:
-        Square(char row, int line) {
-            this->row = row;
-            this->line = line;
+        Square(char rank, int file) {
+            this->rank = rank;
+            this->file = file;
         }
 
         Square (std::string square) {
-            this->row = square[0];
-            this->line = square[1] - '0';
+            this->rank = square[0];
+            this->file = square[1] - '0';
         }
 
         Square() {
-            this->row = -1;
-            this->line = -1;
+            this->rank = -1;
+            this->file = -1;
         }
 
         void print() {
-            std::cout << this->row << this->line;
+            std::cout << this->rank << this->file;
         }
 
         bool operator==(Square s) {
-            return this->row == s.row && this->line == s.line;
+            return this->rank == s.rank && this->file == s.file;
         }
 
         bool operator==(std::string str) {
-            return this->row == str[0] && this->line == str[1] - '0';
+            return this->rank == str[0] && this->file == str[1] - '0';
         }
 
         bool operator!=(Square s) {
@@ -38,6 +38,6 @@ class Square {
             return !(*this == str);
         }
 
-        char row;
-        int line;
+        char rank;
+        int file;
 };

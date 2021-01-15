@@ -11,7 +11,7 @@ void Piece::print_piece() {
         color = "white";
 
     std::cout << color << " " << this->name << " " <<
-              this->position.row << this->position.line <<
+              this->position.rank << this->position.file <<
               " value : " << this->getPieceValue(false) << std::endl;
 }
 
@@ -29,15 +29,15 @@ bool PlusOrMinus(int value1, int value2, int n) {
 }
 
 int squareToIdx(Square c) {
-    int row = c.row - 97;
-    int line = 7 - (c.line - 1);
-    return line * 8 + row;
+    int rank = c.rank - 97;
+    int file = 7 - (c.file - 1);
+    return file * 8 + rank;
 }
 
 Square IdxToSquare(int idx) {
-    char row = 'a' + idx % 8;
-    int line = 9 - (1 + idx / 8);
-    return Square(row, line);
+    char rank = 'a' + idx % 8;
+    int file = 9 - (1 + idx / 8);
+    return Square(rank, file);
 }
 
 bool checkIfPiece(Piece *p) {
@@ -45,7 +45,7 @@ bool checkIfPiece(Piece *p) {
 }
 
 float Piece::getPieceValue (bool end_game) {
-    Square pos = this->white ? this->position : Square (this->position.row, 8 - this->position.line + 1);
+    Square pos = this->white ? this->position : Square (this->position.rank, 8 - this->position.file + 1);
 
     float score = this->pieceValue;
 

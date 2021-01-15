@@ -12,14 +12,14 @@ void Board::init (string fen) {
     this->nb_piece = 0;
     this->nb_pawn = 0;
 
-    int row = 97; // ASCII for 'a'
-    int line = 8;
+    int rank = 97; // ASCII for 'a'
+    int file = 8;
     int idx = 0;
     int nbspace = 0;
     string nb_moves_str = "";
 
     for (int i = 0; i<fen.length(); i++) {
-        Square position(char(row), line);
+        Square position(char(rank), file);
 
         if (fen[i] == ' ') {nbspace++; i++;}
 
@@ -141,13 +141,13 @@ void Board::init (string fen) {
         }
 
         else if (fen[i] == '/') {
-            line--;
-            row = 96; // 97 is for 'a' and 96 is because we increment row at the end of the loop
+            file--;
+            rank = 96; // 97 is for 'a' and 96 is because we increment rank at the end of the loop
             idx--;
         } else {
             int nb = fen[i] - '0'; // char to int conversion
                 if (nb >= 1 && nb <= 8) {
-                    row += nb - 1;
+                    rank += nb - 1;
                     for (int i = 0; i<nb; i++) {
                         (this->squares[idx + i]) = new Empty();
                     }
@@ -159,7 +159,7 @@ void Board::init (string fen) {
                 }
         }
         idx++;
-        row++;
+        rank++;
     }
     this->nb_moves = stoi(nb_moves_str);
 }
@@ -174,7 +174,7 @@ void Board::printPieces () {
     cout << this->castling_long_b << " " << castling_short_b << endl;
 
     if (this->en_passant) {
-        cout << this->en_passant_square.row << this->en_passant_square.line << endl;
+        cout << this->en_passant_square.rank << this->en_passant_square.file << endl;
     }
     cout << "pieces: " << this->nb_piece << endl;
     cout << "pawns: " << this->nb_pawn << endl;
@@ -185,15 +185,15 @@ void Board::printLegalMoves () {
     computeLegalMoves();
     for (Ply p : this->legal_moves) {
         if (p.promote)
-            cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << p.prom << endl;
+            cout << p.dep.rank << p.dep.file << p.stop.rank << p.stop.file << p.prom << endl;
         else
-            cout << p.dep.row << p.dep.line << p.stop.row << p.stop.line << endl;
+            cout << p.dep.rank << p.dep.file << p.stop.rank << p.stop.file << endl;
     }
     cout << "nb: " << this->legal_moves.size() << endl;
 } 
 
 bool Board::isTakeable (Square s) {
-    if (s.line < 1 || s.line > 8) return true; // Bug to fix
+    if (s.file < 1 || s.file > 8) return true; // Bug to fix
     for (int i = 0; i<64; i++) {
         if (checkIfPiece (this->squares[i]) && this->squares[i]->isWhite() != this->white) {
             if (this->squares[i]->en_prise (s, this->squares, this->occupancy))
@@ -218,21 +218,21 @@ bool Board::check_castle (Ply p) {
     Square l[3];
     int size = 2;
     bool castling = false;
-    int line = this->white ? 1 : 8;
+    int file = this->white ? 1 : 8;
     bool c_short = this->white ? this->castling_short_w : this->castling_short_b;
     bool c_long = this->white ? this->castling_long_w : this->castling_long_b;
 
     if (c_short || c_long) {
 
-        if (dep == Square('e', line)) {
-            if (stop == Square('g', line) && c_short) {
-                l[0] = Square('f', line); l[1] = Square('g', line);
+        if (dep == Square('e', file)) {
+            if (stop == Square('g', file) && c_short) {
+                l[0] = Square('f', file); l[1] = Square('g', file);
                 castling = true;
             }
 
-            if (stop == Square('c', line) && c_long) {
-                l[0] = Square('d', line); l[1] = Square('c', line);
-                l[2] = Square('b', line);
+            if (stop == Square('c', file) && c_long) {
+                l[0] = Square('d', file); l[1] = Square('c', file);
+                l[2] = Square('b', file);
                 size = 3;
                 castling = true;
             }
@@ -291,19 +291,19 @@ void Board::remove_castles () {
 */
 void Board::play_castle (Ply p) {
     Square dep = p.dep; Square stop = p.stop;
-    int line = this->white ? 1 : 8;
-    bool c_short = stop == Square('g', line);
+    int file = this->white ? 1 : 8;
+    bool c_short = stop == Square('g', file);
 
     if (c_short) {
 
-        int idx_h = squareToIdx(Square('h', line));
-        int idx_e = squareToIdx(Square('e', line));
-        int idx_f = squareToIdx(Square('f', line));
-        int idx_g = squareToIdx(Square('g', line));
+        int idx_h = squareToIdx(Square('h', file));
+        int idx_e = squareToIdx(Square('e', file));
+        int idx_f = squareToIdx(Square('f', file));
+        int idx_g = squareToIdx(Square('g', file));
 
         //Move king
         Piece* temp = this->squares[idx_e];
-        temp->setPosition(Square('g', line));
+        temp->setPosition(Square('g', file));
 
         // Prevent memory leak
         delete this->squares[idx_g];
@@ -313,7 +313,7 @@ void Board::play_castle (Ply p) {
 
         //Move rook
         Piece* temp2 = this->squares[idx_h];
-        temp2->setPosition(Square('f',line));
+        temp2->setPosition(Square('f',file));
 
         // Prevent memory leak
         delete this->squares[idx_f];
@@ -329,14 +329,14 @@ void Board::play_castle (Ply p) {
 
     } else {
 
-        int idx_e = squareToIdx(Square('e', line));
-        int idx_c = squareToIdx(Square('c', line));
-        int idx_d = squareToIdx(Square('d', line));
-        int idx_a = squareToIdx(Square('a', line));
+        int idx_e = squareToIdx(Square('e', file));
+        int idx_c = squareToIdx(Square('c', file));
+        int idx_d = squareToIdx(Square('d', file));
+        int idx_a = squareToIdx(Square('a', file));
 
         //Move king
         Piece* temp = this->squares[idx_e];
-        temp->setPosition(Square('c', line));
+        temp->setPosition(Square('c', file));
 
         // Prevent memory leak
         delete this->squares[idx_c];
@@ -346,7 +346,7 @@ void Board::play_castle (Ply p) {
 
         //Move rook
         Piece* temp2 = this->squares[idx_a];
-        temp2->setPosition(Square('d',line));
+        temp2->setPosition(Square('d',file));
 
         // Prevent memory leak
         delete this->squares[idx_d];
@@ -372,8 +372,8 @@ bool Board::check_move_min (int start_idx, Square stop) {
 
 bool isPromote (Piece* p) {
     if (p->getName() == 'p') {
-        if (p->isWhite()) return p->getPosition().line == 7;
-        else return p->getPosition().line == 2;
+        if (p->isWhite()) return p->getPosition().file == 7;
+        else return p->getPosition().file == 2;
     }
     return false;
 }
@@ -409,7 +409,7 @@ bool Board::check_move (Ply p) {
         Piece* e_p_pawn;
         if (this->en_passant && temp->getName() == 'p' && stop == this->en_passant_square) {
             e_p = true;
-            e_p_idx = squareToIdx (Square (this->en_passant_square.row, start.line));
+            e_p_idx = squareToIdx (Square (this->en_passant_square.rank, start.file));
             e_p_pawn = this->squares[e_p_idx];
             this->squares[e_p_idx] = new Empty();
         }
@@ -458,12 +458,12 @@ bool Board::play_move (Ply p, bool force) {
         
         this->en_passant = false;
 
-        int line = this->white ? 1 : 8;
+        int file = this->white ? 1 : 8;
         bool castling = false;
         int idx_dep = squareToIdx(dep);
 
-        if (dep == Square('e', line)) {
-            castling = (stop == Square('g', line) || stop == Square('c', line)) && 
+        if (dep == Square('e', file)) {
+            castling = (stop == Square('g', file) || stop == Square('c', file)) && 
                         this->squares[idx_dep]->getName() == 'k';    
         }
 
@@ -479,10 +479,10 @@ bool Board::play_move (Ply p, bool force) {
                 We check if we are capturing a rook, we need to remove castles
             */
            if (this->squares[idx_stop]->getName() == 'r') {
-               if (stop.row == 'a') {
+               if (stop.rank == 'a') {
                         remove_l_castle();
                     }
-                if (stop.row == 'h') {
+                if (stop.rank == 'h') {
                         remove_s_castle();
                 }
            }
@@ -516,10 +516,10 @@ bool Board::play_move (Ply p, bool force) {
                 */
                 if (temp->getName() == 'k') remove_castles();
                 if (temp->getName() == 'r') {
-                    if (dep.row == 'a') {
+                    if (dep.rank == 'a') {
                         remove_l_castle();
                     }
-                    if (dep.row == 'h') {
+                    if (dep.rank == 'h') {
                         remove_s_castle();
                     }
                 }
@@ -529,18 +529,18 @@ bool Board::play_move (Ply p, bool force) {
                 */
                 if (temp->getName() == 'p') {                   
                     // If pawn move 2 squares ahead
-                    if (abs(dep.line - stop.line) == 2) {
+                    if (abs(dep.file - stop.file) == 2) {
                         this->en_passant = true;
 
                         if (this->white)
-                            this->en_passant_square = Square(stop.row, stop.line-1);
+                            this->en_passant_square = Square(stop.rank, stop.file-1);
                         else
-                            this->en_passant_square = Square(stop.row, stop.line+1);
+                            this->en_passant_square = Square(stop.rank, stop.file+1);
                     }
 
                     // If takes en passant
                     else if (stop == this->en_passant_square) {
-                        int idx = squareToIdx(Square(stop.row, dep.line));
+                        int idx = squareToIdx(Square(stop.rank, dep.file));
 
                         this->last_move_capture = true;
 
@@ -594,10 +594,10 @@ void Board::computeLegalMoves () {
 
                         Square dep = this->squares[i]->getPosition();
                         Square stop = IdxToSquare(j);
-                        int line = this->white ? 8 : 1;
+                        int file = this->white ? 8 : 1;
 
                         if (check_move({dep, stop})) {
-                            if (this->squares[i]->getName() == 'p' && stop.line == line) {
+                            if (this->squares[i]->getName() == 'p' && stop.file == file) {
                                 
                                 this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
                                 this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
@@ -693,7 +693,7 @@ string Board::getFen (bool nb_move) {
         fen += "- ";
 
     if (this->en_passant)
-        fen += this->en_passant_square.row + to_string(this->en_passant_square.line) + " ";
+        fen += this->en_passant_square.rank + to_string(this->en_passant_square.file) + " ";
     else
         fen += "-";
 

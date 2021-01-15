@@ -31,8 +31,8 @@ class Ply {
         }
 
         std::string toString () {
-            std::string res = this->dep.row + std::to_string(this->dep.line);
-            res += this->stop.row + std::to_string(this->stop.line);
+            std::string res = this->dep.rank + std::to_string(this->dep.file);
+            res += this->stop.rank + std::to_string(this->stop.file);
             if (this->promote)
                 res += this->prom;
             return res;

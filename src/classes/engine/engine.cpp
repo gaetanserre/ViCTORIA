@@ -24,8 +24,8 @@ bool isGame (string line) {
 }
 
 bool isPly (string line, Ply p) {
-    if (line[0] == p.dep.row && line[1] == char(p.dep.line + '0')) {
-        return line [2] == p.stop.row && line[3] == char(p.stop.line + '0');
+    if (line[0] == p.dep.rank && line[1] == char(p.dep.file + '0')) {
+        return line [2] == p.stop.rank && line[3] == char(p.stop.file + '0');
     }
     return false;
 }

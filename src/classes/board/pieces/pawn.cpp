@@ -19,7 +19,7 @@ int Pawn::forward (int n) {
 bool Pawn::check_move(Square goal, Piece* squares[], U64 occupancy) {
 
     bool piece = false;
-    bool start_pos = this->white ? (this->position.line == 2) : (this->position.line == 7);
+    bool start_pos = this->white ? (this->position.file == 2) : (this->position.file == 7);
 
     // Test if there is a not takeable piece at the goal
     if (checkIfPiece(squares[squareToIdx(goal)])) {
@@ -29,20 +29,20 @@ bool Pawn::check_move(Square goal, Piece* squares[], U64 occupancy) {
         }
     }
 
-    if (this->position.row == goal.row) {
-        if (this->position.line + forward(1) == goal.line)
+    if (this->position.rank == goal.rank) {
+        if (this->position.file + forward(1) == goal.file)
             return !piece;
         
-        else if ((this->position.line + forward(2) == goal.line) && start_pos) {
+        else if ((this->position.file + forward(2) == goal.file) && start_pos) {
             // Check if there is a piece between the pawn and the goal
             return !piece &&
-                   ! checkIfPiece(squares[squareToIdx(Square(goal.row, goal.line - forward(1)))]);
+                   ! checkIfPiece(squares[squareToIdx(Square(goal.rank, goal.file - forward(1)))]);
         }
         
         else return false;
 
-    } else if (PlusOrMinus(this->position.row, goal.row, 1)) {
-        if (this->position.line + forward(1) == goal.line) {
+    } else if (PlusOrMinus(this->position.rank, goal.rank, 1)) {
+        if (this->position.file + forward(1) == goal.file) {
             return piece || (*(this->en_passant) && (*this->en_passant_square) == goal);
         }
             
@@ -52,8 +52,8 @@ bool Pawn::check_move(Square goal, Piece* squares[], U64 occupancy) {
 }
 
 bool Pawn::en_prise(Square goal, Piece* squares[], U64 occupancy) {
-    if (PlusOrMinus(this->position.row, goal.row, 1)) {
-        return this->position.line + forward(1) == goal.line;
+    if (PlusOrMinus(this->position.rank, goal.rank, 1)) {
+        return this->position.file + forward(1) == goal.file;
         
     } else return false;
 }
