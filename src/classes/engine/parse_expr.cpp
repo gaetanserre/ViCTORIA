@@ -157,6 +157,15 @@ void *worker_thread(void *arg)
 
 
 void Engine::parse_go_command (vector<string> args) {
+
+    /*
+        We reset the "thread killers"
+    */
+    this->terminate_thread = false;
+    this->is_terminated = false;
+
+
+
     /*
         We reset the old best move
     */
@@ -175,43 +184,45 @@ void Engine::parse_go_command (vector<string> args) {
     /*
         command: go infinite
     */
-    if (args.size() == 2 && args[1] == "infinite") {
-        this->terminate_thread = false;
+           
 
+    if (args.size() == 2 && args[1] == "infinite") {
         thread t;
         if (direct_analysis)
             t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
         else
             t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
 
-        t.join();
         string input = "";
         while (input != "stop" && !this->is_terminated) {
             getline(cin, input);
         }
+
         this->terminate_thread = true;
-        
+        t.join();
+
         this->best_move.print();
     }
 
     else if (args.size() == 3 && args[1] == "movetime") {
-        this->terminate_thread = false;
-
         int dur = stoi(args[2]);
         double stop = (double)(clock() / 1000) + dur;
         thread t;
+
 
         if (direct_analysis)
             t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
         else
             t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
         
-        t.join();
+        cout << terminate_thread << endl;
         double actual = (double) clock() / 1000;
         while (actual < stop && !this->is_terminated) {
             actual = (double) clock() / 1000;
         }
+
         this->terminate_thread = true;
+        t.join();
         this->best_move.print();
     }
 
@@ -228,7 +239,6 @@ void Engine::parse_go_command (vector<string> args) {
         command: go and all others
     */
     else {
-        cout << "salut" << endl;
         int depth = end_game ? 7 : 5;
         if (!direct_analysis)
             searchOpeningBook(depth);
