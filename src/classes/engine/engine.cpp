@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 Engine::Engine() {
-    this->name = "Victoria UCI chess engine";
+    this->name = "ViCTORIA chess engine";
     this->board = new Board();
     this->board->init();
 
