@@ -1,4 +1,4 @@
-# VicTORIA
+# ViCTORIA
 ViCTORIA is a UCI chess engine built from scratch using C++ 20.
 
 ViCTORIA performs a in-depth analysis of the position with a handcrafted evaluation function.
