@@ -435,7 +435,7 @@ void Engine::MultiDepthAnalysis (int depth) {
             We check if there is a inevitable checkmate.
             If a checkmate in n moves has been found, it's useless to go deeper than depth n
         */
-        if (this->best_move.score == mate_value) break;
+        if (this->best_move.score == mate_value || this->best_move.score == -mate_value) break;
     }
     this->is_terminated = true;
 }

@@ -215,7 +215,6 @@ void Engine::parse_go_command (vector<string> args) {
         else
             t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
         
-        cout << terminate_thread << endl;
         double actual = (double) clock() / 1000;
         while (actual < stop && !this->is_terminated) {
             actual = (double) clock() / 1000;
