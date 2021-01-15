@@ -1,8 +1,8 @@
 args = -std=c++2a -O3 -pthread
 
-all: Victoria
+all: ViCTORIA
 
-Victoria : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o engine.o parse_expr.o ../src/main.cpp
+ViCTORIA : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o engine.o parse_expr.o ../src/main.cpp
 	rm -rf ../out
 	mkdir ../out
 	g++ $^ $(args) -o ../out/$@
