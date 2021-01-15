@@ -232,6 +232,8 @@ bool Board::check_castle (Ply p) {
 
             if (stop == Square('c', line) && c_long) {
                 l[0] = Square('d', line); l[1] = Square('c', line);
+                l[2] = Square('b', line);
+                size = 3;
                 castling = true;
             }
         }
@@ -246,13 +248,16 @@ bool Board::check_castle (Ply p) {
 
         if (castling) {
             if (isCheck()) return false;
-
+            
             for (int i = 0; i<size; i++) {
                 if (checkIfPiece(this->squares[squareToIdx(l[i])]))
                     return false;
             }
 
-            for (int i = 0; i<size; i++) {
+            /*
+                For long castling, the case 'b8' or 'b1' can be takeable so we don't check it
+            */
+            for (int i = 0; i<2; i++) {
                 if (isTakeable(l[i])) return false;
             }
             return true;
