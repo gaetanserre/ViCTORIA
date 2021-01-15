@@ -1,17 +1,17 @@
 # Victoria
-Victoria is a UCI chess engine build from scratch using C++ 20.
+Victoria is a UCI chess engine built from scratch using C++ 20.
 
 Victoria performs a in-depth analysis of the position with a handcrafted evaluation function.
 
 It can perform an analysis in reasonable time between depth 5 and 7, depending on the number of pieces on the chessboard.
 
-I estimate its elo to around 1500, because it beats almost all engine at 1500 elo on [chess.com](www.chess.com)
+I estimate its elo to around 1500, because it beats almost all engines at 1500 elo on [chess.com](www.chess.com)
 Its also beats almost every human players under 1500 elo.
 
 Victoria is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably
 
 ## Build
-Victoria is build from scratch so you don't need any C++ library, only a compiler that support C++ 20.
+Victoria is built from scratch, so you don't need any C++ library, only a compiler that supports C++ 20.
 
 If you are on Linux or macOs, you can use the makefile in the ```build``` directory like this:
 ```bash

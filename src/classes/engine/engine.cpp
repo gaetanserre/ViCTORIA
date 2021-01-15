@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 Engine::Engine() {
-    this->name = "Victoria 1.0";
+    this->name = "Victoria UCI chess engine";
     this->board = new Board();
     this->board->init();
 
@@ -62,6 +62,7 @@ Ply lineToPly (string line) {
     the standard starting position in chess
 */
 void Engine::searchOpeningBook (int depth) {
+    this->is_terminated = false;
 
     /*
         If no move has been played, it's white turn and we return e2e4
@@ -69,9 +70,11 @@ void Engine::searchOpeningBook (int depth) {
     */
     if (this->moves.size() == 0) {
         Score s;
-        s.plies.push_back({Square("e2"), Square("e4")});
+        s.plies.push_back(Ply(Square("e2"), Square("e4")));
         s.print_info(1, 1, 0, true);
         this->best_move = s;
+        this->is_terminated = true;
+
         return;
     }
 
@@ -104,6 +107,8 @@ void Engine::searchOpeningBook (int depth) {
                     opening_book.close();
                     s.print_info(1, 1, 0, this->board->isWhite());
                     this->best_move = s;
+
+                    this->is_terminated = true;
                     return;
                 }
             }
@@ -406,8 +411,10 @@ void Engine::inDepthAnalysis (int depth) {
 
 
 void Engine::MultiDepthAnalysis (int depth) {
+    this->is_terminated = false;
+
     for (int i = 1; i<= depth; i++) {
-        if (this->terminate_thread) return;
+        if (this->terminate_thread) break;
         nodes = 0;
 
         this->searchPly = 0;
@@ -428,9 +435,9 @@ void Engine::MultiDepthAnalysis (int depth) {
             We check if there is a inevitable checkmate.
             If a checkmate in n moves has been found, it's useless to go deeper than depth n
         */
-        if (this->best_move.score == mate_value)
-            return;
+        if (this->best_move.score == mate_value) break;
     }
+    this->is_terminated = true;
 }
 
 /*************** End in depth analysis functions ***************/

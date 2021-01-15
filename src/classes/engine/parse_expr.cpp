@@ -50,6 +50,8 @@ void Engine::parse_expr(string expr) {
             this->startpos = true;
         }
 
+        this->not_in_opening_table = !this->startpos;
+
         this->positions.push_back(this->board->getFen(false));
 
         if (res.size() > moves_idx+1 && res[moves_idx] == "moves") {
@@ -166,32 +168,50 @@ void Engine::parse_go_command (vector<string> args) {
     this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
 
     /*
+        We check if we will search for the next move in the opening book
+    */
+    bool direct_analysis = !(this->moves.size() < 14 && !not_in_opening_table);
+
+    /*
         command: go infinite
     */
     if (args.size() == 2 && args[1] == "infinite") {
         this->terminate_thread = false;
-        thread t(&Engine::MultiDepthAnalysis, this, this->maxDepth);
+
+        thread t;
+        if (direct_analysis)
+            t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
+        else
+            t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
+
+        t.join();
         string input = "";
-        while (input != "stop") {
+        while (input != "stop" && !this->is_terminated) {
             getline(cin, input);
         }
         this->terminate_thread = true;
-        t.join();
+        
         this->best_move.print();
     }
 
     else if (args.size() == 3 && args[1] == "movetime") {
-        cout << "ok" << endl;
         this->terminate_thread = false;
+
         int dur = stoi(args[2]);
         double stop = (double)(clock() / 1000) + dur;
-        thread t(&Engine::MultiDepthAnalysis, this, this->maxDepth);
+        thread t;
+
+        if (direct_analysis)
+            t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
+        else
+            t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
+        
+        t.join();
         double actual = (double) clock() / 1000;
-        while (actual < stop) {
+        while (actual < stop && !this->is_terminated) {
             actual = (double) clock() / 1000;
         }
         this->terminate_thread = true;
-        t.join();
         this->best_move.print();
     }
 
@@ -208,8 +228,9 @@ void Engine::parse_go_command (vector<string> args) {
         command: go and all others
     */
     else {
+        cout << "salut" << endl;
         int depth = end_game ? 7 : 5;
-        if (this->moves.size() < 14 && this->startpos && !not_in_opening_table)
+        if (!direct_analysis)
             searchOpeningBook(depth);
         else
             MultiDepthAnalysis(depth);

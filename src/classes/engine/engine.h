@@ -84,5 +84,7 @@ class Engine {
         vector<Ply> moves;
         vector<string> positions;
 
+        /*************** Thread attributes ***************/
         bool terminate_thread = false;
+        bool is_terminated;
 };
