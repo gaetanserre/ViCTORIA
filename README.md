@@ -5,7 +5,7 @@ ViCTORIA performs a in-depth analysis of the position with a handcrafted evaluat
 
 It can perform an analysis in reasonable (15-35 seconds) time between depth 5 and 7+, depending on the number of pieces on the chessboard.
 
-I estimate its elo to around 1500, because it beats almost all engines at 1500 elo on [chess.com](www.chess.com)
+I estimate its elo to around 1500, because it beats almost all engines at 1500 elo on [chess.com](www.chess.com){target="_blank"}
 It also beats almost every human players under 1500 elo.
 
 ViCTORIA is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably
@@ -48,8 +48,8 @@ Among other thing, the evaluation function takes into account:
     + Iterative deepening
     + Captures table
     + Killer move heuristic
-You can add an opening table like this [one](https://mega.nz/file/fFl1CK4I#gMdpOIj_1FSgyxZzVhFHoJPsaeJYWjTjygSgOaUOTsQ). You have to modify the path in ```engine.h```.
-The table have to be in UCI syntax, you can use [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/) to convert your table into this format.
+You can add an opening table like this [one](https://mega.nz/file/fFl1CK4I#gMdpOIj_1FSgyxZzVhFHoJPsaeJYWjTjygSgOaUOTsQ){target="_blank"}. You have to modify the path in ```engine.h```.
+The table have to be in UCI syntax, you can use [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/){target="_blank"} to convert your table into this format.
 
 ## License
-[GNU v3](https://choosealicense.com/licenses/gpl-3.0/)
+[GNU v3](https://choosealicense.com/licenses/gpl-3.0/){target="_blank"}
