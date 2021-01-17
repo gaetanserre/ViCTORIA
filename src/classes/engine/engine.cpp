@@ -11,12 +11,14 @@ Engine::Engine() {
     // init Zobrist hash keys
     initRandomKeys();
     this->zobrist_hash_key = generateHashKey(this->board);
+    this->transposition_table = (Hash*) calloc(transposition_table_size, sizeof(Hash));
 
     cout << this->name << endl;
 }
 
 
 Engine::~Engine() {
+    free (this->transposition_table);
     delete this->board;
 }
 
@@ -327,6 +329,20 @@ vector<Move> Engine::sortMoves () {
     return res;
 }
 
+
+U64 Engine::makeMove (Ply move) {
+    U64 old_hash = this->zobrist_hash_key;
+    this->board->play_move(move, true);
+    this->zobrist_hash_key = generateHashKey(this->board);
+    return old_hash;
+}
+
+
+void Engine::undoMove (U64 hash_key) {
+    this->board->undo_move();
+    this->zobrist_hash_key = hash_key;
+}
+
 /*************** End useful funcs for deep search ***************/
 
 
@@ -346,11 +362,21 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
         this->positions.push_back (pos);
     
-
         if (checkRepetitions (pos)) return Score (0);
     }
 
-    if (depth == 0 || size == 0) return evalPosition(this->board);
+    // Check in transposition table
+    int hashf = hashfALPHA;
+    Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table);
+    if (s.score != unknown_value) return s;
+
+
+
+    if (depth == 0 || size == 0) {
+        Score val = evalPosition(this->board);
+        RecordHash(depth, val, hashfEXACT, this->zobrist_hash_key, this->transposition_table);
+        return val;
+    }
 
     for (int i = 0; i<size; i++) {
 
@@ -361,12 +387,12 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             return Score();
         }
 
-        this->board->play_move(move_list[i].ply, true);
+        U64 old_key = this->makeMove(move_list[i].ply);
         this->searchPly++;
         
         Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
 
-        this->board->undo_move();
+        this->undoMove(old_key);
         this->searchPly--;
         this->positions.pop_back();
 
@@ -375,19 +401,36 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         score.plies.push_back(move_list[i].ply);
         
         if (alpha.score >= beta.score) {
-
+            
+            // Check for capture and killer moves
             int i1 = squareToIdx (move_list[i].ply.dep);
             int i2 = squareToIdx (move_list[i].ply.stop);
             if (!isCapture(i1, i2, this->board->occupancy)) {
                 this->killerMoves[this->searchPly] = move_list[i].ply;
             }
 
+            // Check if alpha is a checkmate
             bool check_mate = alpha.score == mate_value && alpha.plies.size() >= 1;
+
+            // Record in transposition table
+            RecordHash(
+                depth,
+                (check_mate ? alpha : beta),
+                (check_mate ? hashfEXACT : hashfBETA),
+                this->zobrist_hash_key,
+                this->transposition_table);
+
             return (check_mate ? alpha : beta);
         }
-        
-        alpha = Score::max (score, alpha);
+
+        if (score > alpha) {
+            hashf = hashfEXACT;
+            alpha = score;
+        }
     }
+
+    // Record in transposition table
+    RecordHash(depth, alpha, hashf, this->zobrist_hash_key, this->transposition_table);
     return alpha;
 }
 

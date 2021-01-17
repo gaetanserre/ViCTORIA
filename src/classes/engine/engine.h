@@ -9,6 +9,7 @@
 #include "score/score.h"
 #include "constants/capture_table.h"
 #include "transposition_table/hashKey.h"
+#include "transposition_table/hash.h"
 
 
 struct Move
@@ -54,6 +55,9 @@ class Engine {
         /*************** End Heuristics funcs ***************/
 
         /*************** Begin in-depth search funcs ***************/
+        U64 makeMove (Ply move);
+        void undoMove (U64 hash_key);
+
         Score evalPosition(Board* board);
 
         Score AlphaBetaNegamax (int depth, Score alpha, Score beta);
@@ -81,7 +85,9 @@ class Engine {
         vector<Ply> moves;
         vector<string> positions;
 
+        /*************** Transposition tables attributes ***************/
         U64 zobrist_hash_key;
+        Hash* transposition_table;
 
         /*************** Thread attributes ***************/
         bool terminate_thread = false;

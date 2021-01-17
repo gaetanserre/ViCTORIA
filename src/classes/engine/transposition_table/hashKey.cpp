@@ -113,3 +113,4 @@ U64 generateHashKey (Board* board) {
 
     return final_hash;
 }
+

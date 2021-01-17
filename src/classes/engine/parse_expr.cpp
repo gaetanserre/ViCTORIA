@@ -150,6 +150,25 @@ void Engine::parse_expr(string expr) {
         cout << this->zobrist_hash_key << endl;
     }
 
+    else if (res[0] == "trans") {
+        if (res[1] == "all") {
+
+            for (int i = 0; i<transposition_table_size; i++) {
+                if (this->transposition_table[i].score.score != 0) {
+                    cout << i << endl;
+                    cout << this->transposition_table[i].score.score << endl;
+                }
+            }
+            cout << "end" << endl;
+
+        } else {
+            int idx = stoi (res[1]);
+
+            cout << idx << endl;
+            cout << transposition_table[idx].score.score << endl;
+        }
+    }
+
     else if (expr != "quit") {
         cout << "Unknown command: " << expr << endl;
     }
