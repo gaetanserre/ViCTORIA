@@ -367,14 +367,15 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
     // Check in transposition table
     int hashf = hashfALPHA;
-    Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table);
+    bool white = this->board->isWhite();
+    Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
     if (s.score != unknown_value) return s;
 
 
 
     if (depth == 0 || size == 0) {
         Score val = evalPosition(this->board);
-        RecordHash(depth, val, hashfEXACT, this->zobrist_hash_key, this->transposition_table);
+        RecordHash(depth, val, hashfEXACT, this->zobrist_hash_key, this->transposition_table, white);
         return val;
     }
 
@@ -397,7 +398,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         this->positions.pop_back();
 
 
-        score.score = -score.score;
+        score.score *= -1;
         score.plies.push_back(move_list[i].ply);
         
         if (alpha.score >= beta.score) {
@@ -418,7 +419,8 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
                 (check_mate ? alpha : beta),
                 (check_mate ? hashfEXACT : hashfBETA),
                 this->zobrist_hash_key,
-                this->transposition_table);
+                this->transposition_table,
+                white);
 
             return (check_mate ? alpha : beta);
         }
@@ -430,7 +432,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     }
 
     // Record in transposition table
-    RecordHash(depth, alpha, hashf, this->zobrist_hash_key, this->transposition_table);
+    RecordHash(depth, alpha, hashf, this->zobrist_hash_key, this->transposition_table, white);
     return alpha;
 }
 

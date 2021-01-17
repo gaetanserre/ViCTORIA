@@ -11,10 +11,11 @@ struct Hash {
     Score score;
     int flag;
     int depth;
+    bool white;
 };
 
 // Check if the key is in the transposition table and return a value depending on alpha, beta and depth
-Score ProbeHash (Score alpha, Score beta, int depth, U64 key, Hash* transposition_table);
+Score ProbeHash (Score alpha, Score beta, int depth, U64 key, Hash* transposition_table, bool white);
 
 // Record the key in the transposition table depending on depth, score and hashf
-void RecordHash (int depth, Score score, int hashf, U64 key, Hash* transposition_table);
+void RecordHash (int depth, Score score, int hashf, U64 key, Hash* transposition_table, bool white);
