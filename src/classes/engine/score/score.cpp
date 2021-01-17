@@ -12,7 +12,7 @@ void Score::print() {
     }
 }
 
-void Score::print_info(int depth, int nodes, int time_ms, bool white) {
+void Score::print_info(int depth, int nodes, u_int64_t time_ms, bool white) {
     cout << "info depth " << depth << " seldepth " << depth;
     cout << " score ";
 

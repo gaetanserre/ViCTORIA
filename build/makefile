@@ -2,7 +2,7 @@ args = -std=c++2a -O3 -pthread
 
 all: ViCTORIA
 
-ViCTORIA : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o engine.o parse_expr.o ../src/main.cpp
+ViCTORIA : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o engine.o parse_expr.o hashKey.o ../src/main.cpp
 	rm -rf ../out
 	mkdir ../out
 	g++ $^ $(args) -o ../out/$@
@@ -40,8 +40,12 @@ engine.o: ../src/classes/engine/engine.cpp score.o
 parse_expr.o: ../src/classes/engine/parse_expr.cpp
 	g++ $< $(args) -c
 
-score.o: ../src/classes/engine/score.cpp
+score.o: ../src/classes/engine/score/score.cpp
 	g++ $< $(args) -c
+
+hashKey.o: ../src/classes/engine/transposition_table/hashKey.cpp
+	g++ $< $(args) -c
+
 
 clean:
 	rm *.o

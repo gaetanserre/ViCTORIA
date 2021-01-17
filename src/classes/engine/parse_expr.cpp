@@ -62,8 +62,26 @@ void Engine::parse_expr(string expr) {
                 this->positions.push_back(this->board->getFen(false));
             }
         }
+
+        this->zobrist_hash_key = generateHashKey(this->board);
     }
     
+    else if (res.size() > 0 && res[0] == "go") {
+        parse_go_command(res);
+    }
+
+    else if (expr == "uci") {
+        cout << "id name " << this->name << endl;
+        cout << "id author Gaetan Serre" << endl;
+        cout << "uciok" << endl;
+    }
+
+    else if (expr == "isready") {
+        cout << "readyok" << endl;
+    }
+
+    /************ debug commands ************/
+
     else if (res.size() == 2 && res[0] == "play") {
         
         this->board->computeLegalMoves();
@@ -87,39 +105,32 @@ void Engine::parse_expr(string expr) {
             cout << "Stalemate." << endl;
         }
 
-    }
-    
-    else if (res.size() > 0 && res[0] == "go") {
-        parse_go_command(res);
-    }
-    
-
-    else if (expr == "fen") {
-
-        cout << this->board->getFen() << endl;
+        this->zobrist_hash_key = generateHashKey(this->board);
     }
 
     else if (expr == "undo") {
         this->board->undo_move();
         this->board->printPieces();
         this->moves.pop_back();
+
+        this->zobrist_hash_key = generateHashKey(this->board);
     }
 
     else if (expr == "legal") {
-        clock_t start = startChrono();
+        u_int64_t start = millis();
         this->board->computeLegalMoves();
-        double dur = stopChrono(start);
+        u_int64_t dur = millis() - start;
         this->board->printLegalMoves();
-        printf("%lf millisecond(s)\n", dur);
+        printf("%ld millisecond(s)\n", dur);
     }
 
     else if (expr == "eval") {
         this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
 
         this->board->computeLegalMoves();
-        clock_t start = startChrono();
+        u_int64_t start = millis();
         Score s = evalPosition(this->board);
-        int dur = stopChrono(start);
+        u_int64_t dur = millis() - start;
         s.print_info(1, 1, dur, this->board->isWhite());
     }
 
@@ -130,18 +141,13 @@ void Engine::parse_expr(string expr) {
         }
     }
 
-    else if (expr == "uci") {
-        cout << "id name " << this->name << endl;
-        cout << "id author Gaetan Serre" << endl;
-        cout << "uciok" << endl;
+    else if (expr == "fen") {
+
+        cout << this->board->getFen() << endl;
     }
 
-    else if (expr == "isready") {
-        cout << "readyok" << endl;
-    }
-
-    else if (expr == "stop") {
-        this->best_move.print();
+    else if (expr == "hash") {
+        cout << this->zobrist_hash_key << endl;
     }
 
     else if (expr != "quit") {
@@ -205,19 +211,18 @@ void Engine::parse_go_command (vector<string> args) {
     }
 
     else if (args.size() == 3 && args[1] == "movetime") {
-        int dur = stoi(args[2]);
-        double stop = (double)(clock() / 1000) + dur;
+        u_int64_t dur = stoi(args[2]);
         thread t;
-
 
         if (direct_analysis)
             t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
         else
             t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
         
-        double actual = (double) clock() / 1000;
-        while (actual < stop && !this->is_terminated) {
-            actual = (double) clock() / 1000;
+        u_int64_t start = millis();
+        u_int64_t elapsed = millis() - start;
+        while (elapsed < dur  && !this->is_terminated) {
+            elapsed = millis() - start;
         }
 
         this->terminate_thread = true;

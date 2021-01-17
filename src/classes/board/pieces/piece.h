@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <functional>
 #include <vector>
 #include "../square.h"
 #include "table.h"

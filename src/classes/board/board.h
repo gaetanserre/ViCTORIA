@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pieces/pawn.h"
 #include "pieces/rook.h"
 #include "pieces/knight.h"
@@ -40,11 +42,18 @@ class Board {
         
         vector<Ply> getLegalMoves() { return this->legal_moves; };
         void setLegalMoves(vector<Ply> legal_moves) { this->legal_moves = legal_moves; };
+
         void changeSide() { this->white = ! this->white; };
+
         bool isWhite() { return this->white; };
-        void setWhite(bool isWhite) { this->white = isWhite; } 
+        void setWhite(bool isWhite) { this->white = isWhite; }
+        
         void resetFens() { this->fens = vector<string> (); };
+
         void setEnPassant (bool b) { this->en_passant = b; }
+        bool getEnPassant () { return this->en_passant; }
+        Square getEnPassantSquare () { return this->en_passant_square; }
+
         int getNbCastlings (bool white) {
             if (white) return this->castling_long_w + this->castling_short_w;
             else return this->castling_long_b + this->castling_short_b;
@@ -64,6 +73,11 @@ class Board {
         U64 occupancy;
 
         bool last_move_capture;
+
+        bool castling_short_w = false;
+        bool castling_long_w = false;
+        bool castling_short_b = false;
+        bool castling_long_b = false;
 
 
     private:
@@ -87,11 +101,6 @@ class Board {
 
         Piece* white_king;
         Piece* black_king;
-
-        bool castling_short_w = false;
-        bool castling_long_w = false;
-        bool castling_short_b = false;
-        bool castling_long_b = false;
         
         bool en_passant;
         Square en_passant_square;

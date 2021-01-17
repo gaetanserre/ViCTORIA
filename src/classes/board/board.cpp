@@ -530,12 +530,23 @@ bool Board::play_move (Ply p, bool force) {
                 if (temp->getName() == 'p') {                   
                     // If pawn move 2 squares ahead
                     if (abs(dep.file - stop.file) == 2) {
-                        this->en_passant = true;
+                        
+                        // We check if an opponent pawn is at the same rank and +1 ou -1 file
+                        for (int i = -1; i<=1; i+=2) {
+                            if (this->squares[squareToIdx(Square(stop.rank + i, stop.file))]->getName() == 'p' 
+                                && this->squares[squareToIdx(Square(stop.rank + i, stop.file))]->isWhite() != this->white) {
+                                this->en_passant = true;
+                                break;
+                            }
+                        }
 
-                        if (this->white)
-                            this->en_passant_square = Square(stop.rank, stop.file-1);
-                        else
-                            this->en_passant_square = Square(stop.rank, stop.file+1);
+
+                        if (this->en_passant) {
+                            if (this->white)
+                                this->en_passant_square = Square(stop.rank, stop.file-1);
+                            else
+                                this->en_passant_square = Square(stop.rank, stop.file+1);
+                        }
                     }
 
                     // If takes en passant
@@ -693,7 +704,7 @@ string Board::getFen (bool nb_move) {
         fen += "- ";
 
     if (this->en_passant)
-        fen += this->en_passant_square.rank + to_string(this->en_passant_square.file) + " ";
+        fen += this->en_passant_square.rank + to_string(this->en_passant_square.file);
     else
         fen += "-";
 

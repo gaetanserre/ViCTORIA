@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../board/board.h"
+#include "../../board/board.h"
 
 const int mate_value = 99999;
 
@@ -21,7 +21,7 @@ class Score {
         static Score min (Score s1, Score s2);
 
         void print();
-        void print_info(int depth, int nodes, int time_ms, bool white);
+        void print_info(int depth, int nodes, u_int64_t time_ms, bool white);
 
         int score;
         vector<Ply> plies;

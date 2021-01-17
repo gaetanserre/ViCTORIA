@@ -8,6 +8,10 @@ Engine::Engine() {
 
     this->killerMoves = vector<Ply> (this->maxDepth);
 
+    // init Zobrist hash keys
+    initRandomKeys();
+    this->zobrist_hash_key = generateHashKey(this->board);
+
     cout << this->name << endl;
 }
 
@@ -419,9 +423,9 @@ void Engine::MultiDepthAnalysis (int depth) {
 
         this->searchPly = 0;
 
-        clock_t start = startChrono();
+        u_int64_t start = millis();
         inDepthAnalysis(i);
-        int dur = stopChrono(start);
+        u_int64_t elapsed = millis() - start;
 
         /*
             If we want to kill the thread,
@@ -429,7 +433,7 @@ void Engine::MultiDepthAnalysis (int depth) {
             since we returned a random Score from the Negamax function
         */
         if (!this->terminate_thread)
-            this->best_move.print_info(i, nodes, dur, this->board->isWhite());
+            this->best_move.print_info(i, nodes, elapsed, this->board->isWhite());
 
         /* 
             We check if there is a inevitable checkmate.

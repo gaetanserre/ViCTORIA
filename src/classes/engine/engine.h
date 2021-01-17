@@ -5,10 +5,10 @@
 #include <fstream>
 #include <thread>
 #include <future>
-#include <time.h>
 #include <chrono>
-#include "score.h"
-#include "capture_table.h"
+#include "score/score.h"
+#include "constants/capture_table.h"
+#include "transposition_table/hashKey.h"
 
 
 struct Move
@@ -27,12 +27,9 @@ class Engine {
     private:
 
         /*************** Begin time mesuring funcs ***************/
-        static clock_t startChrono() { 
-            return clock();
-        }
-
-        static double stopChrono(clock_t start) {
-            return (double)(clock() - start) / 1000; //µs to ms
+        static u_int64_t millis() {
+            return chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::
+                   now().time_since_epoch()).count();
         }
         /*************** End time mesuring funcs ***************/
 
@@ -83,6 +80,8 @@ class Engine {
 
         vector<Ply> moves;
         vector<string> positions;
+
+        U64 zobrist_hash_key;
 
         /*************** Thread attributes ***************/
         bool terminate_thread = false;
