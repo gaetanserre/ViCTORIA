@@ -121,7 +121,7 @@ void Engine::parse_expr(string expr) {
         this->board->computeLegalMoves();
         u_int64_t dur = millis() - start;
         this->board->printLegalMoves();
-        printf("%ld millisecond(s)\n", dur);
+        printf("%llu millisecond(s)\n", dur);
     }
 
     else if (expr == "eval") {
