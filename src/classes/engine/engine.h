@@ -23,7 +23,7 @@ class Engine {
     public:
         Engine();
         ~Engine();
-        void parse_expr(string expr);
+        void parseExpr(string expr);
 
     private:
 
@@ -38,7 +38,8 @@ class Engine {
 
         Board* board;
 
-        void parse_go_command (vector<string> args);
+        void parseGoCommand (vector<string> args);
+        void launchTimeThread (u_int64_t dur, bool direct_analysis);
 
 
         void searchOpeningBook (int depth);

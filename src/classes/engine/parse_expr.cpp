@@ -13,7 +13,7 @@ vector<string> split (const string &s, char delim) {
     return result;
 }
 
-void Engine::parse_expr(string expr) {
+void Engine::parseExpr(string expr) {
 
     vector<string> res = split(expr, ' ');
 
@@ -67,7 +67,7 @@ void Engine::parse_expr(string expr) {
     }
     
     else if (res.size() > 0 && res[0] == "go") {
-        parse_go_command(res);
+        parseGoCommand(res);
     }
 
     else if (expr == "uci") {
@@ -121,7 +121,7 @@ void Engine::parse_expr(string expr) {
         this->board->computeLegalMoves();
         u_int64_t dur = millis() - start;
         this->board->printLegalMoves();
-        printf("%llu millisecond(s)\n", dur);
+        printf("%lu millisecond(s)\n", dur);
     }
 
     else if (expr == "eval") {
@@ -181,7 +181,27 @@ void *worker_thread(void *arg)
 }
 
 
-void Engine::parse_go_command (vector<string> args) {
+void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
+    thread t;
+
+    if (direct_analysis)
+        t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
+    else
+        t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
+        
+    u_int64_t start = millis();
+    u_int64_t elapsed = millis() - start;
+    while (elapsed < dur  && !this->is_terminated) {
+        elapsed = millis() - start;
+    }
+
+    this->terminate_thread = true;
+    t.join();
+    this->best_move.print();
+}
+
+
+void Engine::parseGoCommand (vector<string> args) {
 
     /*
         We reset the "thread killers"
@@ -229,24 +249,12 @@ void Engine::parse_go_command (vector<string> args) {
         this->best_move.print();
     }
 
+    /*
+        command: go movetime n
+    */
+
     else if (args.size() == 3 && args[1] == "movetime") {
-        u_int64_t dur = stoi(args[2]);
-        thread t;
-
-        if (direct_analysis)
-            t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
-        else
-            t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
-        
-        u_int64_t start = millis();
-        u_int64_t elapsed = millis() - start;
-        while (elapsed < dur  && !this->is_terminated) {
-            elapsed = millis() - start;
-        }
-
-        this->terminate_thread = true;
-        t.join();
-        this->best_move.print();
+        launchTimeThread (stoi(args[2]), direct_analysis);
     }
 
     /*
@@ -256,6 +264,27 @@ void Engine::parse_go_command (vector<string> args) {
         int depth = stoi(args[2]);
         MultiDepthAnalysis(depth);
         this->best_move.print();
+   }
+
+   /*
+        command: go wtime n1 btime n2 [winc n3 binc n4]
+    */
+
+   else if ((args.size() == 5 || args.size() == 9) && args[1] == "wtime") {
+       double duration = stod (args[this->board->isWhite() ? 2 : 4]);
+        int nb_move = this->moves.size() / 2;
+
+        if (nb_move < 10)
+            duration /= 20.;
+
+        if (nb_move >= 10 && nb_move <= 20) {
+            duration /= 10.;
+        }
+        
+        if (nb_move > 20)
+            duration /= 20.;
+        
+        launchTimeThread ((u_int64_t) duration, direct_analysis);
    }
 
     /*

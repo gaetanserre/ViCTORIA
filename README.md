@@ -28,11 +28,12 @@ cd out
 ./ViCTORIA
 ```
 UCI commands:
-+ position starpos moves [move_list]
-+ position fen your_fen moves [move_list]
-+ go depth n
-+ go infinite: wait for the stop command
-+ go movetime t: search for t milliseconds
++ ```position starpos [moves move_list]```
++ ```position fen your_fen [moves move_list]```
++ ```go depth n```
++ ```go infinite```: wait for the stop command
++ ```go movetime t```: search for t milliseconds
++ ```go wtime t1 btime t2 winc t3 binc t4```: White has ```t1``` ms on clock Black has ```t2``` ms on clock. White increment their time by ```t3``` ms and Black increment their time by ```t4``` ms
 
 ## Evaluation function
 Among other thing, the evaluation function takes into account:

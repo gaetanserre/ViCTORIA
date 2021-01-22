@@ -6,7 +6,7 @@ int main (int argc, char** argv) {
     string input;
     while (input != "quit") {
         getline(cin, input);
-        engine.parse_expr(input);
+        engine.parseExpr(input);
     }
     return 0;
 }
