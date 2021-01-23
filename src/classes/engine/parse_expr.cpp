@@ -15,6 +15,11 @@ vector<string> split (const string &s, char delim) {
 
 void Engine::parseExpr(string expr) {
 
+    ofstream file;
+    file.open("/home/gaetan/Documents/commands.txt", ios::app);
+    file << expr << endl;
+    file.close();
+
     vector<string> res = split(expr, ' ');
 
     // parse expression of type : position fen [fen] moves [moves]
@@ -183,11 +188,12 @@ void *worker_thread(void *arg)
 
 void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
     thread t;
-
-    if (direct_analysis)
-        t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
-    else
+    
+    // Time must be more than 2 sec to search in opening book
+    if (!direct_analysis && dur > 2000)
         t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
+    else
+        t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
         
     u_int64_t start = millis();
     u_int64_t elapsed = millis() - start;
@@ -294,6 +300,7 @@ void Engine::parseGoCommand (vector<string> args) {
         if (duration > 20000) {
             int depth = end_game ? 7 : 5;
             launchDepthSearch (depth, direct_analysis);
+            this->best_move.print();
 
         } else {
             launchTimeThread ((u_int64_t) duration, direct_analysis);
