@@ -192,8 +192,8 @@ Score Engine::evalPosition(Board* board) {
                 material_score -= 10;
             
             // Increase pawn value
-            material_score += wP*200;
-            material_score -= bP*200;
+            material_score += wP*150;
+            material_score -= bP*150;
 
         }
 

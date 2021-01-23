@@ -38,8 +38,11 @@ class Engine {
 
         Board* board;
 
+        /*************** Begin useful funcs for parseExpr ***************/
         void parseGoCommand (vector<string> args);
         void launchTimeThread (u_int64_t dur, bool direct_analysis);
+        void launchDepthSearch (int depth, bool direct_analysis);
+        /*************** End useful funcs for parseExpr ***************/
 
 
         void searchOpeningBook (int depth);

@@ -197,7 +197,13 @@ void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
 
     this->terminate_thread = true;
     t.join();
-    this->best_move.print();
+}
+
+void Engine::launchDepthSearch (int depth, bool direct_analysis) {
+    if (!direct_analysis)
+        searchOpeningBook(depth);
+    else
+        MultiDepthAnalysis(depth);
 }
 
 
@@ -224,7 +230,7 @@ void Engine::parseGoCommand (vector<string> args) {
     /*
         We check if we will search for the next move in the opening book
     */
-    bool direct_analysis = !(this->moves.size() < 14 && !not_in_opening_table);
+    bool direct_analysis = !(this->moves.size()/2 < 10 && !not_in_opening_table);
 
     /*
         command: go infinite
@@ -255,6 +261,7 @@ void Engine::parseGoCommand (vector<string> args) {
 
     else if (args.size() == 3 && args[1] == "movetime") {
         launchTimeThread (stoi(args[2]), direct_analysis);
+        this->best_move.print();
     }
 
     /*
@@ -262,7 +269,7 @@ void Engine::parseGoCommand (vector<string> args) {
     */
    else if (args.size() == 3 && args[1] == "depth") {
         int depth = stoi(args[2]);
-        MultiDepthAnalysis(depth);
+        launchDepthSearch (depth, direct_analysis);
         this->best_move.print();
    }
 
@@ -271,20 +278,27 @@ void Engine::parseGoCommand (vector<string> args) {
     */
 
    else if ((args.size() == 5 || args.size() == 9) && args[1] == "wtime") {
-       double duration = stod (args[this->board->isWhite() ? 2 : 4]);
+        double duration = stod (args[this->board->isWhite() ? 2 : 4]);
         int nb_move = this->moves.size() / 2;
 
-        if (nb_move < 10)
-            duration /= 20.;
+        if (nb_move < 10 || nb_move > 20)
+            duration /= 40.;
 
-        if (nb_move >= 10 && nb_move <= 20) {
-            duration /= 10.;
+        else 
+            duration /= 30.;
+
+        /*
+        *   Duration must not exceed 20 sec
+        *   Otherwise we start a depth analysis
+        */
+        if (duration > 20000) {
+            int depth = end_game ? 7 : 5;
+            launchDepthSearch (depth, direct_analysis);
+
+        } else {
+            launchTimeThread ((u_int64_t) duration, direct_analysis);
+            this->best_move.print();
         }
-        
-        if (nb_move > 20)
-            duration /= 20.;
-        
-        launchTimeThread ((u_int64_t) duration, direct_analysis);
    }
 
     /*
@@ -292,10 +306,7 @@ void Engine::parseGoCommand (vector<string> args) {
     */
     else {
         int depth = end_game ? 7 : 5;
-        if (!direct_analysis)
-            searchOpeningBook(depth);
-        else
-            MultiDepthAnalysis(depth);
+        launchDepthSearch (depth, direct_analysis);
         this->best_move.print();
     }
 }
