@@ -331,10 +331,10 @@ vector<Move> Engine::sortMoves () {
 
 
 U64 Engine::makeMove (Ply move) {
-    U64 old_hash = this->zobrist_hash_key;
+    U64 old_key = this->zobrist_hash_key;
     this->board->play_move(move, true);
     this->zobrist_hash_key = generateHashKey(this->board);
-    return old_hash;
+    return old_key;
 }
 
 
