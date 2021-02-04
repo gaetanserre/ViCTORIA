@@ -267,18 +267,34 @@ bool Board::check_castle (Ply p) {
     return false;
 }
 
-void Board::remove_s_castle () {
-    if (this->white)
-        this->castling_short_w = false;
-    else
-        this->castling_short_b = false;
+void Board::remove_s_castle (bool inverse = false) {
+    if (inverse) {
+        if (this->white)
+            this->castling_short_b = false;
+        else
+            this->castling_short_w = false;
+    }
+    else {
+        if (this->white)
+            this->castling_short_w = false;
+        else
+            this->castling_short_b = false;
+    }
 }
 
-void Board::remove_l_castle () {
-    if (this->white)
-        this->castling_long_w = false;
-    else
-        this->castling_long_b = false;
+void Board::remove_l_castle (bool inverse = false) {
+    if (inverse) {
+        if (this->white)
+            this->castling_long_b = false;
+        else
+            this->castling_long_w = false;
+    }
+    else {
+        if (this->white)
+            this->castling_long_w = false;
+        else
+            this->castling_long_b = false;
+    }
 }
 
 void Board::remove_castles () {
@@ -477,13 +493,14 @@ bool Board::play_move (Ply p, bool force) {
 
             /*
                 We check if we are capturing a rook, we need to remove castles
+                If so, we remove castles for the opposite color (inverse = true)
             */
            if (this->squares[idx_stop]->getName() == 'r') {
                if (stop.rank == 'a') {
-                        remove_l_castle();
+                        remove_l_castle(true);
                     }
                 if (stop.rank == 'h') {
-                        remove_s_castle();
+                        remove_s_castle(true);
                 }
            }
 

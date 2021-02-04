@@ -88,8 +88,8 @@ class Board {
 
         bool check_castle (Ply p);
         void remove_castles();
-        void remove_s_castle();
-        void remove_l_castle();
+        void remove_s_castle(bool inverse);
+        void remove_l_castle(bool inverse);
         void play_castle (Ply p);
 
         bool check_move(Ply p);
