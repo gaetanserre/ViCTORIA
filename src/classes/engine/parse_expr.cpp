@@ -193,7 +193,7 @@ void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
     if (!direct_analysis && dur > 2000)
         t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
     else
-        t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
+        t = thread(&Engine::IterativeDepthAnalysis, this, this->maxDepth);
         
     u_int64_t start = millis();
     u_int64_t elapsed = millis() - start;
@@ -209,7 +209,7 @@ void Engine::launchDepthSearch (int depth, bool direct_analysis) {
     if (!direct_analysis)
         searchOpeningBook(depth);
     else
-        MultiDepthAnalysis(depth);
+        IterativeDepthAnalysis(depth);
 }
 
 
@@ -246,7 +246,7 @@ void Engine::parseGoCommand (vector<string> args) {
     if (args.size() == 2 && args[1] == "infinite") {
         thread t;
         if (direct_analysis)
-            t = thread(&Engine::MultiDepthAnalysis, this, this->maxDepth);
+            t = thread(&Engine::IterativeDepthAnalysis, this, this->maxDepth);
         else
             t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
 

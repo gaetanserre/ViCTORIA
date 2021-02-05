@@ -121,11 +121,11 @@ void Engine::searchOpeningBook (int depth) {
         }
         opening_book.close();
         this->not_in_opening_table = true;
-        MultiDepthAnalysis(depth);
+        IterativeDepthAnalysis(depth);
         return;
     }
     this->not_in_opening_table = true;
-    MultiDepthAnalysis(depth);
+    IterativeDepthAnalysis(depth);
 }
 
 /*************** End search in opening book functions ***************/
@@ -459,8 +459,9 @@ void Engine::inDepthAnalysis (int depth) {
 }
 
 
-void Engine::MultiDepthAnalysis (int depth) {
+void Engine::IterativeDepthAnalysis (int depth) {
     this->is_terminated = false;
+    u_int64_t start = millis();
 
     for (int i = 1; i<= depth; i++) {
         if (this->terminate_thread) break;
@@ -468,7 +469,6 @@ void Engine::MultiDepthAnalysis (int depth) {
 
         this->searchPly = 0;
 
-        u_int64_t start = millis();
         inDepthAnalysis(i);
         u_int64_t elapsed = millis() - start;
 
