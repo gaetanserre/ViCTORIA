@@ -78,6 +78,7 @@ class Engine {
         bool not_in_opening_table = false;
 
         const int maxDepth = 64;
+        int nodes = 0;
         int searchPly = 0;
         vector<Ply> killerMoves;
 

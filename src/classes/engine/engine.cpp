@@ -260,7 +260,7 @@ bool Engine::checkRepetitions (string position) {
         if (positions[i] == position)
             count ++;
     }
-    return count == 3;
+    return count >= 3;
 }
 
 bool isCapture (int idx_p1, int idx_p2, U64 occupancy) {
@@ -348,22 +348,14 @@ void Engine::undoMove (U64 hash_key) {
 
 
 /*************** Begin negamax alpha beta deep search ***************/
-int nodes = 0;
 Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
-    nodes++;
-
-    vector<Move> move_list = sortMoves ();
     
-    int size = move_list.size();
+    // We check for repetitions
+    string pos = this->board->getFen(false);
 
-    // We don't check for repetitions at the root
-    if (nodes > 1) {
-        string pos = this->board->getFen(false);
-
-        this->positions.push_back (pos);
+    this->positions.push_back (pos);
     
-        if (checkRepetitions (pos)) return Score (0);
-    }
+    if (checkRepetitions (pos)) return Score (0);
 
     // Check in transposition table
     int hashf = hashfALPHA;
@@ -373,11 +365,17 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 
 
+    vector<Move> move_list = sortMoves ();    
+    int size = move_list.size();
+
+
     if (depth == 0 || size == 0) {
         Score val = evalPosition(this->board);
         RecordHash(depth, val, hashfEXACT, this->zobrist_hash_key, this->transposition_table, white);
         return val;
     }
+
+    this->nodes++;
 
     for (int i = 0; i<size; i++) {
 
@@ -465,7 +463,7 @@ void Engine::IterativeDepthAnalysis (int depth) {
 
     for (int i = 1; i<= depth; i++) {
         if (this->terminate_thread) break;
-        nodes = 0;
+        this->nodes = 0;
 
         this->searchPly = 0;
 
@@ -478,7 +476,7 @@ void Engine::IterativeDepthAnalysis (int depth) {
             since we returned a random Score from the Negamax function
         */
         if (!this->terminate_thread)
-            this->best_move.print_info(i, nodes, elapsed, this->board->isWhite());
+            this->best_move.print_info(i, this->nodes, elapsed, this->board->isWhite());
 
         /* 
             We check if there is a inevitable checkmate.
