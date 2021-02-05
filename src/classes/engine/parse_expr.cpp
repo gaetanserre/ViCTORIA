@@ -15,11 +15,6 @@ vector<string> split (const string &s, char delim) {
 
 void Engine::parseExpr(string expr) {
 
-    ofstream file;
-    file.open("/home/gaetan/Documents/commands.txt", ios::app);
-    file << expr << endl;
-    file.close();
-
     vector<string> res = split(expr, ' ');
 
     // parse expression of type : position fen [fen] moves [moves]
