@@ -48,10 +48,10 @@ class Engine {
         void searchOpeningBook (int depth);
 
         /*************** Begin useful funcs for in-depth search ***************/
-        bool checkRepetitions (string position);
 
         vector<Move> PlyToMove (vector<Ply> move_list);
         vector<Move> sortMoves ();
+        bool checkRepetitions ();
         /*************** End useful funcs for in-depth search ***************/
 
         /*************** Begin Heuristics funcs ***************/

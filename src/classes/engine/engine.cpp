@@ -71,12 +71,12 @@ void Engine::searchOpeningBook (int depth) {
     this->is_terminated = false;
 
     /*
-        If no move has been played, it's white turn and we return e2e4
+        If no move has been played, it's white turn and we return d2d4
         which is one of the most strongest opening
     */
     if (this->moves.size() == 0) {
         Score s;
-        s.plies.push_back(Ply(Square("e2"), Square("e4")));
+        s.plies.push_back(Ply(Square("d2"), Square("d4")));
         s.print_info(1, 1, 0, true);
         this->best_move = s;
         this->is_terminated = true;
@@ -254,15 +254,6 @@ bool Engine::NullPruning (Score beta, int depth, Score &res) {
 
 /*************** Begin useful funcs for deep search ***************/
 
-bool Engine::checkRepetitions (string position) {
-    int count = 1;
-    for (int i = 0; i<this->positions.size() - 1; i++) {
-        if (positions[i] == position)
-            count ++;
-    }
-    return count >= 3;
-}
-
 bool isCapture (int idx_p1, int idx_p2, U64 occupancy) {
     return get_bit(occupancy, idx_p1) && get_bit (occupancy, idx_p2);
 }
@@ -343,6 +334,17 @@ void Engine::undoMove (U64 hash_key) {
     this->zobrist_hash_key = hash_key;
 }
 
+bool Engine::checkRepetitions () {
+    int count = 1;
+    int size = this->positions.size() - 1;
+    string position = this->positions[size];
+    for (int i = 0; i<size; i++) {
+        if (positions[i] == position)
+            count ++;
+    }
+    return count == 3;
+}
+
 /*************** End useful funcs for deep search ***************/
 
 
@@ -351,11 +353,7 @@ void Engine::undoMove (U64 hash_key) {
 Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     
     // We check for repetitions
-    string pos = this->board->getFen(false);
-
-    this->positions.push_back (pos);
-    
-    if (checkRepetitions (pos)) return Score (0);
+    if (checkRepetitions ()) return Score (0);
 
     // Check in transposition table
     int hashf = hashfALPHA;
@@ -386,7 +384,11 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             return Score();
         }
 
+        // We play the move and we push back the new position to check repetitions
         U64 old_key = this->makeMove(move_list[i].ply);
+        string pos = this->board->getFen(false);
+        this->positions.push_back (pos);
+
         this->searchPly++;
         
         Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
