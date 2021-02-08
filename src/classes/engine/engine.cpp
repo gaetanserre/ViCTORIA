@@ -345,6 +345,22 @@ bool Engine::checkRepetitions () {
     return count == 3;
 }
 
+bool Engine::checkIfEven (vector<Ply> move_list) {
+    bool is_over = false;
+    for (Ply move : move_list) {
+        this->board->play_move(move, true);
+        this->positions.push_back(this->board->getFen(false));
+
+        is_over = checkRepetitions ();
+
+        this->board->undo_move ();
+        this->positions.pop_back ();
+
+        if (is_over) return true;
+    }
+    return false;
+}
+
 /*************** End useful funcs for deep search ***************/
 
 
@@ -359,7 +375,16 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     int hashf = hashfALPHA;
     bool white = this->board->isWhite();
     Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
-    if (s.score != unknown_value) return s;
+    if (s.score != unknown_value) {
+
+        // Check if now it's a draw with repetitions
+        if (!checkIfEven (s.plies))
+            return s;
+        else {
+            s.score = 0;
+            return s;
+        }
+    }
 
 
 

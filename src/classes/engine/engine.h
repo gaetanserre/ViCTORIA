@@ -52,6 +52,7 @@ class Engine {
         vector<Move> PlyToMove (vector<Ply> move_list);
         vector<Move> sortMoves ();
         bool checkRepetitions ();
+        bool checkIfEven (vector<Ply> move_list);
         /*************** End useful funcs for in-depth search ***************/
 
         /*************** Begin Heuristics funcs ***************/
