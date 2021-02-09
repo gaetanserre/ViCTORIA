@@ -51,6 +51,7 @@ Among other thing, the evaluation function takes into account:
     + Captures table
     + Killer move heuristic
 + Transposition table with Zobrist Hashing (500 000 positions)
+
 You can add an opening table like this [one](https://mega.nz/file/fFl1CK4I#gMdpOIj_1FSgyxZzVhFHoJPsaeJYWjTjygSgOaUOTsQ). You have to modify the path in ```engine.h```.
 The table have to be in UCI syntax, you can use [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/) to convert your table into this format.
 
