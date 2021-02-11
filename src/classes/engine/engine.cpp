@@ -140,7 +140,7 @@ Score Engine::evalPosition(Board* board) {
     
     if (size == 0) {
         if (board->isCheck())
-            return Score(-mate_value);
+            return Score( (board->isWhite() ? -mate_value : mate_value) );
         else return Score();
 
     } else {
@@ -383,7 +383,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     int hashf = hashfALPHA;
     bool white = this->board->isWhite();
     
-    Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
+    /*Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
     if (s.score != unknown_value) {
 
         // Check if now it's a draw with repetitions
@@ -393,7 +393,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             s.score = 0;
             return s;
         }
-    }
+    }*/
 
 
 
@@ -452,13 +452,13 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
                                     || beta.plies.size() == 0);
 
             // Record in transposition table
-            RecordHash(
+            /*RecordHash(
                 depth,
                 (check_mate_alpha ? alpha : beta),
                 (hashfBETA),
                 this->zobrist_hash_key,
                 this->transposition_table,
-                white);
+                white);*/
 
             return (check_mate_alpha ? alpha : beta);
         }
@@ -470,7 +470,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     }
 
     // Record in transposition table
-    RecordHash(depth, alpha, hashf, this->zobrist_hash_key, this->transposition_table, white);
+    // RecordHash(depth, alpha, hashf, this->zobrist_hash_key, this->transposition_table, white);
     return alpha;
 }
 
