@@ -173,11 +173,11 @@ Score Engine::evalPosition(Board* board) {
         int material_score = 0;
 
         if (board->isWhite()) {
-            if (board->has_castling_w) material_score += 200;
-            else material_score += 50 * getNbCastlings (legal_moves, board->squares, board->isWhite());
+            if (board->has_castling_w) material_score += 100;
+            else material_score += 25 * getNbCastlings (legal_moves, board->squares, board->isWhite());
         } else {
-            if (board->has_castling_b) material_score -= 200;
-            else material_score -= 50 * getNbCastlings (legal_moves, board->squares, board->isWhite());
+            if (board->has_castling_b) material_score -= 100;
+            else material_score -= 25 * getNbCastlings (legal_moves, board->squares, board->isWhite());
         }
 
         for (int i = 0; i<64; i++) {
