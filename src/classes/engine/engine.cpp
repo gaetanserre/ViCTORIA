@@ -380,7 +380,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     if (checkRepetitions ()) return Score (0);
 
     // Check in transposition table
-    int hashf = hashfEXACT;
+    int hashf = hashfALPHA;
     bool white = this->board->isWhite();
     
     Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
@@ -455,7 +455,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             RecordHash(
                 depth,
                 (check_mate_alpha ? alpha : beta),
-                (hashfEXACT),
+                (hashfBETA),
                 this->zobrist_hash_key,
                 this->transposition_table,
                 white);
