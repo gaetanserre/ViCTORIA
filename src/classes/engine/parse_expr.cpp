@@ -281,12 +281,8 @@ void Engine::parseGoCommand (vector<string> args) {
    else if ((args.size() == 5 || args.size() == 9) && args[1] == "wtime") {
         double duration = stod (args[this->board->isWhite() ? 2 : 4]);
         int nb_move = this->moves.size() / 2;
-        int nb_average_move = 40;
 
-        if (nb_move < nb_average_move - 5)
-            duration /= nb_average_move - nb_move;
-        else 
-            duration /= 5;
+        duration /= 20;
 
         /*if (nb_move < 10 || nb_move > 20)
             duration /= 40.;
