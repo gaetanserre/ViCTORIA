@@ -2,6 +2,7 @@
 
 Knight::Knight (Square position, bool white) : Piece(position, white) {
     this->name = 'n';
+    this->name_str = "Knight";
 
     this->pieceValue = 320;
 

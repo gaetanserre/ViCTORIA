@@ -2,6 +2,7 @@
 
 Rook::Rook(Square position, bool white, Magic_Bitboard* mg) : Piece(position, white) {
     this->name = 'r';
+    this->name_str = "Rook";
 
     this->pieceValue = 500;
 

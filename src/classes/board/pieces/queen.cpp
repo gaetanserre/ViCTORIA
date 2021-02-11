@@ -4,6 +4,7 @@
 
 Queen::Queen (Square position, bool white, Magic_Bitboard* mg) : Piece(position, white) {
     this->name = 'q';
+    this->name_str = "Queen";
 
     this->pieceValue = 900;
 

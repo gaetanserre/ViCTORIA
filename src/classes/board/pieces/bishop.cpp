@@ -3,6 +3,7 @@
 
 Bishop::Bishop(Square position, bool white, Magic_Bitboard* mg) : Piece(position, white) {
     this->name = 'b';
+    this->name_str = "Bishop";
 
     this->pieceValue = 325;
 

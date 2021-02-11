@@ -30,6 +30,10 @@ class Ply {
             }
         }
 
+        bool operator== (std::string p) {
+            return this->toString() == p;
+        }
+
         std::string toString () {
             std::string res = this->dep.rank + std::to_string(this->dep.file);
             res += this->stop.rank + std::to_string(this->stop.file);

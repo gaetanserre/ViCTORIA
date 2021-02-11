@@ -148,7 +148,15 @@ Score Engine::evalPosition(Board* board) {
         int wK = 0, bK = 0, wQ = 0, bQ = 0, wR = 0, bR = 0,
             wN = 0, bN = 0, wB = 0, bB =0, wP = 0, bP = 0;
         
-        int material_score = board->getNbCastlings(board->isWhite()) * 10;
+        int material_score = 0;
+
+        if (board->isWhite()) {
+            if (board->has_castling_w) material_score += 200;
+            else material_score += board->getNbCastlings (board->isWhite()) * 50;
+        } else {
+            if (board->has_castling_b) material_score -= 200;
+            else material_score -= board->getNbCastlings (board->isWhite()) * 50;
+        }
 
         for (int i = 0; i<64; i++) {
 
@@ -192,8 +200,8 @@ Score Engine::evalPosition(Board* board) {
                 material_score -= 10;
             
             // Increase pawn value
-            material_score += wP*150;
-            material_score -= bP*150;
+            material_score += wP * 150;
+            material_score -= bP * 150;
 
         }
 
@@ -223,7 +231,7 @@ Score Engine::evalPosition(Board* board) {
         board->changeSide();
 
         int mobility_score = mobilityV * (mobility_white - mobility_black);
-        int score = (material_score + mobility_score) * (board->isWhite() ? 1 : -1);
+        int score = (material_score + mobility_score);
 
         return Score(score);
 
@@ -372,8 +380,9 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     if (checkRepetitions ()) return Score (0);
 
     // Check in transposition table
-    int hashf = hashfALPHA;
+    int hashf = hashfEXACT;
     bool white = this->board->isWhite();
+    
     Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
     if (s.score != unknown_value) {
 
@@ -394,6 +403,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
     if (depth == 0 || size == 0) {
         Score val = evalPosition(this->board);
+        val.score *= white ? 1 : -1;
         RecordHash(depth, val, hashfEXACT, this->zobrist_hash_key, this->transposition_table, white);
         return val;
     }
@@ -436,18 +446,21 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             }
 
             // Check if alpha is a checkmate
-            bool check_mate = alpha.score == mate_value && alpha.plies.size() >= 1;
+            bool check_mate_alpha = alpha.score == mate_value
+                                    && alpha.plies.size() >= 1
+                                    && (alpha.plies.size() < beta.plies.size()
+                                    || beta.plies.size() == 0);
 
             // Record in transposition table
             RecordHash(
                 depth,
-                (check_mate ? alpha : beta),
-                (check_mate ? hashfEXACT : hashfBETA),
+                (check_mate_alpha ? alpha : beta),
+                (hashfEXACT),
                 this->zobrist_hash_key,
                 this->transposition_table,
                 white);
 
-            return (check_mate ? alpha : beta);
+            return (check_mate_alpha ? alpha : beta);
         }
 
         if (score > alpha) {

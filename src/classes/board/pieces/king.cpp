@@ -2,7 +2,7 @@
 
 King::King (Square position, bool white) : Piece(position, white) {
     this->name = 'k';
-    this->is_check = false;
+    this->name_str = "King";
 
     this->pieceValue = 2000;
 

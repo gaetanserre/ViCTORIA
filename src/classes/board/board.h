@@ -53,7 +53,7 @@ class Board {
         void setEnPassant (bool b) { this->en_passant = b; }
         bool getEnPassant () { return this->en_passant; }
         Square getEnPassantSquare () { return this->en_passant_square; }
-
+        
         int getNbCastlings (bool white) {
             if (white) return this->castling_long_w + this->castling_short_w;
             else return this->castling_long_b + this->castling_short_b;
@@ -64,6 +64,7 @@ class Board {
         static Ply StringToPly (string ply);        
 
 
+        /************* Attributes *************/
 
         int nb_piece;
         int nb_pawn;
@@ -79,6 +80,10 @@ class Board {
         bool castling_short_b = false;
         bool castling_long_b = false;
 
+        // True if players castles
+        bool has_castling_w = false;
+        bool has_castling_b = false;
+
 
     private:
 
@@ -86,15 +91,16 @@ class Board {
         bool check_move_min(int start_idx, Square stop);
         bool isTakeable(Square s);
 
-        bool check_castle (Ply p);
-        void remove_castles();
-        void remove_s_castle(bool inverse);
-        void remove_l_castle(bool inverse);
-        void play_castle (Ply p);
+        bool check_castling (Ply p);
+        void remove_castlings();
+        void remove_s_castling(bool inverse);
+        void remove_l_castling(bool inverse);
+        void play_castling (Ply p);
 
         bool check_move(Ply p);
 
 
+        /************* Attributes *************/
 
         vector<Ply> legal_moves;
         bool white;
@@ -108,4 +114,8 @@ class Board {
         int nb_moves;
 
         Magic_Bitboard magic_bitboard;
+
+        // Counter to check when reset castle booleans
+        int nb_moves_since_castling_w = 0;
+        int nb_moves_since_castling_b = 0;
 };

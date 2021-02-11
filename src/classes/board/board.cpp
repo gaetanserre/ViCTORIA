@@ -167,11 +167,13 @@ void Board::init (string fen) {
 void Board::printPieces () {
     for (int i = 0; i<64; i++) {
         if (checkIfPiece(this->squares[i]))
-            this->squares[i]->print_piece();
+            cout << this->squares[i]->toString() << endl;
     }
 
-    cout << this->castling_long_w << " " << castling_short_w << endl;
-    cout << this->castling_long_b << " " << castling_short_b << endl;
+    cout << "K: " << this->castling_short_w << " Q: " << castling_long_w << endl;
+    cout << "k: " << this->castling_short_b << " q: " << castling_short_b << endl;
+    cout << "Castling white : " << this->has_castling_w << endl;
+    cout << "Castling black : " << this->has_castling_b << endl;
 
     if (this->en_passant) {
         cout << this->en_passant_square.rank << this->en_passant_square.file << endl;
@@ -212,7 +214,7 @@ bool Board::isCheck () {
     }
 }
 
-bool Board::check_castle (Ply p) {
+bool Board::check_castling (Ply p) {
     Square dep = p.dep; Square stop = p.stop;
 
     Square l[3];
@@ -240,10 +242,10 @@ bool Board::check_castle (Ply p) {
 
         /*
             We first check if the king is in check,
-            then if there is a piece blocking the castle 
+            then if there is a piece blocking castling
             and finally, if any the cases is en prise.
             It's more efficient to do 2 for loops 
-            because it's much more easy to verify is there a piece blocking the castle.
+            because it's much more easy to verify is there a piece blocking castling.
         */
 
         if (castling) {
@@ -267,7 +269,7 @@ bool Board::check_castle (Ply p) {
     return false;
 }
 
-void Board::remove_s_castle (bool inverse = false) {
+void Board::remove_s_castling (bool inverse = false) {
     if (inverse) {
         if (this->white)
             this->castling_short_b = false;
@@ -282,7 +284,7 @@ void Board::remove_s_castle (bool inverse = false) {
     }
 }
 
-void Board::remove_l_castle (bool inverse = false) {
+void Board::remove_l_castling (bool inverse = false) {
     if (inverse) {
         if (this->white)
             this->castling_long_b = false;
@@ -297,15 +299,15 @@ void Board::remove_l_castle (bool inverse = false) {
     }
 }
 
-void Board::remove_castles () {
-    remove_s_castle();
-    remove_l_castle();
+void Board::remove_castlings () {
+    remove_s_castling();
+    remove_l_castling();
 }
 
 /*
-    We assume that we already call check_castle
+    We assume that we already call check_castling
 */
-void Board::play_castle (Ply p) {
+void Board::play_castling (Ply p) {
     Square dep = p.dep; Square stop = p.stop;
     int file = this->white ? 1 : 8;
     bool c_short = stop == Square('g', file);
@@ -377,9 +379,12 @@ void Board::play_castle (Ply p) {
         set_bit (this->occupancy, idx_d);
     }
 
-    remove_castles();
-    this->white = !this->white;
-    this->nb_moves++;
+    if (this->white)
+        this->has_castling_w = true;
+    else 
+        this->has_castling_b = true;
+
+    remove_castlings();
 }
 
 bool Board::check_move_min (int start_idx, Square stop) {
@@ -401,7 +406,7 @@ bool Board::check_move (Ply p) {
     int start_idx = squareToIdx(start);
     int stop_idx = squareToIdx(stop);
 
-    if (check_castle(p)) {
+    if (check_castling(p)) {
         return true;
 
     } else if (check_move_min(start_idx, stop)) {
@@ -453,6 +458,7 @@ bool Board::check_move (Ply p) {
     }
 }
 
+
 bool Board::play_move (Ply p, bool force) {
     Square dep = p.dep;
     Square stop = p.stop;
@@ -474,6 +480,9 @@ bool Board::play_move (Ply p, bool force) {
         
         this->en_passant = false;
 
+        if (this->has_castling_w) this->nb_moves_since_castling_w++;
+        if (this->has_castling_b) this->nb_moves_since_castling_b++;
+
         int file = this->white ? 1 : 8;
         bool castling = false;
         int idx_dep = squareToIdx(dep);
@@ -492,15 +501,15 @@ bool Board::play_move (Ply p, bool force) {
             this->last_move_capture = checkIfPiece(this->squares[idx_stop]);
 
             /*
-                We check if we are capturing a rook, we need to remove castles
-                If so, we remove castles for the opposite color (inverse = true)
+                We check if we are capturing a rook, we need to remove castlings
+                If so, we remove castlings for the opposite color (inverse = true)
             */
            if (this->squares[idx_stop]->getName() == 'r') {
                if (stop.rank == 'a') {
-                        remove_l_castle(true);
+                        remove_l_castling(true);
                     }
                 if (stop.rank == 'h') {
-                        remove_s_castle(true);
+                        remove_s_castling(true);
                 }
            }
 
@@ -529,15 +538,15 @@ bool Board::play_move (Ply p, bool force) {
             } else {
                 temp->setPosition(stop);
                 /*
-                    We remove castles if we move the king or one of the rook
+                    We remove castlings if we move the king or one of the rook
                 */
-                if (temp->getName() == 'k') remove_castles();
+                if (temp->getName() == 'k') remove_castlings();
                 if (temp->getName() == 'r') {
                     if (dep.rank == 'a') {
-                        remove_l_castle();
+                        remove_l_castling();
                     }
                     if (dep.rank == 'h') {
-                        remove_s_castle();
+                        remove_s_castling();
                     }
                 }
 
@@ -584,14 +593,17 @@ bool Board::play_move (Ply p, bool force) {
 
 
             this->white = !this->white;
-
             this->nb_moves++;
 
             return true;
 
         } else {
             this->last_move_capture = false;
-            play_castle(p);
+            play_castling(p);
+            
+            this->white = !this->white;
+            this->nb_moves++;
+
             return true;
         }
 
@@ -656,10 +668,31 @@ bool Board::isOver () {
     return isCheckmate(legal_moves_size) || isStalemate(legal_moves_size);
 }
 
-
 void Board::undo_move() {
     string fen = this->fens.back();
     this->fens.pop_back();
+
+
+    /*
+    *  We check if the last move played was a castling :
+    *  If White or Black castling and the number of moves since castling is 0
+    *  it means that the last move was castling, so we reset the right boolean to true
+    */
+    if (this->has_castling_w && this->nb_moves_since_castling_w == 0) {
+        this->has_castling_w = false;
+        this->nb_moves_since_castling_b--;
+    }
+
+    else if (this->has_castling_b && this->nb_moves_since_castling_b == 0) {
+        this->has_castling_b = false;
+        this->nb_moves_since_castling_w--;
+    }
+
+    else {
+        this->nb_moves_since_castling_w--;
+        this->nb_moves_since_castling_b--;
+    }
+
 
     for (int i = 0; i<64; i++) {
         delete this->squares[i];

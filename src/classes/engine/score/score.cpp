@@ -63,18 +63,24 @@ bool Score::operator!= (Score s) {
 
 bool Score::operator> (Score s) {
     if (this->score == -mate_value && s.score == -mate_value) {
-        return (this->plies.size() > s.plies.size() ? true : false); 
-    } else if (this->score > s.score) {
-        return true;
+        return (this->plies.size() > s.plies.size() ? true : false);
+
+    } else if (this->score == mate_value && s.score == mate_value) {
+        return (this->plies.size() < s.plies.size() ? true : false);
+
     } else {
-        return false;
+        return this->score > s.score;
     }
 }
 
 Score Score::max (Score s1, Score s2) {
     if (s1.score == -mate_value && s2.score == -mate_value) {
-        return (s1.plies.size() > s2.plies.size() ? s1 : s2); 
-    } else if (s1.score > s2.score) {
+        return (s1.plies.size() > s2.plies.size() ? s1 : s2);
+
+    } else if (s1.score == mate_value && s2.score == mate_value) {
+        return (s1.plies.size() < s2.plies.size() ? s1 : s2);
+
+    }else if (s1.score > s2.score) {
         return s1;
     } else {
         return s2;
