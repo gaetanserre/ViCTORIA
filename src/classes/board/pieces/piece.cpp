@@ -7,8 +7,7 @@ Piece::Piece(Square position, bool white) {
 
 std::string Piece::toString () {
     std::string res = this->white ? "White" : "Black";
-    res += " " + this->name_str + " " + std::string(1, this->position.rank)
-               + std::to_string(this->position.file);
+    res += " " + this->name_str + " " + this->position.toString();
     res += " value: " + std::to_string((int) this->getPieceValue(false));
     
     return res;

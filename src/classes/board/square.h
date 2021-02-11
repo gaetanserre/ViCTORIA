@@ -18,6 +18,11 @@ class Square {
             this->file = -1;
         }
 
+        std::string toString() {
+            std::string res = std::string(1, this->rank) + std::to_string(this->file);
+            return res;
+        }
+
         void print() {
             std::cout << this->rank << this->file;
         }

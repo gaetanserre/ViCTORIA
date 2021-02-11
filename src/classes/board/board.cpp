@@ -668,11 +668,8 @@ bool Board::isOver () {
     return isCheckmate(legal_moves_size) || isStalemate(legal_moves_size);
 }
 
-void Board::undo_move() {
-    string fen = this->fens.back();
-    this->fens.pop_back();
 
-
+void Board::undoCastlings () {
     /*
     *  We check if the last move played was a castling :
     *  If White or Black castling and the number of moves since castling is 0
@@ -689,9 +686,23 @@ void Board::undo_move() {
     }
 
     else {
-        this->nb_moves_since_castling_w--;
-        this->nb_moves_since_castling_b--;
+        this->nb_moves_since_castling_w --;
+        this->nb_moves_since_castling_b --;
     }
+
+    if (this->nb_moves_since_castling_w < 0)
+        this->nb_moves_since_castling_w = 0;
+
+    if (this->nb_moves_since_castling_b < 0)
+        this->nb_moves_since_castling_b = 0;
+}
+
+void Board::undo_move() {
+    string fen = this->fens.back();
+    this->fens.pop_back();
+
+
+    undoCastlings ();
 
 
     for (int i = 0; i<64; i++) {

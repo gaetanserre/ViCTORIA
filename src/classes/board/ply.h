@@ -21,10 +21,15 @@ class Ply {
 
         bool operator== (Ply p) {
             if (this->is_init && p.is_init) {
-                return this->dep == p.dep
-                        && this->stop == p.stop
-                        && this->promote == p.promote
-                        && this->prom == p.prom;
+
+                if (this->promote && p.promote) {
+                    return this->dep == p.dep
+                            && this->stop == p.stop
+                            && this->promote == p.promote
+                            && this->prom == p.prom;
+                } else {
+                    return this->dep == p.dep && this->stop == p.stop;
+                }
             } else {
                 return false;
             }
@@ -35,10 +40,7 @@ class Ply {
         }
 
         std::string toString () {
-            std::string res = this->dep.rank + std::to_string(this->dep.file);
-            res += this->stop.rank + std::to_string(this->stop.file);
-            if (this->promote)
-                res += this->prom;
+            std::string res = this->dep.toString() + this->stop.toString();
             return res;
         }
 

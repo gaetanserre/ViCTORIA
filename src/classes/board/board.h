@@ -53,11 +53,6 @@ class Board {
         void setEnPassant (bool b) { this->en_passant = b; }
         bool getEnPassant () { return this->en_passant; }
         Square getEnPassantSquare () { return this->en_passant_square; }
-        
-        int getNbCastlings (bool white) {
-            if (white) return this->castling_long_w + this->castling_short_w;
-            else return this->castling_long_b + this->castling_short_b;
-        }
 
         /************* End Setters/Getters/Tools *************/
 
@@ -98,6 +93,8 @@ class Board {
         void play_castling (Ply p);
 
         bool check_move(Ply p);
+
+        void undoCastlings ();
 
 
         /************* Attributes *************/

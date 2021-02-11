@@ -134,6 +134,28 @@ void Engine::searchOpeningBook (int depth) {
 
 /*************** Begin evaluation funcion ***************/
 
+
+int getNbCastlings (vector<Ply> legal_moves, Piece** pieces, bool white) {
+
+    int file = white ? 1 : 8;
+    Ply c_short = Ply(Square('e', file), Square('g', file));
+    Ply c_long = Ply(Square('e', file), Square('c', file));
+
+    if (pieces[squareToIdx(Square('e', file))]->getName() == 'k') {
+        int res = 0;
+
+        for (Ply p : legal_moves) {
+            if (p == c_short || p == c_long) res ++;
+            if (res == 2) break;
+        }
+        return res;
+
+    } else {
+        return 0;
+    }
+}
+
+
 Score Engine::evalPosition(Board* board) {
     vector<Ply> legal_moves = board->getLegalMoves();
     int size = legal_moves.size();
@@ -152,10 +174,10 @@ Score Engine::evalPosition(Board* board) {
 
         if (board->isWhite()) {
             if (board->has_castling_w) material_score += 200;
-            else material_score += board->getNbCastlings (board->isWhite()) * 50;
+            else material_score += 50 * getNbCastlings (legal_moves, board->squares, board->isWhite());
         } else {
             if (board->has_castling_b) material_score -= 200;
-            else material_score -= board->getNbCastlings (board->isWhite()) * 50;
+            else material_score -= 50 * getNbCastlings (legal_moves, board->squares, board->isWhite());
         }
 
         for (int i = 0; i<64; i++) {
