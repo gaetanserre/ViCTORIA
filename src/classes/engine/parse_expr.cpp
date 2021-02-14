@@ -174,13 +174,6 @@ void Engine::parseExpr(string expr) {
     }
 }
 
-void *worker_thread(void *arg)
-{
-        printf("This is worker_thread()\n");
-        pthread_exit(NULL);
-}
-
-
 void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
     thread t;
     
