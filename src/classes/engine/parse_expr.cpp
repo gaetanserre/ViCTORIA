@@ -295,7 +295,7 @@ void Engine::parseGoCommand (vector<string> args) {
         *   Otherwise we start a depth analysis
         */
         if (duration > 20000) {
-            int depth = end_game ? 7 : 5;
+            int depth = end_game ? 8 : 6;
             launchDepthSearch (depth, direct_analysis);
             this->best_move.print();
 
@@ -309,7 +309,7 @@ void Engine::parseGoCommand (vector<string> args) {
         command: go and all others
     */
     else {
-        int depth = end_game ? 7 : 5;
+        int depth = end_game ? 8 : 6;
         launchDepthSearch (depth, direct_analysis);
         this->best_move.print();
     }
