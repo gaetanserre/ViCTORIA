@@ -459,7 +459,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 
         
-        if (alpha.score >= beta.score) {
+        if (score.score >= beta.score) {
             
             // Check for capture and killer moves
             int i1 = squareToIdx (move_list[i].ply.dep);
@@ -469,21 +469,21 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             }
 
             // Check if alpha is a checkmate
-            bool check_mate_alpha = alpha.score == mate_value
-                                    && alpha.plies.size() >= 1
-                                    && (alpha.plies.size() < beta.plies.size()
+            bool check_mate_score = score.score == mate_value
+                                    && score.plies.size() >= 1
+                                    && (score.plies.size() < beta.plies.size()
                                     || beta.plies.size() == 0);
 
             // Record in transposition table
-            /*RecordHash(
+            RecordHash(
                 depth,
-                beta,
-                hashfBETA,
+                (check_mate_score ? score : beta),
+                (check_mate_score ? hashfEXACT : hashfBETA),
                 this->zobrist_hash_key,
                 this->transposition_table,
-                white);*/
+                white);
 
-            return (check_mate_alpha ? alpha : beta);
+            return (check_mate_score ? score : beta);
         }
 
         if (score > alpha) {
@@ -493,7 +493,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     }
 
     // Record in transposition table
-    //RecordHash(depth, alpha, hashf, this->zobrist_hash_key, this->transposition_table, white);
+    RecordHash(depth, alpha, hashf, this->zobrist_hash_key, this->transposition_table, white);
     return alpha;
 }
 
