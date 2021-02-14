@@ -283,19 +283,8 @@ void Engine::parseGoCommand (vector<string> args) {
         else 
             duration /= 30.;*/
 
-        /*
-        *   Duration must not exceed 20 sec
-        *   Otherwise we start a depth analysis
-        */
-        if (duration > 20000) {
-            int depth = end_game ? 8 : 6;
-            launchDepthSearch (depth, direct_analysis);
-            this->best_move.print();
-
-        } else {
-            launchTimeThread ((u_int64_t) duration, direct_analysis);
-            this->best_move.print();
-        }
+        launchTimeThread ((u_int64_t) duration, direct_analysis);
+        this->best_move.print();
    }
 
     /*
