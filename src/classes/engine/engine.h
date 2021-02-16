@@ -63,7 +63,9 @@ class Engine {
         U64 makeMove (Ply move);
         void undoMove (U64 hash_key);
 
+        /*************** Begin evaluation functions ***************/
         Score evalPosition(Board* board);
+        /*************** End evaluation functions ***************/
 
         Score AlphaBetaNegamax (int depth, Score alpha, Score beta);
 

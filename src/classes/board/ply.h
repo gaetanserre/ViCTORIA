@@ -41,6 +41,8 @@ class Ply {
 
         std::string toString () {
             std::string res = this->dep.toString() + this->stop.toString();
+            if (this->promote)
+                res += std::string(1, this->prom);
             return res;
         }
 

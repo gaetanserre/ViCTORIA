@@ -2,7 +2,7 @@ args = -std=c++2a -O3 -pthread
 
 all: ViCTORIA
 
-ViCTORIA : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o hash.o engine.o parse_expr.o hashKey.o ../src/main.cpp
+ViCTORIA : piece.o pawn.o rook.o knight.o bishop.o queen.o king.o magic_bitboard.o board.o score.o hash.o parse_expr.o evaluation.o engine.o hashKey.o ../src/main.cpp
 	rm -rf ../out
 	mkdir ../out
 	g++ $^ $(args) -o ../out/$@
@@ -34,7 +34,10 @@ magic_bitboard.o : ../src/classes/bitboard/magic_bitboard.cpp
 board.o: ../src/classes/board/board.cpp
 	g++ $< $(args) -c
 
-engine.o: ../src/classes/engine/engine.cpp score.o hash.o
+engine.o: ../src/classes/engine/engine.cpp score.o hash.o evaluation.o
+	g++ $< $(args) -c
+
+evaluation.o: ../src/classes/engine/evaluation.cpp
 	g++ $< $(args) -c
 
 parse_expr.o: ../src/classes/engine/parse_expr.cpp

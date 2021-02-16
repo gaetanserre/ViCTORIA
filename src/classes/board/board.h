@@ -64,6 +64,9 @@ class Board {
         int nb_piece;
         int nb_pawn;
 
+        Piece* white_king;
+        Piece* black_king;
+
         vector<string> fens;
 
         U64 occupancy;
@@ -101,9 +104,6 @@ class Board {
 
         vector<Ply> legal_moves;
         bool white;
-
-        Piece* white_king;
-        Piece* black_king;
         
         bool en_passant;
         Square en_passant_square;
