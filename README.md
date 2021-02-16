@@ -1,13 +1,16 @@
 # ViCTORIA
+
+![](images/icon150x150.png)
+
 ViCTORIA is a UCI chess engine built from scratch using C++ 20.
 
 ViCTORIA performs a in-depth analysis of the position with a handcrafted evaluation function.
 
-It can perform an analysis in reasonable (15-35 seconds) time between depth 5 and 7+, depending on the number of pieces on the chessboard.
+It can perform an analysis in reasonable (10-25 seconds) time between depth 6 and 8+, depending on the number of possible moves.
 
-I estimate its elo to around 1500, because it beats almost all engines at 1500 elo on [chess.com](www.chess.com).
+You can play against it on Lichess (here)[https://lichess.org/@/ViCTORIA_engine]
 
-It also beats almost every human players under 1500 elo.
+Its elo rating is 1694 in blitz (February 2021).
 
 ViCTORIA is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably
 
