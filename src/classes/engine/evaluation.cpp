@@ -35,10 +35,7 @@ bool isKingSafe (Board* board) {
         bool check = board->isCheck();
         board->undo_move();
 
-        if (check) {
-            cout << p.toString() << endl;
-            return false;
-        }
+        if (check) return false;
     }
 
     return true;
