@@ -8,7 +8,7 @@ ViCTORIA performs a in-depth analysis of the position with a handcrafted evaluat
 
 It can perform an analysis in reasonable (10-25 seconds) time between depth 6 and 8+, depending on the number of possible moves.
 
-You can play against it on Lichess [here](https://lichess.org/@/ViCTORIA_engine)
+You can play against it on Lichess [here](https://lichess.org/@/ViCTORIA_engine).
 
 Its elo rating is 1694 in blitz (February 2021).
 
