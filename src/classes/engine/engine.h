@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <math.h>
 #include <fstream>
 #include <thread>
 #include <future>

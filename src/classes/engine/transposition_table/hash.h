@@ -19,3 +19,5 @@ Score ProbeHash (Score alpha, Score beta, int depth, U64 key, Hash* transpositio
 
 // Record the key in the transposition table depending on depth, score and hashf
 void RecordHash (int depth, Score score, int hashf, U64 key, Hash* transposition_table, bool white);
+
+int getFlag (U64 key, Hash* transposition_table);
