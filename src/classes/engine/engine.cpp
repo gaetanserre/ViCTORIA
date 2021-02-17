@@ -406,16 +406,15 @@ void Engine::IterativeDepthAnalysis (int depth) {
         this->searchPly = 0;
 
         int count = 0;
-        inDepthAnalysis(i, alpha_score, beta_score);
-        /*while (true) {
+        while (true) {
             //cout << "alpha : " << alpha_score << " beta : " << beta_score << endl; 
 
             inDepthAnalysis(i, alpha_score, beta_score);
             int flag = getFlag (this->zobrist_hash_key, this->transposition_table);
 
             if (flag == 0){ // Exact value
-                //alpha_score = this->best_move.score - 25; // - 1/4 pawn
-                //beta_score = this->best_move.score + 25; // + 1/4 pawn
+                alpha_score = this->best_move.score - 25; // - 1/4 pawn
+                beta_score = this->best_move.score + 25; // + 1/4 pawn
                 break;
             }
 
@@ -431,7 +430,7 @@ void Engine::IterativeDepthAnalysis (int depth) {
             }
             
             count += 1;
-        }*/
+        }
 
         u_int64_t elapsed = millis() - start;
 

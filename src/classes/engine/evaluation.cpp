@@ -132,7 +132,7 @@ Score Engine::evalPosition(Board* board) {
         * We check if the king is safe
         * To be working, we need to change side so this function needs to be between these 2 changeSide() calls
         */
-        int safety_score = isKingSafe(board) ? 200 : 0;
+        //int safety_score = isKingSafe(board) ? 200 : 0;
         
         *other_mobility = board->getLegalMoves().size();
         board->changeSide();
@@ -152,7 +152,7 @@ Score Engine::evalPosition(Board* board) {
             else mobility_score -= 25 * getNbCastlings (legal_moves, board->squares, white);
         }
 
-        int score = (material_score + mobility_score + safety_score);
+        int score = (material_score + mobility_score);
 
         return Score(score);
 
