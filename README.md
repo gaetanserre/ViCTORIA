@@ -49,8 +49,9 @@ Among other thing, the evaluation function takes into account:
 ## Features
 + Alpha-Beta pruning
 + Magic bitboard for sliding pieces
++ Iterative deepening
++ Aspiration windows
 + Move ordering
-    + Iterative deepening
     + Captures table
     + Killer move heuristic
 + Transposition table with Zobrist Hashing (500 000 positions)
