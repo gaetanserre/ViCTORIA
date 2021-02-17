@@ -1,5 +1,4 @@
 #include "engine.h"
-#include <stdio.h>
 
 Engine::Engine() {
     this->name = "ViCTORIA chess engine";
@@ -271,7 +270,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     if (checkRepetitions ()) return Score (0);
 
     // Check in transposition table
-    int hashf = hashfALPHA;
     bool white = this->board->isWhite();
     
     Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
@@ -286,6 +284,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
     vector<Move> move_list = sortMoves ();    
     int size = move_list.size();
+    int hashf = hashfALPHA;
 
 
     if (depth == 0 || size == 0) {
@@ -367,10 +366,10 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 /*************** Begin in depth analysis functions ***************/
 
-void Engine::inDepthAnalysis (int depth) {
+void Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
 
-    Score alpha (-mate_value); // Black checkmate
-    Score beta (mate_value); // White Checkmate
+    Score alpha (alpha_score); // Black checkmate
+    Score beta (beta_score); // White Checkmate
 
     Score bestMove = AlphaBetaNegamax (depth, alpha, beta);
 
@@ -384,18 +383,55 @@ void Engine::inDepthAnalysis (int depth) {
     if (!this->terminate_thread) this->best_move = bestMove;
 }
 
+int expValue (int value, int count, bool plus) {
+    if (plus)
+        return value + exp(count);
+    else
+        return value - exp(count);
+}
+
 
 void Engine::IterativeDepthAnalysis (int depth) {
     this->is_terminated = false;
     u_int64_t start = millis();
 
+    int alpha_score = -mate_value;
+    int beta_score = mate_value;
+
+
     for (int i = 1; i<= depth; i++) {
         if (this->terminate_thread) break;
-        this->nodes = 0;
 
+        this->nodes = 0;
         this->searchPly = 0;
 
-        inDepthAnalysis(i);
+        int count = 0;
+        while (true) {
+            //cout << "alpha : " << alpha_score << " beta : " << beta_score << endl; 
+
+            inDepthAnalysis(i, alpha_score, beta_score);
+            int size = this->best_move.plies.size();
+
+            if (size > 0){
+                //alpha_score = this->best_move.score - 25; // - 1/4 pawn
+                //beta_score = this->best_move.score + 25; // + 1/4 pawn
+                break;
+            }
+
+            else {
+                if (this->best_move.score == alpha_score) { // Fails low
+                    alpha_score = expValue (alpha_score, count, false);
+                } 
+                
+                else { // Fails high
+                    beta_score = expValue (beta_score, count, true);
+                }
+                
+            }
+            
+            count += 1;
+        }
+
         u_int64_t elapsed = millis() - start;
 
         /*
