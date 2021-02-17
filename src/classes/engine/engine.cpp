@@ -342,8 +342,8 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             // Check if alpha is a checkmate
             bool check_mate_score = score.score == mate_value
                                     && score.plies.size() >= 1
-                                    && (score.plies.size() < beta.plies.size()
-                                    || beta.plies.size() == 0);
+                                    && (beta.plies.size() == 0
+                                    || score.plies.size() < beta.plies.size());
 
             // Record in transposition table
             RecordHash(
@@ -373,7 +373,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 /*************** Begin in depth analysis functions ***************/
 
-void Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
+Score Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
 
     Score alpha (alpha_score); // Black checkmate
     Score beta (beta_score); // White Checkmate
@@ -384,17 +384,23 @@ void Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
 
     if (!this->board->isWhite()) bestMove.score *= -1;
     
-    /*
-        If we want to kill the thread, we don't want best_move to be modified
-    */
-    if (!this->terminate_thread) this->best_move = bestMove;
+    return bestMove;
 }
 
 int expValue (int value, int count, bool plus) {
-    if (plus)
-        return value + exp(count);
-    else
-        return value - exp(count);
+    if (plus) {
+        int res = value + exp(count);
+        if (res > mate_value)
+            return mate_value;
+        else
+            return res;
+    } else {
+        int res = value - exp(count);
+        if (res < -mate_value)
+            return -mate_value;
+        else
+            return res;
+    }
 }
 
 
@@ -412,15 +418,22 @@ void Engine::IterativeDepthAnalysis (int depth) {
         this->nodes = 0;
         this->searchPly = 0;
 
+
+        Score bestMove;
         int count = 0;
         while (true) {
 
-            inDepthAnalysis(i, alpha_score, beta_score);
+            Score tempMove = inDepthAnalysis(i, alpha_score, beta_score);
+
+            if (this->terminate_thread) break;
+
             int flag = getFlag (this->zobrist_hash_key, this->transposition_table);
 
+
             if (flag == 0){ // Exact value
-                alpha_score = this->best_move.score - 25; // - 1/4 pawn
-                beta_score = this->best_move.score + 25; // + 1/4 pawn
+                bestMove = tempMove;
+                alpha_score = bestMove.score - 25; // - 1/4 pawn
+                beta_score = bestMove.score + 25; // + 1/4 pawn
                 break;
             }
 
@@ -443,16 +456,19 @@ void Engine::IterativeDepthAnalysis (int depth) {
         /*
             If we want to kill the thread,
             we don't want to print the move that hasn't been really calculated
-            since we returned a random Score from the Negamax function
+            since we returned a random Score from the Negamax function.
+            We don't want best_move attribute to be modified either.
         */
-        if (!this->terminate_thread)
-            this->best_move.print_info(this->nodes, elapsed, this->board->isWhite());
+        if (!this->terminate_thread) {
+            this->best_move = bestMove;
+            bestMove.print_info(this->nodes, elapsed, this->board->isWhite());
+        }
 
         /* 
             We check if there is a inevitable checkmate.
             If a checkmate in n moves has been found, it's useless to go deeper than depth n
         */
-        if (this->best_move.score == mate_value || this->best_move.score == -mate_value) break;
+        if (bestMove.score == mate_value || bestMove.score == -mate_value) break;
     }
     this->is_terminated = true;
 }
