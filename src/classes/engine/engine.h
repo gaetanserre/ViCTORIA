@@ -70,7 +70,7 @@ class Engine {
 
         Score AlphaBetaNegamax (int depth, Score alpha, Score beta);
 
-        void inDepthAnalysis (int depth);
+        void inDepthAnalysis (int depth, int alpha_score, int beta_score);
         void IterativeDepthAnalysis (int depth);
 
         void threadDepthAnalysis (future<void> future_object, int depth);

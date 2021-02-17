@@ -366,10 +366,10 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 /*************** Begin in depth analysis functions ***************/
 
-void Engine::inDepthAnalysis (int depth) {
+void Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
 
-    Score alpha (-mate_value); // Black checkmate
-    Score beta (mate_value); // White Checkmate
+    Score alpha (alpha_score); // Black checkmate
+    Score beta (beta_score); // White Checkmate
 
     Score bestMove = AlphaBetaNegamax (depth, alpha, beta);
 
@@ -406,7 +406,7 @@ void Engine::IterativeDepthAnalysis (int depth) {
         this->searchPly = 0;
 
         int count = 0;
-        inDepthAnalysis(i);
+        inDepthAnalysis(i, alpha_score, beta_score);
         /*while (true) {
             //cout << "alpha : " << alpha_score << " beta : " << beta_score << endl; 
 
