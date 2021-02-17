@@ -76,7 +76,7 @@ void Engine::searchOpeningBook (int depth) {
     if (this->moves.size() == 0) {
         Score s;
         s.plies.push_back(Ply(Square("d2"), Square("d4")));
-        s.print_info(1, 1, 0, true);
+        s.print_info(1, 0, true);
         this->best_move = s;
         this->is_terminated = true;
 
@@ -110,7 +110,7 @@ void Engine::searchOpeningBook (int depth) {
                     Score s;
                     s.plies.push_back(lineToPly(line));
                     opening_book.close();
-                    s.print_info(1, 1, 0, this->board->isWhite());
+                    s.print_info(1, 0, this->board->isWhite());
                     this->best_move = s;
 
                     this->is_terminated = true;
@@ -267,7 +267,12 @@ bool Engine::checkIfEven (vector<Ply> move_list) {
 Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     
     // We check for repetitions
-    if (checkRepetitions ()) return Score (0);
+    if (checkRepetitions ()) {
+        return Score (0);
+    } 
+
+        
+
 
     // Check in transposition table
     bool white = this->board->isWhite();
@@ -279,6 +284,8 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         if (!checkIfEven (s.plies))
             return s;
     }
+
+
 
 
 
@@ -407,7 +414,6 @@ void Engine::IterativeDepthAnalysis (int depth) {
 
         int count = 0;
         while (true) {
-            //cout << "alpha : " << alpha_score << " beta : " << beta_score << endl; 
 
             inDepthAnalysis(i, alpha_score, beta_score);
             int flag = getFlag (this->zobrist_hash_key, this->transposition_table);
@@ -440,7 +446,7 @@ void Engine::IterativeDepthAnalysis (int depth) {
             since we returned a random Score from the Negamax function
         */
         if (!this->terminate_thread)
-            this->best_move.print_info(i, this->nodes, elapsed, this->board->isWhite());
+            this->best_move.print_info(this->nodes, elapsed, this->board->isWhite());
 
         /* 
             We check if there is a inevitable checkmate.

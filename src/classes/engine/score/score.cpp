@@ -12,14 +12,15 @@ void Score::print() {
     }
 }
 
-void Score::print_info(int depth, int nodes, u_int64_t time_ms, bool white) {
+void Score::print_info(int nodes, u_int64_t time_ms, bool white) {
+    int depth = this->plies.size();
     cout << "info depth " << depth << " seldepth " << depth;
     cout << " score ";
 
     if (this->score == mate_value || this->score == -mate_value) {
         // We convert plies to moves and we check the color of the mate
-        int n = this->plies.size() / 2;
-        if (this->plies.size() % 2)
+        int n = depth / 2;
+        if (depth % 2)
             n++;
         bool white_mate = this->score > 0;
         cout << "mate " << (white == white_mate ? n : -n);

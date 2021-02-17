@@ -131,7 +131,7 @@ void Engine::parseExpr(string expr) {
         u_int64_t start = millis();
         Score s = evalPosition(this->board);
         u_int64_t dur = millis() - start;
-        s.print_info(1, 1, dur, this->board->isWhite());
+        s.print_info(1, dur, this->board->isWhite());
     }
 
     else if (expr == "sort") {
