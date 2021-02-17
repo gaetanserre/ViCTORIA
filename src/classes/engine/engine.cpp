@@ -406,7 +406,8 @@ void Engine::IterativeDepthAnalysis (int depth) {
         this->searchPly = 0;
 
         int count = 0;
-        while (true) {
+        inDepthAnalysis(i, alpha_score, beta_score);
+        /*while (true) {
             //cout << "alpha : " << alpha_score << " beta : " << beta_score << endl; 
 
             inDepthAnalysis(i, alpha_score, beta_score);
@@ -430,7 +431,7 @@ void Engine::IterativeDepthAnalysis (int depth) {
             }
             
             count += 1;
-        }
+        }*/
 
         u_int64_t elapsed = millis() - start;
 
