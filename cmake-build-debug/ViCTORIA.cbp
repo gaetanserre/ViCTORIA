@@ -8,200 +8,198 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug"/>
+				<Option working_dir="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug"/>
+				<Option working_dir="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug"/>
+				<Option working_dir="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="ViCTORIA">
-				<Option output="/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/ViCTORIA" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug"/>
+				<Option output="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/ViCTORIA" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/bitboard"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/constants"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/score"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table"/>
-					<Add directory="/usr/include/c++/10"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
-					<Add directory="/usr/include/c++/10/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/bitboard"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/constants"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/score"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 ViCTORIA"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 ViCTORIA"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="ViCTORIA/fast">
-				<Option output="/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/ViCTORIA" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug"/>
+				<Option output="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/ViCTORIA" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/bitboard"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/constants"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/score"/>
-					<Add directory="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table"/>
-					<Add directory="/usr/include/c++/10"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
-					<Add directory="/usr/include/c++/10/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/bitboard"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/constants"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/score"/>
+					<Add directory="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 ViCTORIA/fast"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/gaetan/Documents/Projets/Chess/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 ViCTORIA/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/bitboard/magic_bitboard.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/bitboard/magic_bitboard.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/bitboard/magic_bitboard.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/bitboard/magic_bitboard.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/bitboard/magics_number.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/bitboard/magics_number.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/board.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/board.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/board.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/board.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/bishop.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/bishop.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/bishop.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/bishop.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/empty.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/empty.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/king.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/king.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/king.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/king.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/knight.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/knight.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/knight.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/knight.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/pawn.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/pawn.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/pawn.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/pawn.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/piece.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/piece.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/piece.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/piece.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/queen.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/queen.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/queen.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/queen.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/rook.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/rook.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/rook.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/rook.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/pieces/table.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/pieces/table.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/ply.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/ply.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/square.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/square.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/constants/capture_table.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/constants/capture_table.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/engine.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/engine.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/engine.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/engine.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/evaluation.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/evaluation.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/parse_expr.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/parse_expr.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/score/score.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/score/score.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/score/score.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/score/score.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table/hash.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table/hash.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table/hash.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table/hash.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table/hashKey.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table/hashKey.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table/hashKey.h">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table/hashKey.h">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/main.cpp">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/main.cpp">
 			<Option target="ViCTORIA"/>
 		</Unit>
-		<Unit filename="/home/gaetan/Documents/Projets/Chess/ViCTORIA/CMakeLists.txt">
+		<Unit filename="/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

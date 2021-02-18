@@ -388,19 +388,10 @@ Score Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
 }
 
 int expValue (int value, int count, bool plus) {
-    if (plus) {
-        int res = value + exp(count);
-        if (res > mate_value)
-            return mate_value;
-        else
-            return res;
-    } else {
-        int res = value - exp(count);
-        if (res < -mate_value)
-            return -mate_value;
-        else
-            return res;
-    }
+    if (plus)
+        return min(value + (int) exp(count), mate_value);
+    else
+        return max (value - (int) exp(count), -mate_value);
 }
 
 

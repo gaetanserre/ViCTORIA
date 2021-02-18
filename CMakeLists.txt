@@ -3,7 +3,7 @@ project(ViCTORIA)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -pthread")
 
 include_directories(src/classes/bitboard)
 include_directories(src/classes/board)
