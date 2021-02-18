@@ -94,6 +94,10 @@ string
 
 /home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/constants/capture_table.h
 
+/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/engine.cpp
+engine.h
+/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/engine.h
+
 /home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/engine.h
 sstream
 -
@@ -118,13 +122,13 @@ transposition_table/hashKey.h
 transposition_table/hash.h
 /home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table/hash.h
 
-/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/parse_expr.cpp
-engine.h
-/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/engine.h
-
 /home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/score/score.h
 ../../board/board.h
 /home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/board/board.h
+
+/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table/hash.cpp
+hash.h
+/home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table/hash.h
 
 /home/gaetan/Documents/Projets/Chess/ViCTORIA/src/classes/engine/transposition_table/hash.h
 ../score/score.h

@@ -411,6 +411,8 @@ void Engine::IterativeDepthAnalysis (int depth) {
     int alpha_score = -mate_value;
     int beta_score = mate_value;
 
+    bool white = this->board->isWhite();
+    Score bestMove;
 
     for (int i = 1; i<= depth; i++) {
         if (this->terminate_thread) break;
@@ -419,7 +421,15 @@ void Engine::IterativeDepthAnalysis (int depth) {
         this->searchPly = 0;
 
 
-        Score bestMove;
+        /*
+         * In this loop, we are going to realize the heuristic of the aspiration window
+         * Every time we find a score with a depth below the goal, we update the alpha and beta values
+         * In order to narrow down the previously found score as much as possible.
+         * Then we start a search with this interval.
+         * If it fails, we enlarge the interval.
+         * With this heuristic, we cut a lot of branches in the search tree.
+         */
+
         int count = 0;
         while (true) {
 
@@ -427,10 +437,10 @@ void Engine::IterativeDepthAnalysis (int depth) {
 
             if (this->terminate_thread) break;
 
-            int flag = getFlag (this->zobrist_hash_key, this->transposition_table);
+            bool fails = tempMove.plies.empty();
+            int score = tempMove.score * (white ? 1 : -1); // We recompute the score (+ for white - for black)
 
-
-            if (flag == 0){ // Exact value
+            if (!fails){ // Exact value
                 bestMove = tempMove;
                 alpha_score = bestMove.score - 25; // - 1/4 pawn
                 beta_score = bestMove.score + 25; // + 1/4 pawn
@@ -438,7 +448,7 @@ void Engine::IterativeDepthAnalysis (int depth) {
             }
 
             else {
-                if (flag == 1) { // Fails low
+                if (score == alpha_score) { // Fails low
                     alpha_score = expValue (alpha_score, count, false);
                 } 
                 
