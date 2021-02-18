@@ -54,7 +54,7 @@ Among other thing, the evaluation function takes into account:
 + Move ordering
     + Captures table
     + Killer move heuristic
-+ Transposition table with Zobrist's hashing function (1 000 000 positions ≡ 50 Mb)
++ Transposition table with Zobrist's hashing function (1 000 000 positions ~ 50 Mb)
 
 You can add an opening table like this [one](https://mega.nz/file/fFl1CK4I#gMdpOIj_1FSgyxZzVhFHoJPsaeJYWjTjygSgOaUOTsQ). You have to modify the path in ```engine.h```.
 The table have to be in UCI syntax, you can use [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/) to convert your table into this format.
