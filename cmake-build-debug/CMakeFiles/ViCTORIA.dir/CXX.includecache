@@ -122,9 +122,21 @@ transposition_table/hashKey.h
 transposition_table/hash.h
 /Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table/hash.h
 
+/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/evaluation.cpp
+engine.h
+/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/engine.h
+
+/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/parse_expr.cpp
+engine.h
+/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/engine.h
+
 /Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/score/score.h
 ../../board/board.h
 /Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/board.h
+
+/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table/hash.cpp
+hash.h
+/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table/hash.h
 
 /Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/transposition_table/hash.h
 ../score/score.h
@@ -135,4 +147,8 @@ random
 -
 ../../board/board.h
 /Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/board/board.h
+
+/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/main.cpp
+classes/engine/engine.h
+/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/src/classes/engine/engine.h
 

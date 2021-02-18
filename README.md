@@ -15,7 +15,7 @@ Its elo rating is 1694 in blitz (February 2021).
 ViCTORIA is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably
 
 ## Build
-ViCTORIA is built from scratch, so you don't need any C++ library, only a compiler that supports C++ 20.
+ViCTORIA is built from scratch, so you don't need any C++ library, only a compiler (min C++ 17).
 
 If you are on Linux or macOS, you can use the makefile in the ```build``` directory like this:
 ```bash
@@ -37,7 +37,7 @@ UCI commands:
 + ```go depth n```
 + ```go infinite```: wait for the stop command
 + ```go movetime t```: search for t milliseconds
-+ ```go wtime t1 btime t2 winc t3 binc t4```: White has ```t1``` ms on clock Black has ```t2``` ms on clock. White increment their time by ```t3``` ms and Black increment their time by ```t4``` ms
++ ```go wtime t1 btime t2 [winc t3 binc t4]```: White has ```t1``` ms on clock Black has ```t2``` ms on clock. White increment their time by ```t3``` ms and Black increment their time by ```t4``` ms
 
 ## Evaluation function
 Among other thing, the evaluation function takes into account:
@@ -54,7 +54,7 @@ Among other thing, the evaluation function takes into account:
 + Move ordering
     + Captures table
     + Killer move heuristic
-+ Transposition table with Zobrist Hashing (500 000 positions)
++ Transposition table with Zobrist's hashing function (1 000 000 positions ≡ 50 Mb)
 
 You can add an opening table like this [one](https://mega.nz/file/fFl1CK4I#gMdpOIj_1FSgyxZzVhFHoJPsaeJYWjTjygSgOaUOTsQ). You have to modify the path in ```engine.h```.
 The table have to be in UCI syntax, you can use [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/) to convert your table into this format.

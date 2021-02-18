@@ -4,7 +4,7 @@
 #define hashfEXACT   0
 #define hashfALPHA   1
 #define hashfBETA    2
-#define transposition_table_size 0x7A120 // 500 000 positions
+#define transposition_table_size 0xF4240 // 500 000 positions
 
 struct Hash {
     U64 key;
