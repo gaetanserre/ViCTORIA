@@ -273,7 +273,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
         
 
-
     // Check in transposition table
     bool white = this->board->isWhite();
     
@@ -284,9 +283,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         if (!checkIfEven (s.plies))
             return s;
     }
-
-
-
 
 
     vector<Move> move_list = sortMoves ();    
@@ -375,8 +371,8 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 Score Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
 
-    Score alpha (alpha_score); // Black checkmate
-    Score beta (beta_score); // White Checkmate
+    Score alpha (alpha_score);
+    Score beta (beta_score);
 
     Score bestMove = AlphaBetaNegamax (depth, alpha, beta);
 
@@ -399,8 +395,8 @@ void Engine::IterativeDepthAnalysis (int depth) {
     this->is_terminated = false;
     u_int64_t start = millis();
 
-    int alpha_score = -mate_value;
-    int beta_score = mate_value;
+    int alpha_score = -mate_value; // Black checkmate
+    int beta_score = mate_value; // White Checkmate
 
     bool white = this->board->isWhite();
     Score bestMove;
