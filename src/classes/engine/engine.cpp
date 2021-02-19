@@ -314,9 +314,14 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         this->positions.push_back (pos);
 
         this->searchPly++;
-        
-        Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
+
+        // We inverse the scores because we are in negamax
+        Score n_alpha = alpha; n_alpha.score *= -1;
+        Score n_beta = beta; n_beta.score *= -1;
+        Score score = AlphaBetaNegamax (depth - 1, n_beta, n_alpha);
         score.score *= -1;
+
+
         score.plies.push_back(move_list[i].ply);
 
 
@@ -337,8 +342,8 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
             // Check if alpha is a checkmate
             bool check_mate_score = score.score == mate_value
-                                    && score.plies.size() >= 1
-                                    && (beta.plies.size() == 0
+                                    && !score.plies.empty()
+                                    && (beta.plies.empty()
                                     || score.plies.size() < beta.plies.size());
 
             // Record in transposition table
