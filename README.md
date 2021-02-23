@@ -56,8 +56,10 @@ Among other thing, the evaluation function takes into account:
     + Killer move heuristic
 + Transposition table with Zobrist's hashing function (1 000 000 positions ~ 50 Mb)
 
-You can add an opening table like this [one](https://mega.nz/file/fFl1CK4I#gMdpOIj_1FSgyxZzVhFHoJPsaeJYWjTjygSgOaUOTsQ). You have to modify the path in ```engine.h```.
-The table have to be in UCI syntax, you can use [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/) to convert your table into this format.
+You have to modify the path in ```engine.h``` to use the opening book in the ```books``` directory.
+
+You can use your book, it has to be in UCI syntax, you can use [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/)
+and use the option ````-Wuci```` to convert your book into this format.
 
 ## License
 [GNU v3](https://choosealicense.com/licenses/gpl-3.0/)

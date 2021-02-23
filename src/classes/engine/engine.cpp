@@ -75,7 +75,7 @@ void Engine::searchOpeningBook (int depth) {
     */
     if (this->moves.size() == 0) {
         Score s;
-        s.plies.push_back(Ply(Square("d2"), Square("d4")));
+        s.plies.emplace_back(Square("d2"), Square("d4"));
         s.print_info(1, 0, true);
         this->best_move = s;
         this->is_terminated = true;

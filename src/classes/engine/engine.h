@@ -78,7 +78,7 @@ class Engine {
 
         /*************** Attributes ***************/
 
-        string opening_table_path = "/home/gaetan/Documents/Projets/Chess/chess_books/opening_book-2.5M.pgn";
+        string opening_table_path = "/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/books/modern_openings.pgn";
         bool not_in_opening_table = false;
 
         const int maxDepth = 64;
