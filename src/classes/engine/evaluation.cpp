@@ -109,7 +109,7 @@ Score Engine::evalPosition(Board* board) {
         //cout << wK << " " << bK << " " << wQ << " " << bQ << " " << wR << " " << bR << " " << wN << " " << bN << " " << wB << " " << bB << " " << wP << " " << bP << endl;
             
 
-        const float mobilityV = 3;
+        /*const float mobilityV = 3;
 
         int mobility_white, mobility_black;
         int *other_mobility;
@@ -126,7 +126,7 @@ Score Engine::evalPosition(Board* board) {
         // Compute mobility for the other side
         board->changeSide();
         board->setEnPassant(false);
-        board->computeLegalMoves();
+        board->computeLegalMoves();*/
 
         /* 
         * We check if the king is safe
@@ -134,25 +134,26 @@ Score Engine::evalPosition(Board* board) {
         */
         //int safety_score = isKingSafe(board) ? 200 : 0;
         
-        *other_mobility = board->getLegalMoves().size();
+        /**other_mobility = board->getLegalMoves().size();
         board->changeSide();
 
-        int mobility_score = mobilityV * (mobility_white - mobility_black);
+        int mobility_score = mobilityV * (mobility_white - mobility_black);*/
 
         /*
         * We check if we have castling
         * If yes, we add/remove 100 cp
         * If no, we add/remove 25 cp per castling we can do in this position
         */
+        int castlings_score = 0;
         if (white) {
-            if (board->has_castling_w) mobility_score += 100;
-            else mobility_score += 25 * getNbCastlings (legal_moves, board->squares, white);
+            if (board->has_castling_w) castlings_score += 100;
+            else castlings_score += 25 * getNbCastlings (legal_moves, board->squares, white);
         } else {
-            if (board->has_castling_b) mobility_score -= 100;
-            else mobility_score -= 25 * getNbCastlings (legal_moves, board->squares, white);
+            if (board->has_castling_b) castlings_score -= 100;
+            else castlings_score -= 25 * getNbCastlings (legal_moves, board->squares, white);
         }
 
-        int score = (material_score + mobility_score);
+        int score = (material_score + castlings_score);
 
         return Score(score);
 
