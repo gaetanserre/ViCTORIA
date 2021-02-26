@@ -316,9 +316,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         this->searchPly++;
 
         // We inverse the scores because we are in negamax
-        Score n_alpha = alpha; n_alpha.score *= -1;
-        Score n_beta = beta; n_beta.score *= -1;
-        Score score = AlphaBetaNegamax (depth - 1, n_beta, n_alpha);
+        Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
         score.score *= -1;
 
 
@@ -347,13 +345,13 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
                                     || score.plies.size() < beta.plies.size());
 
             // Record in transposition table
-            /*RecordHash(
+            RecordHash(
                 depth,
                 (check_mate_score ? score : beta),
                 (check_mate_score ? hashfEXACT : hashfBETA),
                 this->zobrist_hash_key,
                 this->transposition_table,
-                white);*/
+                white);
 
             return (check_mate_score ? score : beta);
         }
