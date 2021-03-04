@@ -187,6 +187,9 @@ void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
     u_int64_t elapsed = millis() - start;
     while (elapsed < dur  && !this->is_terminated) {
         elapsed = millis() - start;
+
+        // Useful for not using the CPU for nothing
+        this_thread::sleep_for(chrono::microseconds(100));
     }
 
     this->terminate_thread = true;
@@ -262,9 +265,9 @@ void Engine::parseGoCommand (vector<string> args) {
         command: go depth n
     */
    else if (args.size() == 3 && args[1] == "depth") {
-        int depth = stoi(args[2]);
-        launchDepthSearch (depth, direct_analysis);
-        this->best_move.print();
+       int depth = stoi(args[2]);
+       launchDepthSearch (depth, direct_analysis);
+       this->best_move.print();
    }
 
    /*
@@ -272,19 +275,18 @@ void Engine::parseGoCommand (vector<string> args) {
     */
 
    else if ((args.size() == 5 || args.size() == 9) && args[1] == "wtime") {
-        double duration = stod (args[this->board->isWhite() ? 2 : 4]);
-        int nb_move = this->moves.size() / 2;
+       int move_majorant = 60;
+       double total_time = stod (args[this->board->isWhite() ? 2 : 4]);
+       int nb_move = this->moves.size() / 2;
 
-        duration /= 20;
+       if (nb_move < move_majorant - 10) {
+           total_time /= move_majorant - nb_move;
+       } else {
+           total_time /= 20;
+       }
 
-        /*if (nb_move < 10 || nb_move > 20)
-            duration /= 40.;
-
-        else 
-            duration /= 30.;*/
-
-        launchTimeThread ((u_int64_t) duration, direct_analysis);
-        this->best_move.print();
+       launchTimeThread ((u_int64_t) total_time, direct_analysis);
+       this->best_move.print();
    }
 
     /*
