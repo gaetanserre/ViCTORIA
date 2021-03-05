@@ -382,7 +382,7 @@ Score Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
     reverse(bestMove.plies.begin(), bestMove.plies.end());
 
     if (!this->board->isWhite()) bestMove.score *= -1;
-    
+
     return bestMove;
 }
 
@@ -428,12 +428,12 @@ void Engine::IterativeDepthAnalysis (int depth) {
             if (this->terminate_thread) break;
 
             bool fails = tempMove.plies.empty();
-            int score = tempMove.score * (white ? 1 : -1); // We recompute the score (+ for white - for black)
+            int score = tempMove.score * (white ? 1 : -1); // We recompute the score to the POV of the color
 
             if (!fails){ // Exact value
                 bestMove = tempMove;
-                alpha_score = bestMove.score - 25; // - 1/4 pawn
-                beta_score = bestMove.score + 25; // + 1/4 pawn
+                alpha_score = bestMove.score - 25; // - 1/4 centipawn
+                beta_score = bestMove.score + 25; // + 1/4 centipawn
                 break;
             }
 

@@ -27,8 +27,8 @@ void Score::print_info(int nodes, u_int64_t time_ms, bool white) {
     }
 
     else {
-        
-        // If it's black to play we multiply score by -1 
+
+        // If it's black to play we multiply score by -1
         int score = white ? this->score : -this->score;
 
        cout << "cp " << score;
