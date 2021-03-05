@@ -274,7 +274,7 @@ void Engine::parseGoCommand (vector<string> args) {
         command: go wtime n1 btime n2 [winc n3 binc n4]
     */
 
-   else if ((args.size() == 5 || args.size() == 9) && args[1] == "wtime") {
+   else if ((args.size() == 5 || args.size() == 9 || args.size() == 11) && args[1] == "wtime") {
        int move_majorant = 60;
        double total_time = stod (args[this->board->isWhite() ? 2 : 4]);
        int nb_move = this->moves.size() / 2;
