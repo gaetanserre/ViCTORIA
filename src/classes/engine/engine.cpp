@@ -15,7 +15,6 @@ Engine::Engine(string path) {
     this->transposition_table = (Hash*) calloc(transposition_table_size, sizeof(Hash));
 
     this->opening_table_path = transform_path(std::move(path));
-    cout << this->opening_table_path << endl;
 
     cout << this->name << endl;
 }
