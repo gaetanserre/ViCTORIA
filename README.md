@@ -57,11 +57,7 @@ Among other thing, the evaluation function takes into account:
     + Captures table
     + Killer move heuristic
 + Transposition table with Zobrist's hashing function (1 000 000 positions ~ 50 Mb)
-
-You have to modify the path in ```engine.h``` to use the opening book in the ```books``` directory.
-
-You can use your book, it has to be in UCI syntax, you can use [pgn-extract](https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/)
-and use the option ````-Wuci```` to convert your book into this format.
++ Openings book
 
 ## License
 [GNU v3](https://choosealicense.com/licenses/gpl-3.0/)

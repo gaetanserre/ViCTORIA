@@ -1,6 +1,8 @@
 #include "engine.h"
 
-Engine::Engine() {
+#include <utility>
+
+Engine::Engine(string path) {
     this->name = "ViCTORIA chess engine";
     this->board = new Board();
     this->board->init();
@@ -12,6 +14,9 @@ Engine::Engine() {
     this->zobrist_hash_key = generateHashKey(this->board);
     this->transposition_table = (Hash*) calloc(transposition_table_size, sizeof(Hash));
 
+    this->opening_table_path = transform_path(std::move(path));
+    cout << this->opening_table_path << endl;
+
     cout << this->name << endl;
 }
 
@@ -19,6 +24,17 @@ Engine::Engine() {
 Engine::~Engine() {
     free (this->transposition_table);
     delete this->board;
+}
+
+string Engine::transform_path(string path) {
+    int count = 0;
+    for (int i = path.size() - 1; i >= 0; i--) {
+        if (path[i] == '/' || path[i] == '\\')
+            count++;
+        path.pop_back();
+        if (count == 2) break;
+    }
+    return path + "/books/modern_openings.pgn";
 }
 
 /*************** Begin search in opening book functions ***************/

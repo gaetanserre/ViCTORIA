@@ -176,9 +176,8 @@ void Engine::parseExpr(string expr) {
 
 void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
     thread t;
-    
-    // Time must be more than 2 sec to search in opening book
-    if (!direct_analysis && dur > 2000)
+
+    if (!direct_analysis)
         t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
     else
         t = thread(&Engine::IterativeDepthAnalysis, this, this->maxDepth);

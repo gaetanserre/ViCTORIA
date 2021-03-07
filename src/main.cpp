@@ -1,7 +1,8 @@
 #include "classes/engine/engine.h"
 
 int main (int argc, char** argv) {
-    Engine engine;
+
+    Engine engine (argv[0]);
     string input;
     while (input != "quit") {
         getline(cin, input);

@@ -22,11 +22,13 @@ struct Move
 
 class Engine {
     public:
-        Engine();
+        Engine(string path);
         ~Engine();
         void parseExpr(string expr);
 
     private:
+
+        string transform_path (string path);
 
         /*************** Begin time mesuring funcs ***************/
         static u_int64_t millis() {
@@ -78,7 +80,7 @@ class Engine {
 
         /*************** Attributes ***************/
 
-        string opening_table_path = "/Users/gaetanserre/Documents/Projets/Chess/Engines/ViCTORIA/books/modern_openings.pgn";
+        string opening_table_path = "/home/gaetan/Documents/Projets/Chess/ViCTORIA/books/modern_openings.pgn";
         bool not_in_opening_table = false;
 
         const int maxDepth = 64;
