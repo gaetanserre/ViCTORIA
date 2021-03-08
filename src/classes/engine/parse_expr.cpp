@@ -150,7 +150,7 @@ void Engine::parseExpr(string expr) {
         cout << this->zobrist_hash_key << endl;
     }
 
-    else if (res[0] == "trans") {
+    /*else if (res[0] == "trans") {
         if (res[1] == "all") {
 
             for (int i = 0; i<transposition_table_size; i++) {
@@ -167,7 +167,7 @@ void Engine::parseExpr(string expr) {
             cout << idx << endl;
             cout << transposition_table[idx].score.score << endl;
         }
-    }
+    }*/
 
     else if (expr != "quit") {
         cout << "Unknown command: " << expr << endl;
@@ -276,13 +276,22 @@ void Engine::parseGoCommand (vector<string> args) {
    else if (args.size() >= 5 && args[1] == "wtime") {
        int move_majorant = 60;
        double total_time = stod (args[this->board->isWhite() ? 2 : 4]);
+       double increment = 0;
        int nb_move = this->moves.size() / 2;
+
+        if (args.size() >= 8)
+            increment = stod (args[this->board->isWhite() ? 6 : 8]);
 
        if (nb_move < move_majorant - 10) {
            total_time /= move_majorant - nb_move;
        } else {
            total_time /= 20;
        }
+
+       /*
+        * If we have a increment of x seconds, then we can use x seconds to compute a move
+        */
+       if (total_time < increment) total_time = increment;
 
        launchTimeThread ((u_int64_t) total_time, direct_analysis);
        this->best_move.print();

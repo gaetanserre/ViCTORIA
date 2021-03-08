@@ -98,7 +98,7 @@ class Engine {
 
         /*************** Transposition tables attributes ***************/
         U64 zobrist_hash_key;
-        Hash* transposition_table;
+        //Hash* transposition_table;
 
         /*************** Thread attributes ***************/
         bool terminate_thread = false;

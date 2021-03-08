@@ -56,7 +56,7 @@ Among other thing, the evaluation function takes into account:
 + Move ordering
     + Captures table
     + Killer move heuristic
-+ Transposition table with Zobrist's hashing function (1 000 000 positions ~ 50 Mb)
++ ~~Transposition table with Zobrist's hashing function (1 000 000 positions ~ 50 Mb)~~
 + Openings book
 
 ## License
