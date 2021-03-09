@@ -12,7 +12,7 @@ Engine::Engine(string path) {
     // init Zobrist hash keys
     initRandomKeys();
     this->zobrist_hash_key = generateHashKey(this->board);
-    //this->transposition_table = (Hash*) calloc(transposition_table_size, sizeof(Hash));
+    this->transposition_table = (Hash*) calloc(transposition_table_size, sizeof(Hash));
 
     this->opening_table_path = transform_path(std::move(path));
 
@@ -284,30 +284,31 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     // We check for repetitions
     if (checkRepetitions ()) {
         return Score (0);
-    } 
+    }
+
+    bool white = this->board->isWhite();
 
     // Check in transposition table
     
-    /*Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
+    Score s = ProbeHash(depth, this->zobrist_hash_key, this->transposition_table, white);
     if (s.score != unknown_value) {
 
         // Check if now it's a draw with repetitions
         if (!checkIfEven (s.plies))
             return s;
-    }*/
+    }
 
 
     vector<Move> move_list = sortMoves ();    
     int size = move_list.size();
-    bool white = this->board->isWhite();
-    int hashf = hashfALPHA;
+    bool exact_score = false;
     bool end_condition = depth == 0 || size == 0 || this->board->nb_moves_50_rule == 50;
 
 
     if (end_condition) {
         Score val = evalPosition(this->board);
         val.score *= white ? 1 : -1;
-        //RecordHash(depth, val, hashfEXACT, this->zobrist_hash_key, this->transposition_table, white);
+        RecordHash(depth, val, this->zobrist_hash_key, this->transposition_table, white);
         return val;
     }
 
@@ -359,25 +360,26 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
                                     || score.plies.size() < beta.plies.size());
 
             // Record in transposition table
-            /*RecordHash(
-                depth,
-                (check_mate_score ? score : beta),
-                (check_mate_score ? hashfEXACT : hashfBETA),
-                this->zobrist_hash_key,
-                this->transposition_table,
-                white);*/
+            if (check_mate_score)
+                RecordHash(
+                    depth,
+                    score,
+                    this->zobrist_hash_key,
+                    this->transposition_table,
+                    white);
 
             return (check_mate_score ? score : beta);
         }
 
         if (score > alpha) {
-            hashf = hashfEXACT;
+            exact_score = true;
             alpha = score;
         }
     }
 
     // Record in transposition table
-    //RecordHash(depth, alpha, hashf, this->zobrist_hash_key, this->transposition_table, white);
+    if (exact_score)
+        RecordHash(depth, alpha, this->zobrist_hash_key, this->transposition_table, white);
     return alpha;
 }
 
