@@ -186,7 +186,6 @@ void Board::printPieces () {
     cout << "pieces: " << this->nb_piece << endl;
     cout << "pawns: " << this->nb_pawn << endl;
     cout << "last_move_capture: " << this->last_move_capture << endl;
-    cout << this->nb_moves_50_rule << endl;
 }
 
 void Board::printLegalMoves () {
