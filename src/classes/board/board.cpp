@@ -16,7 +16,8 @@ void Board::init (string fen) {
     int file = 8;
     int idx = 0;
     int nbspace = 0;
-    string nb_moves_str = "";
+    string nb_moves_str;
+    string nb_moves_50_rule_str;
 
     for (int i = 0; i<fen.length(); i++) {
         Square position(char(rank), file);
@@ -52,6 +53,9 @@ void Board::init (string fen) {
                     this->en_passant_square = Square(fen[i], fen[i+1] - '0');
                     i++;
                 } else this->en_passant = false;
+            }
+            if (nbspace == 4) {
+                nb_moves_50_rule_str += fen[i];
             }
             if (nbspace == 5) {
                 nb_moves_str += fen[i];
@@ -162,6 +166,7 @@ void Board::init (string fen) {
         rank++;
     }
     this->nb_moves = stoi(nb_moves_str);
+    this->nb_moves_50_rule = stoi(nb_moves_50_rule_str);
 }
 
 void Board::printPieces () {
@@ -181,6 +186,7 @@ void Board::printPieces () {
     cout << "pieces: " << this->nb_piece << endl;
     cout << "pawns: " << this->nb_pawn << endl;
     cout << "last_move_capture: " << this->last_move_capture << endl;
+    cout << this->nb_moves_50_rule << endl;
 }
 
 void Board::printLegalMoves () {
@@ -494,11 +500,18 @@ bool Board::play_move (Ply p, bool force) {
 
         if (! castling) {
             int idx_stop = squareToIdx(stop);
+            bool is_pawn = this->squares[idx_dep]->getName() == 'p';
 
             Piece* temp = this->squares[idx_dep];
             this->squares[idx_dep] = new Empty();
 
             this->last_move_capture = checkIfPiece(this->squares[idx_stop]);
+
+            // Check if the move is a capture or a pawn move
+            if (this->last_move_capture || is_pawn)
+                this->nb_moves_50_rule = 0;
+            else
+                this->nb_moves_50_rule ++;
 
             /*
                 We check if we are capturing a rook, we need to remove castlings
@@ -553,7 +566,7 @@ bool Board::play_move (Ply p, bool force) {
                 /*
                     We check pawn
                 */
-                if (temp->getName() == 'p') {                   
+                if (is_pawn) {
                     // If pawn move 2 squares ahead
                     if (abs(dep.file - stop.file) == 2) {
                         
@@ -660,7 +673,7 @@ bool Board::isCheckmate (int size) {
 }
 
 bool Board::isStalemate (int size) {
-    return size == 0 && !isCheck();
+    return (size == 0 && !isCheck()) || this->nb_moves_50_rule == 50;
 }
 
 bool Board::isOver () {
@@ -770,7 +783,7 @@ string Board::getFen (bool nb_move) {
         fen += "-";
 
     if (nb_move)
-        fen += " 0 " + to_string((this->nb_moves - 1) / 2 + 1);
+        fen += " " + to_string(this->nb_moves_50_rule) + " " + to_string((this->nb_moves - 1) / 2 + 1);
 
     return fen;
 }

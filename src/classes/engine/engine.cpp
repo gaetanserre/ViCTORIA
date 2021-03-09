@@ -286,10 +286,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         return Score (0);
     } 
 
-        
-
     // Check in transposition table
-    bool white = this->board->isWhite();
     
     /*Score s = ProbeHash(alpha, beta, depth, this->zobrist_hash_key, this->transposition_table, white);
     if (s.score != unknown_value) {
@@ -302,10 +299,12 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
     vector<Move> move_list = sortMoves ();    
     int size = move_list.size();
+    bool white = this->board->isWhite();
     int hashf = hashfALPHA;
+    bool end_condition = depth == 0 || size == 0 || this->board->nb_moves_50_rule == 50;
 
 
-    if (depth == 0 || size == 0) {
+    if (end_condition) {
         Score val = evalPosition(this->board);
         val.score *= white ? 1 : -1;
         //RecordHash(depth, val, hashfEXACT, this->zobrist_hash_key, this->transposition_table, white);

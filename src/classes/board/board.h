@@ -82,6 +82,8 @@ class Board {
         bool has_castling_w = false;
         bool has_castling_b = false;
 
+        int nb_moves_50_rule = 0;
+
 
     private:
 
