@@ -8,8 +8,6 @@ ViCTORIA performs a in-depth analysis of the position with a handcrafted evaluat
 
 It can perform an analysis in reasonable (10-25 seconds) time between depth 6 and 10+, depending on the number of possible moves.
 
-You can play against it on Lichess [here](https://lichess.org/@/ViCTORIA_engine).
-
 Its elo rating is 1694 in blitz (February 2021).
 
 ViCTORIA is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably
