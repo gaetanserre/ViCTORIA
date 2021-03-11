@@ -47,7 +47,7 @@ Score Engine::evalPosition(Board* board) {
     int size = legal_moves.size();
     bool white = board->isWhite();
     
-    if (size == 0 || board->nb_moves_50_rule == 50) {
+    if (size == 0 || board->nb_plies_50_rule == 100) {
         if (board->isCheck())
             return Score( (white ? -mate_value : mate_value) );
         else return Score();

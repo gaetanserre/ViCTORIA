@@ -291,7 +291,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     vector<Move> move_list = sortMoves ();    
     int size = move_list.size();
     bool exact_score = false;
-    bool end_condition = depth == 0 || size == 0 || this->board->nb_moves_50_rule == 50;
+    bool end_condition = depth == 0 || size == 0 || this->board->nb_plies_50_rule == 100;
 
 
     if (end_condition) {
