@@ -14,7 +14,9 @@ Engine::Engine(string path) {
     this->zobrist_hash_key = generateHashKey(this->board);
     this->transposition_table = (Hash*) calloc(transposition_table_size, sizeof(Hash));
 
-    this->opening_table_path = transform_path(std::move(path));
+    string dir_path = transform_path(std::move(path));
+    this->opening_table_path = dir_path + "/books/modern_openings.pgn";
+    this->logs_path = dir_path + "/logs/logs.txt";
 
     cout << this->name << endl;
 }
@@ -33,7 +35,7 @@ string Engine::transform_path(string path) {
         path.pop_back();
         if (count == 2) break;
     }
-    return path + "/books/modern_openings.pgn";
+    return path;
 }
 
 /*************** Begin search in opening book functions ***************/
