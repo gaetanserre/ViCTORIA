@@ -12,7 +12,6 @@ Engine::Engine(string path) {
     // init Zobrist hash keys
     initRandomKeys();
     this->zobrist_hash_key = generateHashKey(this->board);
-    this->transposition_table = (Hash*) calloc(transposition_table_size, sizeof(Hash));
 
     string dir_path = transform_path(std::move(path));
     this->opening_table_path = dir_path + "/books/modern_openings.pgn";
@@ -23,7 +22,6 @@ Engine::Engine(string path) {
 
 
 Engine::~Engine() {
-    //free (this->transposition_table);
     delete this->board;
 }
 
@@ -290,17 +288,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
     bool white = this->board->isWhite();
 
-    // Check in transposition table
-    
-    Score s = ProbeHash(depth, this->zobrist_hash_key, this->transposition_table, white);
-    if (s.score != unknown_value) {
-
-        // Check if now it's a draw with repetitions
-        if (!checkIfEven (s.plies))
-            return s;
-    }
-
-
     vector<Move> move_list = sortMoves ();    
     int size = move_list.size();
     bool exact_score = false;
@@ -310,7 +297,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     if (end_condition) {
         Score val = evalPosition(this->board);
         val.score *= white ? 1 : -1;
-        RecordHash(depth, val, this->zobrist_hash_key, this->transposition_table, white);
         return val;
     }
 
@@ -361,15 +347,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
                                     && (beta.plies.empty()
                                     || score.plies.size() < beta.plies.size());
 
-            // Record in transposition table
-            if (check_mate_score)
-                RecordHash(
-                    depth,
-                    score,
-                    this->zobrist_hash_key,
-                    this->transposition_table,
-                    white);
-
             return (check_mate_score ? score : beta);
         }
 
@@ -379,9 +356,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         }
     }
 
-    // Record in transposition table
-    if (exact_score)
-        RecordHash(depth, alpha, this->zobrist_hash_key, this->transposition_table, white);
     return alpha;
 }
 
