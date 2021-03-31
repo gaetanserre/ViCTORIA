@@ -1,7 +1,5 @@
 #include "engine.h"
 
-#include <utility>
-
 Engine::Engine(string path) {
     this->name = "ViCTORIA chess engine";
     this->board = new Board();
@@ -247,31 +245,24 @@ void Engine::undoMove (U64 hash_key) {
     this->zobrist_hash_key = hash_key;
 }
 
-bool Engine::checkRepetitions () {
-    int count = 1;
-    int size = this->positions.size() - 1;
-    string position = this->positions[size];
-    for (int i = 0; i<size; i++) {
-        if (positions[i] == position)
-            count ++;
+bool Engine::checkRepetitions (U64 position) {
+    if (this->positions.find(position) != this->positions.end()) {
+        return this->positions[position] == 3;
+    } else {
+        return false;
     }
-    return count == 3;
 }
 
-bool Engine::checkIfEven (vector<Ply> move_list) {
-    bool is_over = false;
-    for (Ply move : move_list) {
-        this->board->play_move(move, true);
-        this->positions.push_back(this->board->getFen(false));
-
-        is_over = checkRepetitions ();
-
-        this->board->undo_move ();
-        this->positions.pop_back ();
-
-        if (is_over) return true;
+void Engine::addInHashMap(U64 position) {
+    int nb = 0;
+    if (this->positions.find(position) != this->positions.end()) {
+        nb = this->positions[position];
     }
-    return false;
+    this->positions[position] = nb + 1;
+}
+
+void Engine::removeInHashMap(U64 position) {
+    this->positions[position] -= 1;// max(this->positions[position] - 1, 0);
 }
 
 /*************** End useful funcs for deep search ***************/
@@ -282,7 +273,7 @@ bool Engine::checkIfEven (vector<Ply> move_list) {
 Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     
     // We check for repetitions
-    if (checkRepetitions ()) {
+    if (checkRepetitions (this->zobrist_hash_key)) {
         return Score (0);
     }
 
@@ -290,7 +281,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
     vector<Move> move_list = sortMoves ();    
     int size = move_list.size();
-    bool exact_score = false;
     bool end_condition = depth == 0 || size == 0 || this->board->nb_plies_50_rule == 100;
 
 
@@ -313,8 +303,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
         // We play the move and we push back the new position to check repetitions
         U64 old_key = this->makeMove(move_list[i].ply);
-        string pos = this->board->getFen(false);
-        this->positions.push_back (pos);
+        addInHashMap(this->zobrist_hash_key);
 
         this->searchPly++;
 
@@ -322,13 +311,12 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         Score score = AlphaBetaNegamax (depth - 1, Score(-beta.score), Score(-alpha.score));
         score.score *= -1;
 
-
         score.plies.push_back(move_list[i].ply);
 
-
+        removeInHashMap(this->zobrist_hash_key);
         this->undoMove(old_key);
         this->searchPly--;
-        this->positions.pop_back();
+
 
 
         
@@ -351,7 +339,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         }
 
         if (score > alpha) {
-            exact_score = true;
             alpha = score;
         }
     }
@@ -380,9 +367,9 @@ Score Engine::inDepthAnalysis (int depth, int alpha_score, int beta_score) {
 
 int expValue (int value, int count, bool plus) {
     if (plus)
-        return min(value + (int) exp(count), mate_value);
+        return (int) min(value + exp(count), (double) mate_value);
     else
-        return max (value - (int) exp(count), -mate_value);
+        return (int) max (value - exp(count), (double) -mate_value);
 }
 
 

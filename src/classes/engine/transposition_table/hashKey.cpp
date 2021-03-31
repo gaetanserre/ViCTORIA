@@ -18,7 +18,7 @@ U64 piece_keys [12][64];
 
 U64 enpassant_keys [64];
 
-U64 castle_keys [16];
+U64 castlings_keys [16];
 
 U64 side_key;
 
@@ -39,7 +39,7 @@ void initRandomKeys () {
 
     for (int castlings = 0; castlings < 16; castlings++)
         // init castlings keys
-        castle_keys[castlings] = get_64_random();
+        castlings_keys[castlings] = get_64_random();
     
     // init side key
     side_key = get_64_random();
@@ -103,7 +103,7 @@ U64 generateHashKey (Board* board) {
         final_hash ^= enpassant_keys[squareToIdx(board->getEnPassantSquare())];
     }
 
-    final_hash ^= castle_keys[getCastlingsKey(board)];
+    final_hash ^= castlings_keys[getCastlingsKey(board)];
 
     if (!board->isWhite())
         final_hash ^= side_key;

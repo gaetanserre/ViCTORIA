@@ -57,14 +57,14 @@ void Engine::parseExpr(string expr) {
 
         this->not_in_opening_table = !this->startpos;
 
-        this->positions.push_back(this->board->getFen(false));
+        addInHashMap(generateHashKey(this->board));
 
         if (res.size() > moves_idx+1 && res[moves_idx] == "moves") {
             for (int i = moves_idx+1; i<res.size(); i++) {
                 this->board->computeLegalMoves();
                 this->board->play_move(res[i]);
                 this->moves.push_back(Board::StringToPly(res[i]));
-                this->positions.push_back(this->board->getFen(false));
+                addInHashMap(generateHashKey(this->board));
             }
         }
 
@@ -92,7 +92,7 @@ void Engine::parseExpr(string expr) {
         this->board->computeLegalMoves();
         this->board->play_move(res[1]);
 
-        this->positions.push_back(this->board->getFen(false));
+        addInHashMap(generateHashKey(this->board));
 
         this->board->printPieces();
 
@@ -153,6 +153,12 @@ void Engine::parseExpr(string expr) {
 
     else if (expr == "hash") {
         cout << this->zobrist_hash_key << endl;
+    }
+
+    else if (expr == "hashMap") {
+        for (auto pair : this->positions) {
+            cout << pair.first << " : " << pair.second << endl;
+        }
     }
 
     /*else if (res[0] == "trans") {

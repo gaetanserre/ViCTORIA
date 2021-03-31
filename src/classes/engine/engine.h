@@ -7,6 +7,7 @@
 #include <thread>
 #include <future>
 #include <chrono>
+#include <unordered_map>
 #include "score/score.h"
 #include "constants/capture_table.h"
 #include "transposition_table/hashKey.h"
@@ -54,28 +55,28 @@ class Engine {
 
         vector<Move> PlyToMove (vector<Ply> move_list);
         vector<Move> sortMoves ();
-        bool checkRepetitions ();
-        bool checkIfEven (vector<Ply> move_list);
+        bool checkRepetitions (U64 position);
         /*************** End useful funcs for in-depth search ***************/
 
         /*************** Begin Heuristics funcs ***************/
         bool NullPruning (Score beta, int depth, Score &res);
         /*************** End Heuristics funcs ***************/
 
-        /*************** Begin in-depth search funcs ***************/
-        U64 makeMove (Ply move);
-        void undoMove (U64 hash_key);
-
         /*************** Begin evaluation functions ***************/
         Score evalPosition(Board* board);
         /*************** End evaluation functions ***************/
+
+        /*************** Begin in-depth search funcs ***************/
+        U64 makeMove (Ply move);
+        void undoMove (U64 hash_key);
+        void addInHashMap(U64 position);
+        void removeInHashMap(U64 position);
 
         Score AlphaBetaNegamax (int depth, Score alpha, Score beta);
 
         Score inDepthAnalysis (int depth, int alpha_score, int beta_score);
         void IterativeDepthAnalysis (int depth);
 
-        void threadDepthAnalysis (future<void> future_object, int depth);
         /*************** End in-depth search funcs ***************/
 
         /*************** Attributes ***************/
@@ -95,7 +96,7 @@ class Engine {
         Score best_move;
 
         vector<Ply> moves;
-        vector<string> positions;
+        unordered_map<U64, int> positions;
 
         /*************** Transposition tables attributes ***************/
         U64 zobrist_hash_key;
