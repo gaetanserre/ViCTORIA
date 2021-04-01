@@ -64,10 +64,10 @@ bool Score::operator!= (Score s) {
 
 bool Score::operator> (Score s) {
     if (this->score == -mate_value && s.score == -mate_value) {
-        return (this->plies.size() > s.plies.size() ? true : false);
+        return this->plies.size() > s.plies.size();
 
     } else if (this->score == mate_value && s.score == mate_value) {
-        return (this->plies.size() < s.plies.size() ? true : false);
+        return this->plies.size() < s.plies.size();
 
     } else {
         return this->score > s.score;
