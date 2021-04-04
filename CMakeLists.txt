@@ -44,8 +44,9 @@ add_executable(ViCTORIA
         src/classes/engine/transposition_table/hash.h
         src/classes/engine/transposition_table/hashKey.cpp
         src/classes/engine/transposition_table/hashKey.h
+        src/classes/engine/evaluator/evaluator.h
+        src/classes/engine/evaluator/evaluator.cpp
         src/classes/engine/engine.cpp
         src/classes/engine/engine.h
-        src/classes/engine/evaluation.cpp
         src/classes/engine/parse_expr.cpp
         src/main.cpp)

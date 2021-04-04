@@ -1,9 +1,10 @@
 #include "engine.h"
 
-Engine::Engine(string path) {
+Engine::Engine(string path, Evaluator evaluator) {
     this->name = "ViCTORIA chess engine";
     this->board = new Board();
     this->board->init();
+    this->evaluator = evaluator;
 
     this->killerMoves = vector<Ply> (this->maxDepth);
 
@@ -285,7 +286,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 
     if (end_condition) {
-        Score val = evalPosition(this->board);
+        Score val = this->evaluator.evalPosition(this->board, this->end_game);
         val.score *= white ? 1 : -1;
         return val;
     }

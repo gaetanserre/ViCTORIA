@@ -134,7 +134,7 @@ void Engine::parseExpr(string expr) {
 
         this->board->computeLegalMoves();
         u_int64_t start = millis();
-        Score s = evalPosition(this->board);
+        Score s = this->evaluator.evalPosition(this->board, this->end_game);
         u_int64_t dur = millis() - start;
         s.print_info(1, dur, this->board->isWhite());
     }
@@ -237,7 +237,7 @@ void Engine::parseGoCommand (vector<string> args) {
     /*
         We check if we will search for the next move in the opening book
     */
-    bool direct_analysis = !(this->moves.size()/2 < 10 && !not_in_opening_table);
+    bool direct_analysis = !(this->moves.size()/2 < 10 && !this->not_in_opening_table);
 
     /*
         command: go infinite
@@ -276,7 +276,7 @@ void Engine::parseGoCommand (vector<string> args) {
     */
    else if (args.size() == 3 && args[1] == "depth") {
        int depth = stoi(args[2]);
-       launchDepthSearch (depth, direct_analysis);
+       launchDepthSearch (depth, true);
        this->best_move.print();
    }
 

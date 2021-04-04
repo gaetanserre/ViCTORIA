@@ -2,7 +2,9 @@
 
 int main (int argc, char** argv) {
 
-    Engine engine (argv[0]);
+    Evaluator evaluator;
+    Engine engine (argv[0], evaluator);
+
     string input;
     while (input != "quit") {
         getline(cin, input);

@@ -7,11 +7,10 @@
 #include <thread>
 #include <future>
 #include <chrono>
-#include <unordered_map>
-#include "score/score.h"
 #include "constants/capture_table.h"
 #include "transposition_table/hashKey.h"
 #include "transposition_table/hash.h"
+#include "evaluator/evaluator.h"
 
 
 struct Move
@@ -23,63 +22,19 @@ struct Move
 
 class Engine {
     public:
-        Engine(string path);
+        Engine(string path, Evaluator evaluator);
         ~Engine();
         void parseExpr(string expr);
 
     private:
 
-        string transform_path (string path);
-
-        /*************** Begin time mesuring funcs ***************/
-        static u_int64_t millis() {
-            return chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::
-                   now().time_since_epoch()).count();
-        }
-        /*************** End time mesuring funcs ***************/
+        /*************** Attributes ***************/
 
         string name;
 
         Board* board;
 
-        /*************** Begin useful funcs for parseExpr ***************/
-        void parseGoCommand (vector<string> args);
-        void launchTimeThread (u_int64_t dur, bool direct_analysis);
-        void launchDepthSearch (int depth, bool direct_analysis);
-        /*************** End useful funcs for parseExpr ***************/
-
-
-        void searchOpeningBook (int depth);
-
-        /*************** Begin useful funcs for in-depth search ***************/
-
-        vector<Move> PlyToMove (vector<Ply> move_list);
-        vector<Move> sortMoves ();
-        bool checkRepetitions (U64 position);
-        /*************** End useful funcs for in-depth search ***************/
-
-        /*************** Begin Heuristics funcs ***************/
-        bool NullPruning (Score beta, int depth, Score &res);
-        /*************** End Heuristics funcs ***************/
-
-        /*************** Begin evaluation functions ***************/
-        Score evalPosition(Board* board);
-        /*************** End evaluation functions ***************/
-
-        /*************** Begin in-depth search funcs ***************/
-        U64 makeMove (Ply move);
-        void undoMove (U64 hash_key);
-        void addInHashMap(U64 position);
-        void removeInHashMap(U64 position);
-
-        Score AlphaBetaNegamax (int depth, Score alpha, Score beta);
-
-        Score inDepthAnalysis (int depth, int alpha_score, int beta_score);
-        void IterativeDepthAnalysis (int depth);
-
-        /*************** End in-depth search funcs ***************/
-
-        /*************** Attributes ***************/
+        Evaluator evaluator;
 
         string opening_table_path;
         string logs_path;
@@ -105,4 +60,48 @@ class Engine {
         /*************** Thread attributes ***************/
         bool terminate_thread = false;
         bool is_terminated;
+
+        string transform_path (string path);
+
+        /*************** Begin time mesuring funcs ***************/
+        static u_int64_t millis() {
+            return chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::
+                   now().time_since_epoch()).count();
+        }
+        /*************** End time mesuring funcs ***************/
+
+
+        /*************** Begin useful funcs for parseExpr ***************/
+        void parseGoCommand (vector<string> args);
+        void launchTimeThread (u_int64_t dur, bool direct_analysis);
+        void launchDepthSearch (int depth, bool direct_analysis);
+        /*************** End useful funcs for parseExpr ***************/
+
+
+        void searchOpeningBook (int depth);
+
+        /*************** Begin useful funcs for in-depth search ***************/
+
+        vector<Move> PlyToMove (vector<Ply> move_list);
+        vector<Move> sortMoves ();
+        bool checkRepetitions (U64 position);
+        /*************** End useful funcs for in-depth search ***************/
+
+        /*************** Begin Heuristics funcs ***************/
+        bool NullPruning (Score beta, int depth, Score &res);
+        /*************** End Heuristics funcs ***************/
+
+        /*************** Begin in-depth search funcs ***************/
+        U64 makeMove (Ply move);
+        void undoMove (U64 hash_key);
+        void addInHashMap(U64 position);
+        void removeInHashMap(U64 position);
+
+        Score AlphaBetaNegamax (int depth, Score alpha, Score beta);
+
+        Score inDepthAnalysis (int depth, int alpha_score, int beta_score);
+        void IterativeDepthAnalysis (int depth);
+
+        /*************** End in-depth search funcs ***************/
+
 };
