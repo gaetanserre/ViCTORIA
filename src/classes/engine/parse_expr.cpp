@@ -85,6 +85,12 @@ void Engine::parseExpr(string expr) {
         cout << "readyok" << endl;
     }
 
+    else if (res.size() >= 3 && res[0] == "set" && res[1] == "openings") {
+        for (int i = 2; i<res.size(); i++) {
+            this->opening_table_path += res[i];
+        }
+    }
+
     /************ debug commands ************/
 
     else if (res.size() == 2 && res[0] == "play") {
@@ -237,7 +243,7 @@ void Engine::parseGoCommand (vector<string> args) {
     /*
         We check if we will search for the next move in the opening book
     */
-    bool direct_analysis = !(this->moves.size()/2 < 10 && !this->not_in_opening_table);
+    bool direct_analysis = !(this->moves.size()/2 < 10 && !this->not_in_opening_table && !this->opening_table_path.empty());
 
     /*
         command: go infinite
@@ -276,7 +282,7 @@ void Engine::parseGoCommand (vector<string> args) {
     */
    else if (args.size() == 3 && args[1] == "depth") {
        int depth = stoi(args[2]);
-       launchDepthSearch (depth, true);
+       launchDepthSearch (depth, direct_analysis);
        this->best_move.print();
    }
 

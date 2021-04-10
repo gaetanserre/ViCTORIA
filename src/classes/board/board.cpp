@@ -652,13 +652,13 @@ void Board::computeLegalMoves () {
                         if (check_move({dep, stop})) {
                             if (this->squares[i]->getName() == 'p' && stop.file == file) {
                                 
-                                this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
-                                this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
-                                this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
-                                this->legal_moves.push_back(Ply (dep, stop, true, 'q'));
+                                this->legal_moves.emplace_back(dep, stop, true, 'q');
+                                this->legal_moves.emplace_back(dep, stop, true, 'q');
+                                this->legal_moves.emplace_back(Ply (dep, stop, true, 'q'));
+                                this->legal_moves.emplace_back(Ply (dep, stop, true, 'q'));
                             }
                             else
-                                this->legal_moves.push_back(Ply (dep, stop));
+                                this->legal_moves.emplace_back(Ply (dep, stop));
                         }
                     }
                 }

@@ -36,6 +36,7 @@ class Engine {
 
         Evaluator evaluator;
 
+
         string opening_table_path;
         string logs_path;
         bool not_in_opening_table = false;
@@ -57,11 +58,12 @@ class Engine {
         U64 zobrist_hash_key;
         Hash* transposition_table;
 
+
         /*************** Thread attributes ***************/
         bool terminate_thread = false;
         bool is_terminated;
 
-        string transform_path (string path);
+        static string transform_path (string path);
 
         /*************** Begin time mesuring funcs ***************/
         static u_int64_t millis() {
@@ -86,10 +88,6 @@ class Engine {
         vector<Move> sortMoves ();
         bool checkRepetitions (U64 position);
         /*************** End useful funcs for in-depth search ***************/
-
-        /*************** Begin Heuristics funcs ***************/
-        bool NullPruning (Score beta, int depth, Score &res);
-        /*************** End Heuristics funcs ***************/
 
         /*************** Begin in-depth search funcs ***************/
         U64 makeMove (Ply move);

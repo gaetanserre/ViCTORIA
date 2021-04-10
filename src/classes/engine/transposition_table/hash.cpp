@@ -1,11 +1,12 @@
 #include "hash.h"
 
 Score ProbeHash (int depth, U64 key, Hash* transposition_table, bool white) {
-    Hash* phashe = &transposition_table[key % transposition_table_size];
+    Hash* phashe = &(transposition_table[key % transposition_table_size]);
 
     if (phashe->key == key) {
         if (phashe->depth >= depth) {
-            Score s = phashe->score;
+            Score s = Score(phashe->score.score);
+            s.plies = vector<Ply>(phashe->score.plies);
             if (phashe->white != white)
                 s.score *= -1;
             return s;
@@ -15,7 +16,7 @@ Score ProbeHash (int depth, U64 key, Hash* transposition_table, bool white) {
 }
 
 void RecordHash (int depth, Score score, U64 key, Hash* transposition_table, bool white) {
-    Hash * phashe = &transposition_table[key % transposition_table_size];
+    Hash * phashe = &(transposition_table[key % transposition_table_size]);
 
     if (depth > phashe->depth) {
         phashe->key = key;

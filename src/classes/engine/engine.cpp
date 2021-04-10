@@ -13,7 +13,7 @@ Engine::Engine(string path, Evaluator evaluator) {
     this->zobrist_hash_key = generateHashKey(this->board);
 
     string dir_path = transform_path(std::move(path));
-    this->opening_table_path = dir_path + "/books/modern_openings.pgn";
+    this->opening_table_path = "";
     this->logs_path = dir_path + "/logs/logs.txt";
 
     cout << this->name << endl;
@@ -142,25 +142,6 @@ void Engine::searchOpeningBook (int depth) {
 }
 
 /*************** End search in opening book functions ***************/
-
-
-
-/*************** Begin Heuristics funcs ***************/
-
-bool Engine::NullPruning (Score beta, int depth, Score &res) {
-    this->board->changeSide();
-    Score score = AlphaBetaNegamax (depth - 1 - 2, Score (-beta.score), Score (-beta.score+1));
-    this->board->changeSide();
-    score.score = -score.score;
-
-    if (score.score >= beta.score) {
-        res = beta;
-        return true;
-    }
-    return false;
-}
-
-/*************** End Heuristics funcs ***************/
 
 
 
@@ -318,8 +299,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         this->undoMove(old_key);
         this->searchPly--;
 
-
-
         
         if (score.score >= beta.score) {
             
@@ -343,7 +322,6 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             alpha = score;
         }
     }
-
     return alpha;
 }
 

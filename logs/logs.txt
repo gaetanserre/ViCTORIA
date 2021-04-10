@@ -262,3 +262,210 @@ quit
 go depth 5
 go depth 5
 quit
+ h 5
+go depth 5
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves
+go depth 4
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves b1c3
+go depth 4
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves b1c3 c7c5
+go depth 4
+go depth 4
+go depth 4
+go depth 5
+quit
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4 c3d3
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4 c3d3 h7g8
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4 c3d3 h7g8 d3b1
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4 c3d3 h7g8 d3b1 g8h8
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4 c3d3 h7g8 d3b1 g8h8 b1g6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4 c3d3 h7g8 d3b1 g8h8 b1g6 a6a5
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4 c3d3 h7g8 d3b1 g8h8 b1g6 a6a5 f4e6
+go depth 3
+position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves d2d4 b8c6 c1f4 d7d5 b1c3 c8f5 e2e4 d5e4 f1b5 a7a6 b5c6 b7c6 d1h5 f5g6 h5g5 d8d4 f4c7 h7h6 g5g4 g8f6 g4f4 f6h5 f4h4 f7f5 g1f3 d4d7 c3e4 f5e4 a1d1 d7c7 f3d2 a8d8 e1g1 e7e5 g1h1 h5f4 f1e1 f8c5 a2a3 e8g8 h2h3 g8h8 a3a4 f8e8 a4a5 c7a5 d2c4 f4g2 h1g2 c5f2 h4f2 d8d1 c4a5 e4e3 e1e3 d1b1 c2c4 c6c5 a5c6 h6h5 c6e5 h8g8 e5g6 e8e3 f2e3 b1b2 g2f3 g8h7 e3c3 b2h2 f3g3 h2h1 g3g2 h1b1 g6f4 h5h4 c3d3 h7g8 d3b1 g8h8 b1g6 a6a5 f4e6 a5a4
+go depth 3
+
+go depth 4
+set openings ../books/modern_openings.pgn
+go depth 3
+play d2d4
+go depth 3
+quit
+go depth 3
+go depth 5
+set openings ../books/modern_openings.pgn
+go depth 5
+go depth 5
+go depth 5
+go depth 5
+go depth 5
+go depth 5
+go depth 5
+go depth 5
+go depth 5
+go depth 5
+go depth 3
+go depth 3
+go depth 4
+go depth 5
+go depth 5
