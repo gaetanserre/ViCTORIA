@@ -246,3 +246,19 @@ quit
 position fen 8/8/3k4/8/1P6/1K6/8/8 w - - 0 1
 go depth 13
 quit
+go depth 5
+go depth 5
+quit
+go depth 5
+quit
+go depth 5
+go depth 5
+go depth 3
+go depth 4
+go depth 3
+go depth 4
+go depth 4
+go depth 4
+go depth 5
+go depth 5
+go depth 5

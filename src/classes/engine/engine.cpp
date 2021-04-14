@@ -249,6 +249,30 @@ void Engine::removeInHashMap(U64 position) {
     this->positions[position] -= 1;// max(this->positions[position] - 1, 0);
 }
 
+bool Engine::checkRepetitionsTrans(const vector<Ply>& plies) {
+    vector<U64> keys;
+    int count = 0;
+    bool rep = false;
+    for (Ply ply : plies){
+        count++;
+        keys.push_back(this->zobrist_hash_key);
+        this->makeMove(ply);
+        addInHashMap(this->zobrist_hash_key);
+        if (checkRepetitions(this->zobrist_hash_key)) {
+            rep = true;
+            break;
+        }
+    }
+
+
+    for (int i = count-1; i>=0; i--) {
+        removeInHashMap(this->zobrist_hash_key);
+        undoMove(keys[count]);
+    }
+
+    return rep;
+}
+
 /*************** End useful funcs for deep search ***************/
 
 
@@ -276,7 +300,10 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
     Score transposition = ProbeHash(depth, this->zobrist_hash_key, this->transposition_table, white);
     if (transposition.score != unknown_value) {
-        return transposition;
+        if (checkRepetitionsTrans(transposition.plies))
+            return Score(0);
+        else
+         return transposition;
     }
 
     bool exact_value = false;

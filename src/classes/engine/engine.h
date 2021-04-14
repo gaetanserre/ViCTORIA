@@ -83,10 +83,10 @@ class Engine {
         void searchOpeningBook (int depth);
 
         /*************** Begin useful funcs for in-depth search ***************/
-
         vector<Move> PlyToMove (vector<Ply> move_list);
         vector<Move> sortMoves ();
         bool checkRepetitions (U64 position);
+        bool checkRepetitionsTrans(const vector<Ply>& plies);
         /*************** End useful funcs for in-depth search ***************/
 
         /*************** Begin in-depth search funcs ***************/
