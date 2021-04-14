@@ -246,7 +246,7 @@ void Engine::addInHashMap(U64 position) {
 }
 
 void Engine::removeInHashMap(U64 position) {
-    this->positions[position] -= 1;// max(this->positions[position] - 1, 0);
+    this->positions[position] -= 1;
 }
 
 bool Engine::checkRepetitionsTrans(const vector<Ply>& plies) {
@@ -255,8 +255,7 @@ bool Engine::checkRepetitionsTrans(const vector<Ply>& plies) {
     bool rep = false;
     for (Ply ply : plies){
         count++;
-        keys.push_back(this->zobrist_hash_key);
-        this->makeMove(ply);
+        keys.push_back(this->makeMove(ply));
         addInHashMap(this->zobrist_hash_key);
         if (checkRepetitions(this->zobrist_hash_key)) {
             rep = true;
@@ -267,7 +266,7 @@ bool Engine::checkRepetitionsTrans(const vector<Ply>& plies) {
 
     for (int i = count-1; i>=0; i--) {
         removeInHashMap(this->zobrist_hash_key);
-        undoMove(keys[count]);
+        undoMove(keys[i]);
     }
 
     return rep;
