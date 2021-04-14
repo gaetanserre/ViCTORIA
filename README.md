@@ -43,8 +43,7 @@ UCI commands:
 ## Evaluation function
 Among other thing, the evaluation function takes into account:
 + Material score
-+ Mobility score
-+ Pieces/position tables
++ Pieces/squares tables
 + Different evaluation for end game (differents pieces/position tables, pawn value is slightly increased, etc...)
 
 ## Features

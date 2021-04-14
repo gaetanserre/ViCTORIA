@@ -5,6 +5,7 @@ Engine::Engine(string path, Evaluator evaluator) {
     this->board = new Board();
     this->board->init();
     this->evaluator = evaluator;
+    this->transposition_table = (Hash*) malloc(transposition_table_size * sizeof(Hash));
 
     this->killerMoves = vector<Ply> (this->maxDepth);
 
@@ -21,6 +22,7 @@ Engine::Engine(string path, Evaluator evaluator) {
 
 
 Engine::~Engine() {
+    free(this->transposition_table);
     delete this->board;
 }
 
@@ -272,6 +274,12 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         return val;
     }
 
+    Score transposition = ProbeHash(depth, this->zobrist_hash_key, this->transposition_table, white);
+    if (transposition.score != unknown_value) {
+        return transposition;
+    }
+
+    bool exact_value = false;
     this->nodes++;
 
     for (int i = 0; i<size; i++) {
@@ -319,9 +327,12 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         }
 
         if (score > alpha) {
+            exact_value = true;
             alpha = score;
         }
     }
+    if (exact_value)
+        RecordHash(depth, alpha, this->zobrist_hash_key, this->transposition_table, white);
     return alpha;
 }
 

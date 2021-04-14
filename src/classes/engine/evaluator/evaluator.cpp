@@ -39,23 +39,26 @@ void Evaluator::getPawnsInfos(unordered_map<int, int> pawn_columns, int &nb_isol
     nb_doubled = 0;
     nb_isolated = 0;
 
-    int next = -1;
+    int prev = -1;
     int nb_empty = 1;
+    bool pawn = false;
 
     for (int i = 0; i<9; i++) {
         if (pawn_columns.find(i) != pawn_columns.end()) {
             if (pawn_columns[i] >= 2)
                 nb_doubled += pawn_columns[i] - 1;
 
-            if (next != -1 && next == i - 1) {
-                nb_empty--;
+            pawn = true;
+            if (prev != -1 && prev == i - 1) {
+                nb_empty = max(nb_empty - 1, 0);
             }
-            next = i;
-        } else {
+            prev = i;
+        } else if (pawn) {
             nb_empty++;
             if (nb_empty == 2) {
                 nb_isolated++;
                 nb_empty = 1;
+                pawn = false;
             }
         }
     }
@@ -153,11 +156,11 @@ Score Evaluator::evalPosition(Board* board, bool end_game) {
         if (white) {
             if (board->has_castling_w) castlings_score += 100;
             else castlings_score += 25 * getNbCastlings (legal_moves, board->squares, white);
-            material_score -= 50 * (Wdoubled_pawn + Wisolated_pawn) + 50 * (Bdoubled_pawn + Bisolated_pawn);
+            material_score -= 25 * (Wdoubled_pawn + Wisolated_pawn) + 25 * (Bdoubled_pawn + Bisolated_pawn);
         } else {
             if (board->has_castling_b) castlings_score -= 100;
             else castlings_score -= 25 * getNbCastlings (legal_moves, board->squares, white);
-            material_score += 50 * (Bdoubled_pawn + Bisolated_pawn) - 50 * (Wdoubled_pawn + Wisolated_pawn);
+            material_score += 25 * (Bdoubled_pawn + Bisolated_pawn) - 25 * (Wdoubled_pawn + Wisolated_pawn);
         }
 
         int score = (material_score + castlings_score);
