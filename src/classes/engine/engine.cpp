@@ -253,16 +253,15 @@ bool Engine::checkRepetitionsTrans(const vector<Ply>& plies) {
     vector<U64> keys;
     int count = 0;
     bool rep = false;
-    for (Ply ply : plies){
+    for (int i = plies.size()-1; i>=0; i--){
         count++;
-        keys.push_back(this->makeMove(ply));
+        keys.push_back(this->makeMove(plies[i]));
         addInHashMap(this->zobrist_hash_key);
         if (checkRepetitions(this->zobrist_hash_key)) {
             rep = true;
             break;
         }
     }
-
 
     for (int i = count-1; i>=0; i--) {
         removeInHashMap(this->zobrist_hash_key);
