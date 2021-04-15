@@ -9,8 +9,10 @@ Score ProbeHash (int depth, U64 key, Hash* transposition_table, bool white) {
         if (phashe->depth >= depth) {
             Score s = Score(phashe->score.score);
             s.plies = vector<Ply>();
-            for (int i=0; i<depth; i++)
+            int size = phashe->score.plies.size();
+            for (int i=size-1; i>=size-depth; i--) {
                 s.plies.push_back(phashe->score.plies[i]);
+            }
             if (phashe->white != white)
                 s.score *= -1;
             return s;
