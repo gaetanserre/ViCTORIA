@@ -267,7 +267,6 @@ bool Engine::checkRepetitionsTrans(const vector<Ply>& plies) {
         removeInHashMap(this->zobrist_hash_key);
         undoMove(keys[i]);
     }
-
     return rep;
 }
 
