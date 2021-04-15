@@ -298,11 +298,8 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
     }
 
     Score transposition = ProbeHash(depth, this->zobrist_hash_key, this->transposition_table, white);
-    if (transposition.score != unknown_value) {
-        if (checkRepetitionsTrans(transposition.plies))
-            return Score(0);
-        else
-         return transposition;
+    if (transposition.score != unknown_value && !checkRepetitionsTrans(transposition.plies)) {
+        return transposition;
     }
 
     bool exact_value = false;
