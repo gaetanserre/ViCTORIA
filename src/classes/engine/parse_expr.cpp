@@ -14,7 +14,6 @@ vector<string> split (const string &s, char delim) {
 }
 
 void Engine::parseExpr(string expr) {
-
     ofstream log_file;
     log_file.open(this->logs_path, ios::app);
     log_file << expr << endl;
@@ -167,7 +166,7 @@ void Engine::parseExpr(string expr) {
         }
     }
 
-    /*else if (res[0] == "trans") {
+    else if (res[0] == "trans") {
         if (res[1] == "all") {
 
             for (int i = 0; i<transposition_table_size; i++) {
@@ -184,7 +183,7 @@ void Engine::parseExpr(string expr) {
             cout << idx << endl;
             cout << transposition_table[idx].score.score << endl;
         }
-    }*/
+    }
 
     else if (expr != "quit") {
         cout << "Unknown command: " << expr << endl;
@@ -309,6 +308,8 @@ void Engine::parseGoCommand (vector<string> args) {
         * If we have a increment of x seconds, then we can use x seconds to compute a move
         */
        if (total_time < increment) total_time = increment;
+
+       cout << "searching for: " << total_time << " ms" << endl;
 
        launchTimeThread ((u_int64_t) total_time, direct_analysis);
        this->best_move.print();
