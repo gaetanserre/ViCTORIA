@@ -344,7 +344,12 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
                                     && (beta.plies.empty()
                                     || score.plies.size() < beta.plies.size());
 
-            return (check_mate_score ? score : beta);
+            if (check_mate_score) {
+                RecordHash(depth, score, this->zobrist_hash_key, this->transposition_table, white);
+                return score;
+            } else {
+                return beta;
+            }
         }
 
         if (score > alpha) {
@@ -458,7 +463,7 @@ void Engine::IterativeDepthAnalysis (int depth) {
             We check if there is a inevitable checkmate.
             If a checkmate in n moves has been found, it's useless to go deeper than depth n
         */
-        if (bestMove.score == mate_value || bestMove.score == -mate_value) break;
+        if (abs(bestMove.score) == mate_value) break;
     }
     this->is_terminated = true;
 }
