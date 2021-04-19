@@ -249,7 +249,7 @@ void Engine::parseGoCommand (vector<string> args) {
     */
            
 
-    if (args.size() == 2 && args[1] == "infinite") {
+    if (args.size() >= 2 && (args[1] == "infinite" || args[1] == "ponder")) {
         thread t;
         if (direct_analysis)
             t = thread(&Engine::IterativeDepthAnalysis, this, this->maxDepth);
