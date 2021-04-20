@@ -295,10 +295,10 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         return val;
     }
 
-    Score transposition = ProbeHash(depth, this->zobrist_hash_key, this->transposition_table, white);
+    /*Score transposition = ProbeHash(depth, this->zobrist_hash_key, this->transposition_table, white);
     if (transposition.score != unknown_value && !checkRepetitionsTrans(transposition.plies)) {
         return transposition;
-    }
+    }*/
 
     bool exact_value = false;
     this->nodes++;
@@ -345,7 +345,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
                                     || score.plies.size() < beta.plies.size());
 
             if (check_mate_score) {
-                RecordHash(depth, score, this->zobrist_hash_key, this->transposition_table, white);
+                //RecordHash(depth, score, this->zobrist_hash_key, this->transposition_table, white);
                 return score;
             } else {
                 return beta;
@@ -357,8 +357,8 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             alpha = score;
         }
     }
-    if (exact_value)
-        RecordHash(depth, alpha, this->zobrist_hash_key, this->transposition_table, white);
+    /*if (exact_value)
+        RecordHash(depth, alpha, this->zobrist_hash_key, this->transposition_table, white);*/
     return alpha;
 }
 

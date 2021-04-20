@@ -141,10 +141,10 @@ Score Evaluator::evalPosition(Board* board, bool end_game) {
 
             // Pair of bishop
             if (wB >= 2)
-                material_score += 10;
+                material_score += 30;
 
             if (bB >= 2)
-                material_score -= 10;
+                material_score -= 30;
 
             // Increase pawn value
             material_score += wP * 150;
@@ -156,11 +156,11 @@ Score Evaluator::evalPosition(Board* board, bool end_game) {
         if (white) {
             if (board->has_castling_w) castlings_score += 100;
             else castlings_score += 25 * getNbCastlings (legal_moves, board->squares, white);
-            material_score -= 25 * (Wdoubled_pawn + Wisolated_pawn) + 25 * (Bdoubled_pawn + Bisolated_pawn);
+            material_score -= 10 * (Wdoubled_pawn + Wisolated_pawn) + 10 * (Bdoubled_pawn + Bisolated_pawn);
         } else {
             if (board->has_castling_b) castlings_score -= 100;
             else castlings_score -= 25 * getNbCastlings (legal_moves, board->squares, white);
-            material_score += 25 * (Bdoubled_pawn + Bisolated_pawn) - 25 * (Wdoubled_pawn + Wisolated_pawn);
+            material_score += 10 * (Bdoubled_pawn + Bisolated_pawn) - 10 * (Wdoubled_pawn + Wisolated_pawn);
         }
 
         int score = (material_score + castlings_score);

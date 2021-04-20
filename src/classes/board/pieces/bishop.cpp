@@ -5,7 +5,7 @@ Bishop::Bishop(Square position, bool white, Magic_Bitboard* mg) : Piece(position
     this->name = 'b';
     this->name_str = "Bishop";
 
-    this->pieceValue = 325;
+    this->pieceValue = 330;
 
     this->table = &bishop_table[0];
     this->table_end_game = &bishop_table[0];
