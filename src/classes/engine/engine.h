@@ -48,6 +48,7 @@ class Engine {
 
         bool startpos = true;
         bool end_game;
+        bool early_game;
 
         Score best_move;
 
@@ -74,6 +75,7 @@ class Engine {
 
 
         /*************** Begin useful funcs for parseExpr ***************/
+        void definePartGame ();
         void parseGoCommand (vector<string> args);
         void launchTimeThread (u_int64_t dur, bool direct_analysis);
         void launchDepthSearch (int depth, bool direct_analysis);

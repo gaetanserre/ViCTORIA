@@ -218,11 +218,35 @@ void Engine::launchDepthSearch (int depth, bool direct_analysis) {
         IterativeDepthAnalysis(depth);
 }
 
+/*
+ * Define if the position is early game, mid game or end game
+ */
+void Engine::definePartGame() {
+    if (this->moves.size() < 20) {
+        this->early_game = true;
+        this->end_game = false;
+    } else {
+        int nb_piece_min = 0;
+        for (auto & square : this->board->squares) {
+            if (checkIfPiece(square)) {
+                char name_piece = square->getName();
+                // If the piece is not a pawn or a king
+                if (name_piece != 'k' && name_piece != 'K' && name_piece != 'p' && name_piece != 'P')
+                    nb_piece_min ++;
+            }
+        }
+        this->early_game = false;
+        this->end_game = nb_piece_min <= 2;
+    }
 
+
+}
+
+double total_time = 0;
 void Engine::parseGoCommand (vector<string> args) {
 
     /*
-        We reset the "thread killers"
+    * We reset the "thread killers"
     */
     this->terminate_thread = false;
     this->is_terminated = false;
@@ -230,22 +254,19 @@ void Engine::parseGoCommand (vector<string> args) {
 
 
     /*
-        We reset the old best move
+    * We reset the old best move
     */
     this->best_move = Score();
 
-    /*
-        We define what end game is 
-    */
-    this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
+    definePartGame();
 
     /*
-        We check if we will search for the next move in the opening book
+    * We check if we will search for the next move in the opening book
     */
     bool direct_analysis = !(this->moves.size()/2 < 10 && !this->not_in_opening_table && !this->opening_table_path.empty());
 
     /*
-        command: go infinite
+    * command: go infinite
     */
            
 
@@ -268,7 +289,7 @@ void Engine::parseGoCommand (vector<string> args) {
     }
 
     /*
-        command: go movetime n
+    * command: go movetime n
     */
 
     else if (args.size() == 3 && args[1] == "movetime") {
@@ -277,7 +298,7 @@ void Engine::parseGoCommand (vector<string> args) {
     }
 
     /*
-        command: go depth n
+    * command: go depth n
     */
    else if (args.size() == 3 && args[1] == "depth") {
        int depth = stoi(args[2]);
@@ -286,37 +307,62 @@ void Engine::parseGoCommand (vector<string> args) {
    }
 
    /*
-        command: go wtime n1 btime n2 [winc n3 binc n4]
-    */
+   * command: go wtime n1 btime n2 [winc n3 binc n4]
+   */
 
    else if (args.size() >= 5 && args[1] == "wtime") {
-       int move_majorant = 60;
-       double total_time = stod (args[this->board->isWhite() ? 2 : 4]);
-       double increment = 0;
-       int nb_move = this->moves.size() / 2;
+       if (total_time == 0)
+           total_time = stod (args[this->board->isWhite() ? 2 : 4]);
 
+       double time_search;
+
+       double increment = 0;
         if (args.size() >= 8)
             increment = stod (args[this->board->isWhite() ? 6 : 8]);
+        int nb_move = this->moves.size() / 2;
 
-       if (nb_move < move_majorant - 10) {
+       if (this->early_game) {
+           double total_early = total_time/6.0 * 2;
+           int move_majorant = 10;
+           time_search = total_early / move_majorant;
+       }
+
+       else if (! this->end_game) {
+           double total_mid = total_time/6.0 * 3;
+
+           // We remove the moves of the early game
+           nb_move -= 10;
+
+           int move_majorant = 20;
+           if (nb_move < move_majorant - 5)
+               time_search = total_mid / move_majorant;
+           else
+               time_search = stod (args[this->board->isWhite() ? 2 : 4]) / 20;
+       }
+
+       else {
+           time_search = stod (args[this->board->isWhite() ? 2 : 4]) / 20;
+       }
+
+       /*if (nb_move < move_majorant - 10) {
            total_time /= move_majorant - nb_move;
        } else {
            total_time /= 20;
-       }
+       }*/
 
        /*
         * If we have a increment of x seconds, then we can use x seconds to compute a move
         */
-       if (total_time < increment) total_time = increment;
+       if (time_search < increment) time_search = increment;
 
-       cout << "searching for: " << total_time << " ms" << endl;
+       cout << "searching for: " << time_search << " ms" << endl;
 
-       launchTimeThread ((u_int64_t) total_time, direct_analysis);
+       launchTimeThread ((u_int64_t) time_search, direct_analysis);
        this->best_move.print();
    }
 
     /*
-        command: go and all others
+    * command: go and all others
     */
     else {
         int depth = end_game ? 8 : 6;
