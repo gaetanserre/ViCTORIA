@@ -308,6 +308,8 @@ void Engine::parseGoCommand (vector<string> args) {
 
    /*
    * command: go wtime n1 btime n2 [winc n3 binc n4]
+   * I assume the engine need to pass 2/6 of the total time in the early game,
+   * 3/6 in the mid game and the rest in the end game
    */
 
    else if (args.size() >= 5 && args[1] == "wtime") {
