@@ -21,7 +21,7 @@ class Piece {
         virtual bool check_move(Square goal, Piece* squares[], U64 occupancy) = 0;
         virtual bool en_prise(Square goal, Piece* squares[], U64 occupancy) = 0;
 
-        float getPieceValue (bool end_game);
+        float getPieceValue (bool early_game, bool end_game);
 
         
     protected:
@@ -31,10 +31,10 @@ class Piece {
         std::string name_str;
         
         int pieceValue;
+        const float* table_early_game;
         const float* table;
         const float* table_end_game;
 
-        
 };
 
 bool PlusOrMinus(int value1, int value2, int n);

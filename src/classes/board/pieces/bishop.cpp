@@ -1,5 +1,4 @@
 #include "bishop.h"
-#include <math.h>
 
 Bishop::Bishop(Square position, bool white, Magic_Bitboard* mg) : Piece(position, white) {
     this->name = 'b';
@@ -7,6 +6,7 @@ Bishop::Bishop(Square position, bool white, Magic_Bitboard* mg) : Piece(position
 
     this->pieceValue = 330;
 
+    this->table_early_game = &piece_early_game[0];
     this->table = &bishop_table[0];
     this->table_end_game = &bishop_table[0];
 

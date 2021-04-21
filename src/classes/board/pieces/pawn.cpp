@@ -11,6 +11,7 @@ Pawn::Pawn(Square position, bool white,
 
     this->pieceValue = 100;
 
+    this->table_early_game = &pawn_table[0];
     this->table = &pawn_table[0];
     this->table_end_game = &pawn_table_end_game[0];
 }
