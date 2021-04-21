@@ -64,7 +64,7 @@ void Evaluator::getPawnsInfos(unordered_map<int, int> pawn_columns, int &nb_isol
     }
 }
 
-Score Evaluator::evalPosition(Board* board, bool early_game, bool end_game) {
+Score Evaluator::evalPosition(Board* board, bool end_game) {
     vector<Ply> legal_moves = board->getLegalMoves();
     int size = legal_moves.size();
     bool white = board->isWhite();
@@ -88,7 +88,7 @@ Score Evaluator::evalPosition(Board* board, bool early_game, bool end_game) {
 
             if (checkIfPiece(board->squares[i])) {
                 char name = board->squares[i]->getName();
-                material_score += board->squares[i]->getPieceValue(early_game, end_game);
+                material_score += board->squares[i]->getPieceValue(end_game);
 
                 if (name == 'k') {
                     board->squares[i]->isWhite() ? wK++ : bK++;

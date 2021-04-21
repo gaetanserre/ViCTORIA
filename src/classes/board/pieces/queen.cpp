@@ -8,7 +8,6 @@ Queen::Queen (Square position, bool white, Magic_Bitboard* mg) : Piece(position,
 
     this->pieceValue = 900;
 
-    this->table_early_game = &piece_early_game[0];
     this->table = &queen_table[0];
     this->table_end_game = &queen_table[0];
 

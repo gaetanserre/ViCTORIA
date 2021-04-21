@@ -139,7 +139,7 @@ void Engine::parseExpr(string expr) {
 
         this->board->computeLegalMoves();
         u_int64_t start = millis();
-        Score s = this->evaluator.evalPosition(this->board, this->early_game, this->end_game);
+        Score s = this->evaluator.evalPosition(this->board, this->end_game);
         u_int64_t dur = millis() - start;
         s.print_info(1, dur, this->board->isWhite());
     }
@@ -236,7 +236,7 @@ void Engine::definePartGame() {
             }
         }
         this->early_game = false;
-        this->end_game = nb_piece_min <= 4;
+        this->end_game = nb_piece_min <= 2;
     }
 
 

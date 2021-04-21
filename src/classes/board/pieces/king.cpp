@@ -6,7 +6,6 @@ King::King (Square position, bool white) : Piece(position, white) {
 
     this->pieceValue = 2000;
 
-    this->table_early_game = &king_table[0];
     this->table = &king_table[0];
     this->table_end_game = &king_table_end_game[0];
 }
