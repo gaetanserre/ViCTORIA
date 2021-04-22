@@ -8,7 +8,7 @@ Piece::Piece(Square position, bool white) {
 std::string Piece::toString () {
     std::string res = this->white ? "White" : "Black";
     res += " " + this->name_str + " " + this->position.toString();
-    res += " value: " + std::to_string((int) this->getPieceValue(false));
+    res += " value: " + std::to_string((int) this->getPieceValue(false, false));
     
     return res;
 }
@@ -42,14 +42,19 @@ bool checkIfPiece(Piece *p) {
     return p->getName() != 'z';
 }
 
-float Piece::getPieceValue (bool end_game) {
+float Piece::getPieceValue (bool early_game, bool end_game) {
     Square pos = this->white ? this->position : Square (this->position.rank, 8 - this->position.file + 1);
 
     float score = this->pieceValue;
 
-    if (end_game)
+    if (early_game)
+        /*
+         * Interpolation between early and mid game. 60% early 40% mid
+         */
+        score += this->table[squareToIdx(pos)]; // (0.6f * this->table_early_game[squareToIdx(pos)] + 0.4f * this->table[squareToIdx(pos)]);
+    else if (end_game)
         score += this->table_end_game[squareToIdx(pos)];
-    else 
+    else
         score += this->table[squareToIdx(pos)];
 
     return this->white ? score : -score;

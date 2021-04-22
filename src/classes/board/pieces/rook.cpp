@@ -6,6 +6,7 @@ Rook::Rook(Square position, bool white, Magic_Bitboard* mg) : Piece(position, wh
 
     this->pieceValue = 500;
 
+    this->table_early_game = &rook_table[0];
     this->table = &rook_table[0];
     this->table_end_game = &rook_table[0];
 

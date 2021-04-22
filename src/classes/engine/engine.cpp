@@ -290,7 +290,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 
     if (end_condition) {
-        Score val = this->evaluator.evalPosition(this->board, this->end_game);
+        Score val = this->evaluator.evalPosition(this->board, this->early_game, this->end_game);
         val.score *= white ? 1 : -1;
         return val;
     }

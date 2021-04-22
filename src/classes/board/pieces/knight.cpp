@@ -6,6 +6,7 @@ Knight::Knight (Square position, bool white) : Piece(position, white) {
 
     this->pieceValue = 320;
 
+    this->table_early_game = &knight_table_early[0];
     this->table = &knight_table[0];
     this->table_end_game = &knight_table[0];
 }
