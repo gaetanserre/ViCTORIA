@@ -86,7 +86,7 @@ void Engine::parseExpr(string expr) {
 
     else if (res.size() >= 3 && res[0] == "set" && res[1] == "openings") {
         for (int i = 2; i<res.size(); i++) {
-            this->opening_table_path += res[i];
+            this->opening_table_path = res[i];
         }
     }
 
@@ -196,7 +196,7 @@ void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
     if (!direct_analysis)
         t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
     else
-        t = thread(&Engine::IterativeDepthAnalysis, this, this->maxDepth);
+        t = thread(&Engine::IterativeDepthAnalysis, this, this->maxDepth, -1);
         
     u_int64_t start = millis();
     u_int64_t elapsed = millis() - start;
@@ -211,11 +211,11 @@ void Engine::launchTimeThread (u_int64_t dur, bool direct_analysis) {
     t.join();
 }
 
-void Engine::launchDepthSearch (int depth, bool direct_analysis) {
+void Engine::launchDepthSearch (int depth, bool direct_analysis, int nodes_max) {
     if (!direct_analysis)
         searchOpeningBook(depth);
     else
-        IterativeDepthAnalysis(depth);
+        IterativeDepthAnalysis(depth, nodes_max);
 }
 
 /*
@@ -273,7 +273,7 @@ void Engine::parseGoCommand (vector<string> args) {
     if (args.size() >= 2 && (args[1] == "infinite" || args[1] == "ponder")) {
         thread t;
         if (direct_analysis)
-            t = thread(&Engine::IterativeDepthAnalysis, this, this->maxDepth);
+            t = thread(&Engine::IterativeDepthAnalysis, this, this->maxDepth, -1);
         else
             t = thread(&Engine::searchOpeningBook, this, this->maxDepth);
 
@@ -361,6 +361,16 @@ void Engine::parseGoCommand (vector<string> args) {
 
        launchTimeThread ((u_int64_t) time_search, direct_analysis);
        this->best_move.print();
+   }
+
+   /*
+    * commmand: go nodes [nb_nodes]
+    */
+   else if (args.size() == 3 && args[1] == "nodes") {
+       int nb_nodes = stoi(args[2]);
+       cout << nb_nodes << endl;
+        launchDepthSearch(this->maxDepth, direct_analysis, nb_nodes);
+
    }
 
     /*

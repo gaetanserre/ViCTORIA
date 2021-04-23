@@ -37,7 +37,8 @@ UCI commands:
 + `go depth n`
 + `go infinite`: wait for the stop command
 + `go movetime t`: search for t milliseconds
-+ `go wtime t1 btime t2 [winc t3 binc t4]`: White has `t1` ms on clock Black has `t2` ms on clock. White increment their time by `t3` ms and Black increment their time by `t4` ms
++ `go wtime t1 btime t2 [winc t3 binc t4]`: Whites has `t1` ms on clock Blacks has `t2` ms on clock. Whites increment their time by `t3` ms and Blacks increment their time by `t4` ms
++ `go nodes n` search for n nodes (In fact, the number of nodes explored will be a bit greater than *n*)  
 + `set openings path` use the openings book at path (must be in UCI format)
 
 ## Evaluation function

@@ -78,7 +78,7 @@ class Engine {
         void definePartGame ();
         void parseGoCommand (vector<string> args);
         void launchTimeThread (u_int64_t dur, bool direct_analysis);
-        void launchDepthSearch (int depth, bool direct_analysis);
+        void launchDepthSearch (int depth, bool direct_analysis, int nodes_max=-1);
         /*************** End useful funcs for parseExpr ***************/
 
 
@@ -100,7 +100,7 @@ class Engine {
         Score AlphaBetaNegamax (int depth, Score alpha, Score beta);
 
         Score inDepthAnalysis (int depth, int alpha_score, int beta_score);
-        void IterativeDepthAnalysis (int depth);
+        void IterativeDepthAnalysis (int depth, int nodes_max=-1);
 
         /*************** End in-depth search funcs ***************/
 
