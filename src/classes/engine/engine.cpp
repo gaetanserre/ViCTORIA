@@ -290,7 +290,7 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
 
 
     if (end_condition) {
-        Score val = this->evaluator.evalPosition(this->board, this->end_game);
+        Score val = this->evaluator.evalPosition(this->board, this->early_game, this->end_game);
         val.score *= white ? 1 : -1;
         return val;
     }
@@ -389,7 +389,7 @@ int expValue (int value, int count, bool plus) {
 }
 
 
-void Engine::IterativeDepthAnalysis (int depth) {
+void Engine::IterativeDepthAnalysis (int depth, int nodes_max) {
     this->is_terminated = false;
     u_int64_t start = millis();
 
@@ -458,6 +458,12 @@ void Engine::IterativeDepthAnalysis (int depth) {
             this->best_move = bestMove;
             bestMove.print_info(this->nodes, elapsed, this->board->isWhite());
         }
+
+        /*
+         * If we have reached the node limit, we kill the thread and return the last best move
+         */
+        if (nodes_max != -1 && this->nodes >= nodes_max)
+            this->terminate_thread = true;
 
         /* 
             We check if there is a inevitable checkmate.

@@ -9,7 +9,7 @@ using namespace std;
 class Evaluator {
 
     public:
-        Score evalPosition(Board* board, bool end_game);
+        Score evalPosition(Board* board, bool early_game, bool end_game);
 
     private:
 
