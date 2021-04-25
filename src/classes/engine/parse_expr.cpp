@@ -76,7 +76,7 @@ void Engine::parseExpr(string expr) {
 
     else if (expr == "uci") {
         cout << "id name " << this->name << endl;
-        cout << "id author Gaetan Serre" << endl;
+        cout << "id author Gaëtan Serré" << endl;
         cout << "uciok" << endl;
     }
 
