@@ -1,7 +1,7 @@
 #include "engine.h"
 
 Engine::Engine(string path, Evaluator evaluator) {
-    this->name = "ViCTORIA chess engine";
+    this->name = "ViCTORIA";
     this->board = new Board();
     this->board->init();
     this->evaluator = evaluator;
