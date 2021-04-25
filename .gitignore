@@ -4,4 +4,5 @@ out/
 .vscode/
 .idea/
 cmake-build-debug/
+build/
 logs.txt

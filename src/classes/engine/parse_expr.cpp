@@ -135,13 +135,14 @@ void Engine::parseExpr(string expr) {
     }
 
     else if (expr == "eval") {
-        this->end_game = this->board->nb_piece != 0 && this->board->nb_piece <= 8;
-
+        definePartGame();
         this->board->computeLegalMoves();
         u_int64_t start = millis();
         Score s = this->evaluator.evalPosition(this->board, this->end_game);
         u_int64_t dur = millis() - start;
-        s.print_info(1, dur, this->board->isWhite());
+        float score = this->board->isWhite() ? (float) s.score / 100.f : (float) -s.score / 100.f;
+        cout << "Took " << dur << " ms" << endl;
+        cout << "Final evaluation: " << score << " (white side)" << endl;
     }
 
     else if (expr == "sort") {

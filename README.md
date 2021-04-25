@@ -15,12 +15,14 @@ ViCTORIA is not a complete chess program and requires a UCI-compatible graphical
 ## Build
 ViCTORIA is built from scratch, so you don't need any C++ library, only a compiler (min C++ 17).
 
-You need the [Make](https://www.gnu.org/software/make/) software.
+You need [CMake](https://cmake.org/).
 On Windows you can use [Cygwin](https://www.cygwin.com/) to install ```g++``` and ```make```.
 
 Then: 
 ```bash
+mkdir build
 cd build
+cmake..
 make
 ```
 
@@ -28,7 +30,6 @@ In the future, I will provide binaries.
 
 ## Usage
 ```bash
-cd out
 ./ViCTORIA
 ```
 UCI commands:
