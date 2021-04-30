@@ -71,6 +71,11 @@ class Engine {
             return chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::
                    now().time_since_epoch()).count();
         }
+
+        static u_int64_t micros() {
+            return chrono::duration_cast<chrono::microseconds>(chrono::high_resolution_clock::
+                                                               now().time_since_epoch()).count();
+        }
         /*************** End time mesuring funcs ***************/
 
 
