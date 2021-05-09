@@ -1,6 +1,5 @@
 # ViCTORIA
 
-![](images/icon150x150.png)
 
 ViCTORIA is a UCI chess engine built from scratch using C++ 20.
 
@@ -10,7 +9,7 @@ It can perform an analysis in reasonable (10-25 seconds) time between depth 6 an
 
 Its elo rating is 1694 in blitz (February 2021).
 
-ViCTORIA is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably
+ViCTORIA is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably.
 
 ## Build
 ViCTORIA is built from scratch, so you don't need any C++ library, only a compiler (min C++ 17).
@@ -21,7 +20,7 @@ On Windows you can use [Cygwin](https://www.cygwin.com/) to install ```g++``` an
 Then: 
 ```bash
 mkdir build
-cd build
+cd buid
 cmake ..
 make
 ```
@@ -60,4 +59,4 @@ Among other thing, the evaluation function takes into account:
 + Openings book
 
 ## License
-[GNU v3](https://choosealicense.com/licenses/gpl-3.0/)
+[GPL v3](https://choosealicense.com/licenses/gpl-3.0/)

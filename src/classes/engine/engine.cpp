@@ -328,8 +328,12 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
         this->undoMove(old_key);
         this->searchPly--;
 
+        if (score > alpha) {
+            exact_value = true;
+            alpha = score;
+        }
         
-        if (score.score >= beta.score) {
+        if (alpha.score >= beta.score) {
             
             // Check for capture and killer moves
             int i1 = squareToIdx (move_list[i].ply.dep);
@@ -339,22 +343,17 @@ Score Engine::AlphaBetaNegamax (int depth, Score alpha, Score beta) {
             }
 
             // Check if alpha is a checkmate
-            bool check_mate_score = score.score == mate_value
-                                    && !score.plies.empty()
+            bool check_mate_score = alpha.score == mate_value
+                                    && !alpha.plies.empty()
                                     && (beta.plies.empty()
-                                    || score.plies.size() < beta.plies.size());
+                                    || alpha.plies.size() < beta.plies.size());
 
             if (check_mate_score) {
                 //RecordHash(depth, score, this->zobrist_hash_key, this->transposition_table, white);
-                return score;
+                return alpha;
             } else {
                 return beta;
             }
-        }
-
-        if (score > alpha) {
-            exact_value = true;
-            alpha = score;
         }
     }
     /*if (exact_value)
