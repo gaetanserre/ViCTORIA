@@ -3,7 +3,7 @@
 
 ViCTORIA is a UCI chess engine built from scratch using C++ 20.
 
-ViCTORIA performs a in-depth analysis of the position with a handcrafted evaluation function.
+It performs an in-depth analysis and uses a handcrafted evaluation function to evaluate each chess board.
 
 It can perform an analysis in reasonable (10-25 seconds) time between depth 6 and 10+, depending on the number of possible moves.
 
