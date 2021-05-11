@@ -11,6 +11,8 @@ Its elo rating is 1694 in blitz (February 2021).
 
 ViCTORIA is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably.
 
+If you want to see a better version of ViCTORIA powered by machine learning check out [Deep ViCTORIA](https://github.com/LE10EENFAIT/Deep-ViCTORIA).
+
 ## Build
 ViCTORIA is built from scratch, so you don't need any C++ library, only a compiler (min C++ 17).
 
@@ -35,7 +37,7 @@ UCI commands:
 + `position starpos [moves move_list]`
 + `position fen your_fen [moves move_list]`
 + `go depth n`
-+ `go infinite`: wait for the stop command
++ `go infinite`: search until you enter `stop`
 + `go movetime t`: search for t milliseconds
 + `go wtime t1 btime t2 [winc t3 binc t4]`: Whites has `t1` ms on clock Blacks has `t2` ms on clock. Whites increment their time by `t3` ms and Blacks increment their time by `t4` ms
 + `go nodes n` search for n nodes (In fact, the number of nodes explored will be a bit greater than *n*)  
