@@ -34,7 +34,7 @@ In the future, I will provide binaries.
 ./ViCTORIA
 ```
 UCI commands:
-+ `position starpos [moves move_list]`
++ `position startpos [moves move_list]`
 + `position fen your_fen [moves move_list]`
 + `go depth n`
 + `go infinite`: search until you enter `stop`
