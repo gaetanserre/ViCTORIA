@@ -2,9 +2,9 @@
 
 #include <iostream>
 #include <vector>
-#include "../square.h"
+#include "square.h"
 #include "table.h"
-#include "../../bitboard/magic_bitboard.h"
+#include "magic_bitboard.h"
 
 class Piece {
     public:

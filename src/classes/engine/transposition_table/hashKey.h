@@ -1,5 +1,5 @@
 #include <random>
-#include "../../board/board.h"
+#include "board.h"
 
 void resetSeed ();
 void initRandomKeys ();

@@ -1,4 +1,4 @@
-#include "../score/score.h"
+#include "score.h"
 
 #define U64 unsigned long long
 #define transposition_table_size 0xF4240 // 1 000 000 positions

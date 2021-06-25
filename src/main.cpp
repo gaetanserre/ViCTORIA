@@ -1,4 +1,4 @@
-#include "classes/engine/engine.h"
+#include "engine.h"
 
 int main (int argc, char** argv) {
     Evaluator evaluator;

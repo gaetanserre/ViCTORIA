@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <unordered_map>
-#include "../score/score.h"
+#include "score.h"
 using namespace std;
 
 class Evaluator {

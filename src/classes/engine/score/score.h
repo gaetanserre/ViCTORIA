@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../board/board.h"
+#include "board.h"
 
 const int mate_value = 99999;
 const int unknown_value = -100000;

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "pieces/pawn.h"
-#include "pieces/rook.h"
-#include "pieces/knight.h"
-#include "pieces/bishop.h"
-#include "pieces/queen.h"
-#include "pieces/king.h"
-#include "pieces/empty.h"
-#include "../bitboard/magic_bitboard.h"
+#include "pawn.h"
+#include "rook.h"
+#include "knight.h"
+#include "bishop.h"
+#include "queen.h"
+#include "king.h"
+#include "empty.h"
+#include "magic_bitboard.h"
 #include "ply.h"
 
 #include <vector>
