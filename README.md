@@ -11,7 +11,7 @@ Its elo rating is 1694 in blitz (February 2021).
 
 ViCTORIA is not a complete chess program and requires a UCI-compatible graphical user interface (GUI) (e.g. XBoard with PolyGlot, Scid, Cute Chess, eboard, Arena, Sigma Chess, Shredder, Chess Partner or Fritz) in order to be used comfortably.
 
-If you want to see a better version of ViCTORIA powered by machine learning check out [Deep ViCTORIA](https://github.com/LE10EENFAIT/Deep-ViCTORIA).
+If you want to see a better version of ViCTORIA powered by deep learning check out [Deep ViCTORIA](https://github.com/LE10EENFAIT/Deep-ViCTORIA).
 
 ## Build
 ViCTORIA is built from scratch, so you don't need any C++ library, only a compiler (min C++ 17).
